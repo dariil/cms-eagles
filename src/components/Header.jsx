@@ -2,6 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import {Link, useNavigate} from 'react-router-dom'
 
 function Header(){
     return(
@@ -15,10 +16,10 @@ function Header(){
                     <Nav className="me-auto">
                         
                     </Nav>
-                    <Nav>
-                        <Nav.Link href="#features">Home</Nav.Link>
-                        <Nav.Link href="#pricing">Announcements</Nav.Link>
-                        <Nav.Link href="#deets">Projects</Nav.Link>
+                    <Nav className='navbar_wrapper'>
+                        <Link to="/" className='mt-2'>Home</Link>
+                        <Link to="/announcements" className='mt-2'>Announcements</Link>
+                        <Link to="/projects" className='mt-2'>Projects</Link>
                         <NavDropdown title="Clubs" id="collapsible-nav-dropdown">
                             <NavDropdown.Item href="#action/3.2">MMEC 1</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">MBMEC 2</NavDropdown.Item>
