@@ -13,6 +13,8 @@
   --variety-color-1: #1d9fd9;
   --dark-shade-color: #2b3035;
   --darker-shade-color: #00190f;
+  --gray-shade: #638a8f;
+  --mud-variation: #c1c1c1;
   /* --header-text-color: #0A1D56;
   --sub-text-color: #7E30E1;
   --variety-color: #E26EE5;
@@ -239,4 +241,115 @@
 .project-details-light{
   color: black;
   margin-top: 20px;
+}
+
+.about-main-container{
+  display: block;
+  /* height: 100vh */
+}
+
+/* .about-inner{
+  height: 100vh;
+  position: absolute;
+}
+
+.about-title{
+  display: flex;
+  position: absolute;
+  right: 0;
+  width: 60%;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+} */
+
+.about-title h1{
+  color: white;
+  font-size: 5.0rem;
+  font-weight: 700;
+  width: 70%;
+}
+
+.our-mission-main-container{
+  display: flex;
+  justify-content: flex-end;
+  margin: 50px 0 100px 0;
+}
+
+.our-mission-text-container{
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  height: 400px;
+  background-color: var(--dark-shade-color);
+  padding: 30px;
+}
+
+.blog{
+  margin-right: 20px;
+  width: 30%;
+  height: 400px;
+  background-size: cover;
+  background-position: center; 
+}
+
+.our-mission-text-container h2{
+  color: white;
+}
+
+.our-mission-text-container p{
+  color: white;
+}
+
+.about-image-container{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 100px;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center; 
+}
+
+.about-image-container h1{
+  margin-bottom: 100px;
+  color: white;
+  font-size: 5.0rem;
+  font-weight: 700;
+  width: 45%;
+}
+
+.register-btn{
+  padding: 15px 30px;
+  margin-left: 20px;
+  border-radius: 50px;
+  background-color: var(--gray-shade);
+  color: black;
+  font-weight: 700; 
+}
+
+.register-image-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-right: 100px;
+  width: 100%;
+  padding: 100px 200px;
+  background-size: cover;
+  background-position: center; 
+  flex-wrap: wrap-reverse;
+}
+
+.register-main-container{
+  height: 80vh;
+}
+
+.register-text-title{
+  color: var(--mud-variation);
+  font-weight: 700;
+}
+
+.form-label-text-light{
+  color: white;
 }

@@ -30,12 +30,13 @@ function Header(){
                             <NavDropdown.Item href="#action/3.2">MBMEC 7</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">MBMEC 8</NavDropdown.Item>
                         </NavDropdown>
-                        <NavDropdown title="About" id="collapsible-nav-dropdown">
+                        {/* <NavDropdown title="About" id="collapsible-nav-dropdown">
                             <NavDropdown.Item href="#action/3.2">Region</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Eagles</NavDropdown.Item>
-                            {/* <NavDropdown.Divider /> */}
-                        </NavDropdown>
-                        <Nav.Link eventKey={2} href="#memes">Contact</Nav.Link>
+                            <NavDropdown.Item><Link to="/projects" className='mt-2'>Eagles</Link></NavDropdown.Item>
+                            <NavDropdown.Divider /> 
+                        </NavDropdown> */}
+                        <Link to="/about" className='mt-2'>About</Link>
+                        <Link to="/register" className='mt-2'><span className='register-btn'>Register</span> </Link>
                     </Nav>
                     </Navbar.Collapse>
                 </Container>
