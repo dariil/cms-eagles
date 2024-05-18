@@ -11,6 +11,8 @@ import Announcements from './components/Announcements'
 import Projects from './components/Projects'
 import About from './components/About'
 import Register from './components/Register'
+import Login from './components/Login'
+import AdminDashboard from './components/AdminDashboard'
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
           <Route path='/projects' element={<Projects />}></Route>
           <Route path='/about' element={<About />}></Route>
           <Route path='/register' element={<Register />}></Route>
+          <Route path='/login' element={<Login />}></Route>
+          <Route path='/admindashboard' element={<AdminDashboard />}></Route>
             {/* <Route path="/"></Route>
             <Route path="/login"></Route>
             <Route path='/register'></Route>

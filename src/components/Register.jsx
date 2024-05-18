@@ -39,6 +39,16 @@ function Register(){
                                         </Form.Group>
 
                                         <Form.Group className="mb-3">
+                                            <Form.Label htmlFor="number" className='form-label-text-light'>Club membership</Form.Label>
+                                            <Form.Select aria-label="Default select example">
+                                                <option>Select the club you belong to</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </Form.Select>
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
                                             <Form.Label htmlFor="email" className='form-label-text-light'>Email address</Form.Label>
                                             <Form.Control type="email" name="email" id="email"  placeholder="Enter email" />
                                         </Form.Group>
