@@ -4,12 +4,15 @@ import { Container, Row, Col, Image } from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom'
 import axios from "axios";
 import { DownOutlined } from '@ant-design/icons';
-import { Radio, Space, Switch, Table, Divider, message } from 'antd';
+import { Radio, Space, Switch, Table, Divider, message, ConfigProvider } from 'antd';
 import { useParams } from 'react-router-dom';
 import { Input } from 'antd';
 import { Button, Modal, notification } from 'antd';
 import {
   SmileOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined
 } from '@ant-design/icons';
 
 // const columns = [
@@ -63,45 +66,50 @@ import {
 //     },
 //   ];
 
+const defaultTitle = () => 'Here is title';
+const defaultFooter = () => 'Here is footer';
 
-  const defaultExpandable = {
-    expandedRowRender: (record) => <p>{record.description}</p>,
-  };
-  const defaultTitle = () => 'Here is title';
-  const defaultFooter = () => 'Here is footer';
+function GeneralUsersMaintenance(){
+    const [bordered, setBordered] = useState(true);
+    const [data, setData] = useState([]); /////   IMPORTANT    //////
+    const [loading, setLoading] = useState(false); /////   IMPORTANT    //////
+    const [clubId, setClubId] = useState(null); /////   IMPORTANT    //////
+    const [accessLevel, setAccessLevel] = useState(null); /////   IMPORTANT    //////
+    const [size, setSize] = useState('large');
+    const [expandable, setExpandable] = useState(false);
+    const [showTitle, setShowTitle] = useState(true);
+    const [showHeader, setShowHeader] = useState(true);
+    const [showFooter, setShowFooter] = useState(true);
+    const [rowSelection, setRowSelection] = useState({});
+    const [hasData, setHasData] = useState(true);
+    const [tableLayout, setTableLayout] = useState('fixed');
+    const [top, setTop] = useState('topLeft');
+    const [bottom, setBottom] = useState('bottomLeft');
+    const [ellipsis, setEllipsis] = useState(true);
+    const [yScroll, setYScroll] = useState(true);
+    const [xScroll, setXScroll] = useState('fixed');
+    const [open, setOpen] = useState(false);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [modalText, setModalText] = useState('Content of the modal');
+    const [inputs, setInputs] = useState({ access_level: '0' });
+    const navigate = useNavigate();
+    const showModal = () => {
+      setOpen(true);
+    };
 
-function GeneralAdmin(){
-  const [bordered, setBordered] = useState(true);
-  const [data, setData] = useState([]); /////   IMPORTANT    //////
-  const [loading, setLoading] = useState(false); /////   IMPORTANT    //////
-  const [clubId, setClubId] = useState(null); /////   IMPORTANT    //////
-  const [accessLevel, setAccessLevel] = useState(null); /////   IMPORTANT    //////
-  const [size, setSize] = useState('large');
-  const [expandable, setExpandable] = useState(false);
-  const [showTitle, setShowTitle] = useState(true);
-  const [showHeader, setShowHeader] = useState(true);
-  const [showFooter, setShowFooter] = useState(true);
-  const [rowSelection, setRowSelection] = useState({});
-  const [hasData, setHasData] = useState(true);
-  const [tableLayout, setTableLayout] = useState();
-  const [top, setTop] = useState('topLeft');
-  const [bottom, setBottom] = useState('bottomLeft');
-  const [ellipsis, setEllipsis] = useState(true);
-  const [yScroll, setYScroll] = useState(true);
-  const [xScroll, setXScroll] = useState('scroll');
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState('Content of the modal');
-  const [inputs, setInputs] = useState({});
-  const navigate = useNavigate();
-  const showModal = () => {
-    setOpen(true);
-  };
+    // const handleOk = () => {
+    //   setModalText('The modal will be closed after two seconds');
+    //   setConfirmLoading(true);
+    //   setTimeout(() => {
+    //     setOpen(false);
+    //     setConfirmLoading(false);
+    //   }, 2000);
+    // };
 
-  const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false);
-  };
+    const handleCancel = () => {
+      console.log('Clicked cancel button');
+      setOpen(false);
+    };
 
     const handleBorderChange = (enable) => {
         setBordered(enable);
@@ -109,16 +117,8 @@ function GeneralAdmin(){
 
     const columns = [
       {
-          title: 'First Name',
-          dataIndex: 'first_name',
-      },
-      {
-          title: 'Middle Name',
-          dataIndex: 'middle_name',
-      },
-      {
-          title: 'Last Name',
-          dataIndex: 'last_name',
+        title: 'Full Name',
+        dataIndex: 'full_name',
       },
       {
           title: 'Number',
@@ -128,10 +128,10 @@ function GeneralAdmin(){
           title: 'Email',
           dataIndex: 'email',
       },
-      {
-          title: 'Access Level',
-          dataIndex: 'access_level',
-      },
+      // {
+      //     title: 'Access Level',
+      //     dataIndex: 'access_level',
+      // },
       {
           title: 'Club',
           dataIndex: 'club_id',
@@ -139,6 +139,54 @@ function GeneralAdmin(){
       {
           title: 'Date Created',
           dataIndex: 'date_created',
+      },
+      {
+        title: 'Action',
+        // key: 'action',
+        // sorter: true,
+        render: () => (
+          <Space size="middle">
+            <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#C40C0C',
+                        }
+                    }
+                }}
+            >
+                <Button type='primary' className='action-del1' size='middle' icon={<DeleteOutlined />}>
+                    {/* <EditOutlined className='action-edit' /> */}
+                </Button>
+            </ConfigProvider>
+            <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#7ABA78',
+                        }
+                    }
+                }}
+            >
+                <Button type='primary' className='action-edit1' size='middle' icon={<EditOutlined />}>
+                    {/* <EditOutlined className='action-edit' /> */}
+                </Button>
+            </ConfigProvider>
+            <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#5755FE',
+                        }
+                    }
+                }}
+            >
+                <Button type='primary' className='action-view1' size='middle' icon={<EyeOutlined />}>
+                    {/* <EyeOutlined className='action-view' /> */}
+                </Button>
+            </ConfigProvider>
+          </Space>
+        ),
       },
   ]
 
@@ -179,16 +227,14 @@ function GeneralAdmin(){
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem('user-info');
-
     if (storedUserInfo) {
         try {
             const userInfo = JSON.parse(storedUserInfo);
 
-            // Access the user_id property and update the state
             if (userInfo.response && userInfo.response.access_level) {
               setAccessLevel(userInfo.response.access_level)
             // setClubId(userInfo.response.club_id);
-            // console.log(clubId);
+            console.log(accessLevel);
             }
         } catch (error) {
             console.error("Failed to parse user info from localStorage:", error);
@@ -200,19 +246,24 @@ function GeneralAdmin(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/1`);
-        setData(response.data);
+        const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/0`);
+        const users = response.data.map((user) => ({
+          ...user,
+          full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+        }));
+        setData(users);
         setLoading(false);
       } catch (error) {
         console.error('Error: ', error);
         setLoading(false);
       }
     };
-
+  
     if (accessLevel) {
       fetchData();
     }
   }, [accessLevel]);
+  
 
   const dataWithKeys = data.map((item) => ({
     ...item,
@@ -228,9 +279,7 @@ function GeneralAdmin(){
   const handleTableLayoutChange = (e) => {
     setTableLayout(e.target.value);
   };
-  const handleExpandChange = (enable) => {
-    setExpandable(enable ? defaultExpandable : undefined);
-  };
+
   const handleEllipsisChange = (enable) => {
     setEllipsis(enable);
   };
@@ -257,7 +306,7 @@ function GeneralAdmin(){
   };
   const scroll = {};
   if (yScroll) {
-    scroll.y = 450;
+    scroll.y = 390;
   }
   if (xScroll) {
     scroll.x = '80vw';
@@ -266,8 +315,8 @@ function GeneralAdmin(){
     ...item,
     ellipsis,
   }));
-  if (xScroll === 'unset') {
-    tableColumns[0].fixed = true;
+  if (xScroll === 'fixed') {
+    tableColumns[0].fixed = false;
     tableColumns[tableColumns.length - 1].fixed = 'right';
   }
   const tableProps = {
@@ -352,7 +401,11 @@ function GeneralAdmin(){
         try {
           setLoading(true);
           const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/0`);
-          setData(response.data);
+          const users = response.data.map((user) => ({
+            ...user,
+            full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+          }));
+          setData(users);
           setLoading(false);
         } catch (error) {
           console.error('Error: ', error);
@@ -366,7 +419,7 @@ function GeneralAdmin(){
         last_name: '',
         number: '',
         club_member: '',
-        access_level: '',
+        access_level: '0',
         email: '',
         password: ''
       });
@@ -376,19 +429,17 @@ function GeneralAdmin(){
       }
     }
   }
-
   return (
     <>
       {contextHolder}
       {contextHolderMsg}
-
       <div className='search-container'>
         <Search placeholder="input search text" className='search' size='large' onSearch={onSearch} enterButton />
         <Button size='large' type="primary" onClick={showModal}>
-          Add Admin
+          Add User
         </Button>
         <Modal
-          title="Admin User"
+          title="Add User"
           open={open}
           centered
           onOk={handleOk}
@@ -430,14 +481,14 @@ function GeneralAdmin(){
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group className="mb-3">
+              {/* <Form.Group className="mb-3">
                 <Form.Label htmlFor="access_level" className=''>Access Level</Form.Label>
                 <Form.Select name="access_level" id="access_level" onChange={handleChange} value={inputs.access_level} aria-label="Default select example">
                   <option>Open this select menu</option>
                   <option value="0">Member</option>
                   <option value="1">Admin</option>
                 </Form.Select>
-              </Form.Group>
+              </Form.Group> */}
 
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="email" className=''>Email</Form.Label>
@@ -452,7 +503,7 @@ function GeneralAdmin(){
           </Form>
         </Modal>
       </div>
-
+      
       <Table
         {...tableProps}
         pagination={{
@@ -463,10 +514,11 @@ function GeneralAdmin(){
         scroll={scroll}
         style={{
             width: '100%',
+            // height: '100vh',
         }}
       />
     </>
   );
 }
 
-export default GeneralAdmin;
+export default GeneralUsersMaintenance;

@@ -21,8 +21,9 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
-import GeneralUsers from './GeneralUsers';
-import GeneralAdmin from './GeneralAdmin';
+import GeneralUsersMaintenance from './GeneralUsersMaintenance';
+import GeneralAdminMaintenance from './GeneralAdminMaintenance';
+import GeneralHomeMaintenance from './GeneralHomeMaintenance';
 
 
 const Dashboard = () => <div>Dashboard Content</div>;
@@ -37,25 +38,32 @@ const Officers = () => <div>Officers Content</div>;
 function Admin(){
   const [clubId, setClubId] = useState(null);
 
+  // const [clubId, setClubId] = useState(null);
+
   useEffect(() => {
     // Retrieve the data from localStorage
     const storedUserInfo = localStorage.getItem('user-info');
 
     if (storedUserInfo) {
-        try {
-            // Parse the JSON string into an object
-            const userInfo = JSON.parse(storedUserInfo);
+      try {
+        // Parse the JSON string into an object
+        const userInfo = JSON.parse(storedUserInfo);
 
-            // Access the user_id property and update the state
-            if (userInfo.response && userInfo.response.club_id) {
-            setClubId(userInfo.response.club_id);
-            // console.log(clubId);
-            }
-        } catch (error) {
-            console.error("Failed to parse user info from localStorage:", error);
+        // Access the club_id property and update the state
+        if (userInfo.response && userInfo.response.club_id !== undefined) {
+          setClubId(userInfo.response.club_id);
+          console.log('Club ID:', userInfo.response.club_id); // Log the retrieved value
+        } else {
+          console.log('club_id not found in userInfo.response');
         }
+      } catch (error) {
+        console.error('Failed to parse user info from localStorage:', error);
       }
+    } else {
+      console.log('No user-info found in localStorage');
+    }
   }, []);
+
 
   useEffect(() => {
     console.log(clubId);
@@ -105,7 +113,7 @@ function Admin(){
         {
           key: 'general-home',
           icon: <HomeOutlined />,
-          label: <Link to={"/admin/general-home"} className='mt-2 admin-menu-items'>Home</Link>,
+          label: <Link to="/admin/general-home" className='mt-2 admin-menu-items'>Home</Link>,
         },
         {
           key: 'general-announcements',
@@ -261,11 +269,11 @@ function Admin(){
       case 'dashboard':
         return <Dashboard />;
       case 'users-general':
-        return <GeneralUsers />;
+        return <GeneralUsersMaintenance />;
       case 'admin-general':
-        return <GeneralAdmin />;
+        return <GeneralAdminMaintenance />;
       case 'general-home':
-        return <Home />;
+        return <GeneralHomeMaintenance />;
       case 'general-announcements':
         return <Announcements />;
       case 'general-projects':

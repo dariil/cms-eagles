@@ -471,11 +471,6 @@
   width: 100%;
 }
 
-.admin-menu-container{
-  /* display: flex; */
-  /* width: 20%; */
-}
-
 .admin-content-container{
   width: 100%;
   padding: 20px;
@@ -483,8 +478,8 @@
 
 .child-main-test{
   background-color: white;
-  width: 100%;
-  height: 85vh;
+  width: 99%;
+  /* height: 85vh; */
   border-radius: 15px;
 }
 
@@ -501,4 +496,65 @@
 
 .search{
   width: 90%;
+  /* margin-right: 10px; */
+}
+
+.action-del{
+  color: white;
+  width: 100%;
+  transition: background ease-in-out 0.5s;
+  background-color: #FF6500;
+  padding: 7px;
+  border-radius: 5px;
+}
+
+.action-del:hover{
+  background-color: #C40C0C;
+  transition: background ease-in-out 0.5s;
+}
+
+.action-edit{
+  color: white;
+  width: 100%;
+  transition: background ease-in-out 0.5s;
+  background-color: #F3CA52;
+  padding: 7px;
+  border-radius: 5px;
+}
+
+.action-edit:hover{
+  background-color: #7ABA78;
+  transition: background ease-in-out 0.5s;
+}
+
+.action-view{
+  color: white;
+  width: 100%;
+  transition: background ease-in-out 0.5s;
+  background-color: #8576FF;
+  padding: 7px;
+  border-radius: 5px;
+}
+
+.action-view:hover{
+  background-color: #5755FE;
+  transition: background ease-in-out 0.5s;
+}
+
+.action-edit1{
+  background: #F3CA52;
+  color: white;
+  border: none;
+}
+
+.action-view1{
+  background: #8576FF;
+  color: white;
+  border: none;
+}
+
+.action-del1{
+  background: #FF6500;
+  color: white;
+  border: none;
 }
