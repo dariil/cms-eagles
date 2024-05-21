@@ -24,6 +24,9 @@ import { Button, Menu } from 'antd';
 import GeneralUsersMaintenance from './GeneralUsersMaintenance';
 import GeneralAdminMaintenance from './GeneralAdminMaintenance';
 import GeneralHomeMaintenance from './GeneralHomeMaintenance';
+import GeneralAnnouncementMaintenance from './GeneralAnnouncementMaintenance';
+import GeneralProjectsMaintenance from './GeneralProjectsMaintenance';
+import GeneralAboutUsMaintenance from './GeneralAboutUsMaintenance';
 
 
 const Dashboard = () => <div>Dashboard Content</div>;
@@ -264,6 +267,7 @@ function Admin(){
     setSelectedKey(e.key);
   };
 
+  ///////////////////////////////////// RENDER TABLE UI
   const renderContent = () => {
     switch (selectedKey) {
       case 'dashboard':
@@ -275,11 +279,11 @@ function Admin(){
       case 'general-home':
         return <GeneralHomeMaintenance />;
       case 'general-announcements':
-        return <Announcements />;
+        return <GeneralAnnouncementMaintenance />;
       case 'general-projects':
-        return <Projects />;
+        return <GeneralProjectsMaintenance />;
       case 'general-about':
-        return <AboutUs />;
+        return <GeneralAboutUsMaintenance />;
       case 'general-officers':
         return <Officers />;
       default:

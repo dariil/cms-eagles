@@ -23,7 +23,7 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-function GeneralHomeMaintenance() {
+function GeneralProjectsMaintenance() {
   const defaultTitle = () => 'Here is title';
   const defaultFooter = () => 'Here is footer';
   const [bordered, setBordered] = useState(true);
@@ -40,6 +40,7 @@ function GeneralHomeMaintenance() {
   const [bottom, setBottom] = useState('bottomLeft');
   const [ellipsis, setEllipsis] = useState(true);
   const [data, setData] = useState([]); /////   IMPORTANT    //////
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const formRef = useRef(null);
 
@@ -62,7 +63,8 @@ function GeneralHomeMaintenance() {
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
-  const showDrawer = () => {
+  const showDrawer = (projectID) => {
+    setSelectedProjectId(projectID);
     setOpen(true);
   };
   const onClose = () => {
@@ -102,21 +104,34 @@ function GeneralHomeMaintenance() {
       </div>
     </button>
   );
+  
 
   // TABLE ITEMS
   const columns = [
     {
-      title: 'Image',
-      dataIndex: 'logo',
-      render: (logo) => <img src={"http://localhost:8000/" + logo} alt="Home Logo" style={{ maxWidth: '70px' }} />
+      title: 'Project Title',
+      dataIndex: 'project_title',
     },
     {
       title: 'Description',
-      dataIndex: 'description',
+      dataIndex: 'project_description',
+    },
+    {
+      title: 'Project Image',
+      dataIndex: 'cover_image',
+      render: (projectImage) => <img src={"http://localhost:8000/" + projectImage} alt="Project Image" style={{ maxWidth: '70px' }} />
+    },
+    {
+      title: 'Created at',
+      dataIndex: 'created_at',
+    },
+    {
+      title: 'Updated at',
+      dataIndex: 'updated_at',
     },
     {
       title: 'Action',
-      render: () => (
+      render: (text, record) => (
         <Space size="middle">
           <ConfigProvider
             theme={{
@@ -127,7 +142,7 @@ function GeneralHomeMaintenance() {
               }
             }}
           >
-            <Button type='primary' onClick={showDrawer} className='action-edit1' size='large' icon={<EditOutlined />}>
+            <Button type='primary' onClick={() => showDrawer(record.project_id)} className='action-edit1' size='large' icon={<EditOutlined />}>
               {/* <EditOutlined className='action-edit' /> */}
             </Button>
           </ConfigProvider>
@@ -150,7 +165,6 @@ function GeneralHomeMaintenance() {
     },
   ]
 
-  // RETRIEVE CLUB ID ON LOAD
   useEffect(() => {
     const storedUserInfo = localStorage.getItem('user-info');
 
@@ -171,18 +185,19 @@ function GeneralHomeMaintenance() {
     }
   }, []);
 
-  // RETRIEVE DATA ON LOAD
   useEffect(() => {
     const fetchData = async () => {
       if (clubId !== null) {
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getHome/${clubId}`);
-          const users = response.data.map((user) => ({
-            ...user,
+          const response = await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/${clubId}`);
+          const projects = response.data.map((projects) => ({
+            ...projects,
+            created_at: projects.created_at.split('T')[0],
+            updated_at: projects.updated_at.split('T')[0]
           }));
-          setData(users);
+          setData(projects);
           setLoading(false);
         } catch (error) {
           console.error('Error: ', error);
@@ -202,8 +217,13 @@ function GeneralHomeMaintenance() {
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/getHome/${clubId}`);
-            setData(response.data);
+            const response = await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/${clubId}`);
+            const projects = response.data.map((projects) => ({
+              ...projects,
+              created_at: projects.created_at.split('T')[0],
+              updated_at: projects.updated_at.split('T')[0]
+            }));
+            setData(projects);
             setLoading(false);
           } catch (error) {
             console.error('Error: ', error);
@@ -221,19 +241,17 @@ function GeneralHomeMaintenance() {
       );
       const dataWithKeys = filteredData.map((item) => ({
         ...item,
-        key: item.home_id,
+        key: item.project_id,
       }));
       setData(dataWithKeys);
     }
   };
 
-  // INSERT THE DATA WITH KEYS
   const dataWithKeys = data.map((item) => ({
     ...item,
-    key: item.home_id,
+    key: item.project_id,
   }));
 
-  // TABLE ATTRIBUTES
   const tableProps = {
     bordered,
     loading,
@@ -247,7 +265,6 @@ function GeneralHomeMaintenance() {
     tableLayout,
   };
 
-  // INITIALIZE TABLE COLUMNS
   const tableColumns = columns.map((item) => ({
     ...item,
     ellipsis,
@@ -257,20 +274,20 @@ function GeneralHomeMaintenance() {
     tableColumns[tableColumns.length - 1].fixed = 'right';
   }
 
-  // HANDLE SUBMIT
   const onFinish = async (values) => {
     try {
       const formData = new FormData();
       formData.append('image', fileList[0]?.originFileObj);
-      formData.append('description', values.home_content);
-
-      const response = await fetch(`http://127.0.0.1:8000/api/updateHome/1?_method=POST`, {
+      formData.append('project_description', values.project_content);
+      formData.append('project_title', values.project_title);
+  
+      const response = await fetch(`http://127.0.0.1:8000/api/updateProjects/${selectedProjectId}?_method=POST`, {
         method: 'POST',
         body: formData,
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         message.success(data.messages.message);
         const fetchData = async () => {
@@ -278,39 +295,38 @@ function GeneralHomeMaintenance() {
             console.log(`Fetching data for clubId: ${clubId}`);
             try {
               setLoading(true);
-              const response = await axios.get(`http://127.0.0.1:8000/api/getHome/${clubId}`);
-              const users = response.data.map((user) => ({
-                ...user,
+              const response = await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/${clubId}`);
+              const projects = response.data.map((projects) => ({
+                ...projects,
+                created_at: projects.created_at.split('T')[0],
+                updated_at: projects.updated_at.split('T')[0]
               }));
-              setData(users);
+              setData(projects);
               setLoading(false);
-
-              
             } catch (error) {
               console.error('Error: ', error);
               setLoading(false);
             }
           }
         };
-        formRef.current.resetFields();
-        setFileList([]);
+        setOpen(false);
     
         fetchData();
-        setOpen(false);
-        
+        formRef.current.resetFields();
+        setFileList([]);
       } else {
         message.error(data.messages.message);
       }
     } catch (error) {
       console.error('Error:', error);
-      message.error('Failed to update home contents.');
+      message.error('Failed to update project.');
     }
-  };
+  };  
 
   return (
     <>
       <Drawer
-        title="Edit Home Contents"
+        title="Edit Project Contents"
         width={500}
         onClose={onClose}
         open={open}
@@ -319,33 +335,34 @@ function GeneralHomeMaintenance() {
             paddingBottom: 80,
           },
         }}
-        // extra={
-        //   <Space>
-        //     <Button onClick={onClose}>Cancel</Button>
-        //     <Button htmlType='submit'  type="primary">
-        //       Save
-        //     </Button>
-        //   </Space>
-        // }
-        // onFinish={(values) => {
-        //   console.log({values});
-        // }}
       >
         <Form layout="vertical" onFinish={onFinish} ref={formRef} >
           <div className='test-cont'>
           <Col span={24}>
-          
             <Form.Item
-              name="home_content"
-              label="Home Content"
+              name="project_title"
+              label="Project Title"
               rules={[
                 {
                   required: true,
-                  message: 'Please enter a home description content',
+                  message: 'Please enter a project title content',
                 },
               ]}
             >
-              <Input.TextArea rows={12} name="description" placeholder="Enter home content" />
+              <Input name="title" placeholder="Enter post title" />
+            </Form.Item>
+          
+            <Form.Item
+              name="project_content"
+              label="Project Content"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a project description content',
+                },
+              ]}
+            >
+              <Input.TextArea rows={12} name="project_description" placeholder="Enter project content" />
             </Form.Item>
             <Form.Item
               name={"image"}
@@ -372,9 +389,6 @@ function GeneralHomeMaintenance() {
                 }
               ]}
             >
-              {/* <Upload> //THIS WORKS
-                <Button>Upload File</Button>
-              </Upload> */}
               <Upload
                 maxCount={1}
                 listType="picture-card"
@@ -391,15 +405,11 @@ function GeneralHomeMaintenance() {
                   });
                 }}
                 customRequest={({ file, onSuccess }) => {
-                  // Call handleChange to update fileList state
                   handleChange({ file });
-
-                  // Call onSuccess to inform Ant Design that upload is successful
                   onSuccess();
                 }}
               >
                 {uploadButton}
-                {/* {fileList[0]?.name} */}
               </Upload>
             </Form.Item>
             {previewImage && (
@@ -431,9 +441,11 @@ function GeneralHomeMaintenance() {
           </div>
         </Form>
       </Drawer>
+      
       <div className='search-container2'>
         <Search placeholder="input search text" className='search2' size='large' onSearch={onSearch} enterButton />
       </div>
+
       <Table
         {...tableProps}
         pagination={{
@@ -450,4 +462,4 @@ function GeneralHomeMaintenance() {
   )
 }
 
-export default GeneralHomeMaintenance;
+export default GeneralProjectsMaintenance;

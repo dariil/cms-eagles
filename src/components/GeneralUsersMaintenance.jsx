@@ -198,7 +198,12 @@ function GeneralUsersMaintenance(){
           try {
             setLoading(true);
             const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/0`);
-            setData(response.data);
+            const users = response.data.map((user) => ({
+              ...user,
+              full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+            }));
+            setData(users);
+            
             setLoading(false);
           } catch (error) {
             console.error('Error: ', error);
@@ -209,6 +214,8 @@ function GeneralUsersMaintenance(){
         if (accessLevel) {
           fetchData();
         }
+
+        
     } else {
       // Filter the data based on the search value
       const filteredData = data.filter((item) =>
@@ -377,42 +384,18 @@ function GeneralUsersMaintenance(){
     const emptyFields = requiredFields.filter(field => !inputs[field]);
 
     if (emptyFields.length > 0) {
-      // Display an error message or do something else to inform the user
-      console.log(`Please fill in the following fields: ${emptyFields.join(', ')}`);
-      error();
+      message.error(`Please fill in the following fields: ${emptyFields.join(', ')}`);
       return;
     }
 
     setConfirmLoading(true);
 
     try {
-        const response = await axios.post('http://127.0.0.1:8000/api/addUser', inputs);
-        console.log(response.data);
-        // localStorage.setItem("user-info", JSON.stringify(response.data));
-        
-    } catch (error) {
-        console.error('Error registering:', error);
-        // Handle error here if needed
-    } finally {
-      setConfirmLoading(false);
-      setOpen(false);
-      navigate('/admin/general-users');
-      const fetchData = async () => {
-        try {
-          setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/0`);
-          const users = response.data.map((user) => ({
-            ...user,
-            full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
-          }));
-          setData(users);
-          setLoading(false);
-        } catch (error) {
-          console.error('Error: ', error);
-          setLoading(false);
-        }
-      };
-      openNotification();
+      const response = await axios.post('http://127.0.0.1:8000/api/addUser', inputs);
+      message.success(response.data.messages.message);
+      console.log(response.data);
+
+      // Reset the form
       setInputs({
         first_name: '',
         middle_name: '',
@@ -424,11 +407,39 @@ function GeneralUsersMaintenance(){
         password: ''
       });
 
+      // Fetch and update user data
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const response = await axios.get('http://127.0.0.1:8000/api/getUsers/0');
+          const users = response.data.map((user) => ({
+            ...user,
+            full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+          }));
+          setData(users);
+        } catch (error) {
+          console.error('Error: ', error);
+          message.error(response.data.messages.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
       if (accessLevel) {
         fetchData();
       }
+
+      navigate('/admin/general-users');
+      // openNotification();
+    } catch (error) {
+      console.error('Error registering:', error);
+      message.error('Failed to add user.');
+    } finally {
+      setConfirmLoading(false);
+      setOpen(false);
     }
-  }
+  };
+
   return (
     <>
       {contextHolder}

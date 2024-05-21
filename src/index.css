@@ -494,9 +494,19 @@
   padding: 20px 20px 10px 20px;
 }
 
+.search-container2{
+  display: flex;
+  justify-content: space-evenly;
+  padding: 20px 0px 10px 0px;
+}
+
 .search{
   width: 90%;
   /* margin-right: 10px; */
+}
+
+.search2{
+  width: 96%;
 }
 
 .action-del{
