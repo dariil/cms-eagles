@@ -4,14 +4,23 @@ import axios from "axios";
 import { DownOutlined } from '@ant-design/icons';
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
 import { useParams } from 'react-router-dom';
-import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Select, notification } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification } from 'antd';
 import {
   SmileOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
   InboxOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
+
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 function GeneralHomeMaintenance() {
   const defaultTitle = () => 'Here is title';
@@ -30,61 +39,45 @@ function GeneralHomeMaintenance() {
   const [bottom, setBottom] = useState('bottomLeft');
   const [ellipsis, setEllipsis] = useState(true);
   const [data, setData] = useState([]); /////   IMPORTANT    //////
+  //
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState([]);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: 'none',
+      }}
+      type="button"
+    >
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </button>
+  );
 
   //HANDLE FORM DATA
   const [formData, setFormData] = useState({
     description: '',
     image: null,
   });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleImageUpload = ({ file }) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      image: file.originFileObj,
-    }));
-  };
-
-  const handleSubmit = async () => {
-    const formDataObj = new FormData();
-    formDataObj.append('description', formData.description);
-    formDataObj.append('image', formData.image);
-  
-    try {
-      const response = await axios.post(`http://127.0.0.1:8000/api/updateHome/${clubId}`, formDataObj, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      if (response.data.messages.status === 1) {
-        notification.success({
-          message: 'Success',
-          description: response.data.messages.message,
-        });
-        // Optionally, you can refresh the data or perform any other necessary actions
-      } else {
-        notification.error({
-          message: 'Error',
-          description: response.data.messages.message,
-        });
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      notification.error({
-        message: 'Error',
-        description: 'An error occurred while updating the home content.',
-      });
-    }
-  };
 
   /////////////////////////////////////////////////
 
@@ -107,28 +100,7 @@ function GeneralHomeMaintenance() {
   };
 
   //UPLOAD COMPONENTS
-  const { Dragger } = Upload;
-  const props = {
-    name: 'file',
-    multiple: false,
-    accept: 'image/*',
-    showUploadList: true,
-    onChange(info) {
-      handleImageUpload(info);
-      const { status } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
-    },
-  };
+  
 
   // TABLE ITEMS
   const columns = [
@@ -203,7 +175,7 @@ function GeneralHomeMaintenance() {
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getHome/${clubId}?_method=POST`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getHome/${clubId}`);
           const users = response.data.map((user) => ({
             ...user,
           }));
@@ -246,6 +218,32 @@ function GeneralHomeMaintenance() {
     tableColumns[tableColumns.length - 1].fixed = 'right';
   }
 
+  const onFinish = async (values) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', fileList[0]?.originFileObj);
+      formData.append('description', values.home_content);
+
+      const response = await fetch(`http://127.0.0.1:8000/api/updateHome/1?_method=POST`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Handle success
+        message.success(data.messages.message);
+      } else {
+        // Handle error
+        message.error(data.messages.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      message.error('Failed to update home contents.');
+    }
+  };
+
   return (
     <>
       <Drawer
@@ -258,17 +256,22 @@ function GeneralHomeMaintenance() {
             paddingBottom: 80,
           },
         }}
-        extra={
-          <Space>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button onClick={handleSubmit} type="primary">
-              Save
-            </Button>
-          </Space>
-        }
+        // extra={
+        //   <Space>
+        //     <Button onClick={onClose}>Cancel</Button>
+        //     <Button htmlType='submit'  type="primary">
+        //       Save
+        //     </Button>
+        //   </Space>
+        // }
+        // onFinish={(values) => {
+        //   console.log({values});
+        // }}
       >
-        <Form layout="vertical">
+        <Form layout="vertical" onFinish={onFinish} >
+          <div className='test-cont'>
           <Col span={24}>
+          
             <Form.Item
               name="home_content"
               label="Home Content"
@@ -279,30 +282,90 @@ function GeneralHomeMaintenance() {
                 },
               ]}
             >
-              <Input.TextArea rows={12} name="description" value={formData.description} onChange={handleInputChange} placeholder="Enter home content" />
+              <Input.TextArea rows={12} name="description" placeholder="Enter home content" />
             </Form.Item>
             <Form.Item
-              name="image"
+              name={"image"}
+              valuePropName='fileList'
+              getValueFromEvent={(event)=>{
+                return event?.fileList;
+              }}
               label="Image"
               rules={[
                 {
                   required: true,
                   message: 'Please upload an image',
                 },
+                {
+                  validator(_,fileList){
+                    return new Promise((resolve, reject) =>{
+                      if(fileList && fileList[0].size > 900000){
+                        reject('File size exceeded the accepted limit');
+                      } else{
+                        resolve("Success");
+                      }
+                    });
+                  }
+                }
               ]}
             >
-              <Dragger {...props} onChange={handleImageUpload} fileList={fileList}>
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                <p className="ant-upload-hint">
-                  Support for a single image file upload. Strictly prohibited from uploading sensitive data or other
-                  banned files.
-                </p>
-              </Dragger>
+              {/* <Upload> //THIS WORKS
+                <Button>Upload File</Button>
+              </Upload> */}
+              <Upload
+                maxCount={1}
+                listType="picture-card"
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+                beforeUpload={(file) => {
+                  return new Promise((resolve, reject) => {
+                    if (file.size > 900000) {
+                      reject('File size exceeded the accepted limit');
+                    } else {
+                      resolve();
+                    }
+                  });
+                }}
+                customRequest={({ file, onSuccess }) => {
+                  // Call handleChange to update fileList state
+                  handleChange({ file });
+
+                  // Call onSuccess to inform Ant Design that upload is successful
+                  onSuccess();
+                }}
+              >
+                {uploadButton}
+                {/* {fileList[0]?.name} */}
+              </Upload>
             </Form.Item>
+            {previewImage && (
+                <Image
+                  wrapperStyle={{
+                    display: 'none',
+                  }}
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                  }}
+                  src={previewImage}
+                />
+              )}
           </Col>
+          <Row gutter={16} className='mt-4'>
+            <Col span={12}>
+              <Button htmlType='submit' type="primary" block>
+                Update
+              </Button>
+            </Col>
+            <Col span={12}>
+              <Button onClick={onClose} block>
+                Cancel
+              </Button>
+            </Col>
+          </Row>
+          </div>
         </Form>
       </Drawer>
 
