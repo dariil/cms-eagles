@@ -40,7 +40,7 @@ function GeneralAboutUsMaintenance() {
   const [bottom, setBottom] = useState('bottomLeft');
   const [ellipsis, setEllipsis] = useState(true);
   const [data, setData] = useState([]); /////   IMPORTANT    //////
-  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [selectedAboutId, setSelectedAboutId] = useState(null);
 
   const formRef = useRef(null);
 
@@ -63,18 +63,28 @@ function GeneralAboutUsMaintenance() {
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
-  const showDrawer = (projectID) => {
-    setSelectedProjectId(projectID);
+  const showDrawer = (aboutID) => {
+    setSelectedAboutId(aboutID);
     setOpen(true);
   };
   const onClose = () => {
     setOpen(false);
+    setCoverImageFileList([]);
+    setLogoFileList([]);
+    setPostImageFileList([]);
   };
+
+  // useEffect(() => {
+  //   console.log(selectedAboutId);
+  // })
 
   //UPLOAD HANDLING COMPONENTS
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState([]);
+  const [coverImageFileList, setCoverImageFileList] = useState([]);
+  const [logoFileList, setLogoFileList] = useState([]);
+  const [postImageFileList, setPostImageFileList] = useState([]);
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -109,25 +119,31 @@ function GeneralAboutUsMaintenance() {
   // TABLE ITEMS
   const columns = [
     {
-      title: 'Project Title',
-      dataIndex: 'project_title',
+      title: 'Club Name',
+      dataIndex: 'club_name',
     },
     {
-      title: 'Description',
-      dataIndex: 'project_description',
-    },
-    {
-      title: 'Project Image',
+      title: 'Cover Image',
       dataIndex: 'cover_image',
-      render: (projectImage) => <img src={"http://localhost:8000/" + projectImage} alt="Project Image" style={{ maxWidth: '70px' }} />
+      render: (club_cover) => <img src={"http://localhost:8000/" + club_cover} alt="About Cover Image" style={{ maxWidth: '70px' }} />
     },
     {
-      title: 'Created at',
-      dataIndex: 'created_at',
+      title: 'Vision Content',
+      dataIndex: 'vision_content',
     },
     {
-      title: 'Updated at',
-      dataIndex: 'updated_at',
+      title: 'Logo',
+      dataIndex: 'club_logo',
+      render: (club_logo) => <img src={"http://localhost:8000/" + club_logo} alt="Club Logo" style={{ maxWidth: '70px' }} />
+    },
+    {
+      title: 'Mission Content',
+      dataIndex: 'mission_content',
+    },
+    {
+      title: 'Post Image',
+      dataIndex: 'club_post_image',
+      render: (post_image) => <img src={"http://localhost:8000/" + post_image} alt="About Post Image" style={{ maxWidth: '70px' }} />
     },
     {
       title: 'Action',
@@ -142,7 +158,7 @@ function GeneralAboutUsMaintenance() {
               }
             }}
           >
-            <Button type='primary' onClick={() => showDrawer(record.project_id)} className='action-edit1' size='large' icon={<EditOutlined />}>
+            <Button type='primary' onClick={() => showDrawer(record.club_id)} className='action-edit1' size='large' icon={<EditOutlined />}>
               {/* <EditOutlined className='action-edit' /> */}
             </Button>
           </ConfigProvider>
@@ -191,13 +207,13 @@ function GeneralAboutUsMaintenance() {
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/${clubId}`);
-          const projects = response.data.map((projects) => ({
-            ...projects,
-            created_at: projects.created_at.split('T')[0],
-            updated_at: projects.updated_at.split('T')[0]
+          const response = await axios.get(`http://127.0.0.1:8000/api/getAboutClub/${clubId}`);
+          const about = response.data.map((about) => ({
+            ...about,
+            // date_created: about.date_created.split('T')[0],
+            // updated_at: projects.updated_at.split('T')[0]
           }));
-          setData(projects);
+          setData(about);
           setLoading(false);
         } catch (error) {
           console.error('Error: ', error);
@@ -217,13 +233,13 @@ function GeneralAboutUsMaintenance() {
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/${clubId}`);
-            const projects = response.data.map((projects) => ({
-              ...projects,
-              created_at: projects.created_at.split('T')[0],
-              updated_at: projects.updated_at.split('T')[0]
+            const response = await axios.get(`http://127.0.0.1:8000/api/getAboutClub/${clubId}`);
+            const about = response.data.map((about) => ({
+              ...about,
+              created_at: about.created_at.split('T')[0],
+              updated_at: about.updated_at.split('T')[0]
             }));
-            setData(projects);
+            setData(about);
             setLoading(false);
           } catch (error) {
             console.error('Error: ', error);
@@ -241,7 +257,7 @@ function GeneralAboutUsMaintenance() {
       );
       const dataWithKeys = filteredData.map((item) => ({
         ...item,
-        key: item.project_id,
+        key: item.club_id,
       }));
       setData(dataWithKeys);
     }
@@ -249,7 +265,7 @@ function GeneralAboutUsMaintenance() {
 
   const dataWithKeys = data.map((item) => ({
     ...item,
-    key: item.project_id,
+    key: item.club_id,
   }));
 
   const tableProps = {
@@ -277,11 +293,14 @@ function GeneralAboutUsMaintenance() {
   const onFinish = async (values) => {
     try {
       const formData = new FormData();
-      formData.append('image', fileList[0]?.originFileObj);
-      formData.append('project_description', values.project_content);
-      formData.append('project_title', values.project_title);
+      formData.append('club_name', values.club_name);
+      formData.append('cover_image', coverImageFileList[0]?.originFileObj);
+      formData.append('vision_content', values.vision_content);
+      formData.append('logo', logoFileList[0]?.originFileObj);
+      formData.append('mission_content', values.mission_content);
+      formData.append('post_image', postImageFileList[0]?.originFileObj);
   
-      const response = await fetch(`http://127.0.0.1:8000/api/updateProjects/${selectedProjectId}?_method=POST`, {
+      const response = await fetch(`http://127.0.0.1:8000/api/updateAbout/${selectedAboutId}?_method=POST`, {
         method: 'POST',
         body: formData,
       });
@@ -295,13 +314,13 @@ function GeneralAboutUsMaintenance() {
             console.log(`Fetching data for clubId: ${clubId}`);
             try {
               setLoading(true);
-              const response = await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/${clubId}`);
-              const projects = response.data.map((projects) => ({
-                ...projects,
-                created_at: projects.created_at.split('T')[0],
-                updated_at: projects.updated_at.split('T')[0]
+              const response = await axios.get(`http://127.0.0.1:8000/api/getAboutClub/${clubId}`);
+              const about = response.data.map((about) => ({
+                ...about,
+                // created_at: about.created_at.split('T')[0],
+                // updated_at: about.updated_at.split('T')[0]
               }));
-              setData(projects);
+              setData(about);
               setLoading(false);
             } catch (error) {
               console.error('Error: ', error);
@@ -313,20 +332,22 @@ function GeneralAboutUsMaintenance() {
     
         fetchData();
         formRef.current.resetFields();
-        setFileList([]);
+        setCoverImageFileList([]);
+        setLogoFileList([]);
+        setPostImageFileList([]);
       } else {
         message.error(data.messages.message);
       }
     } catch (error) {
       console.error('Error:', error);
-      message.error('Failed to update project.');
+      message.error('Failed to update about contents.');
     }
   };  
 
   return (
     <>
       <Drawer
-        title="Edit Project Contents"
+        title="Edit About Contents"
         width={500}
         onClose={onClose}
         open={open}
@@ -337,40 +358,28 @@ function GeneralAboutUsMaintenance() {
         }}
       >
         <Form layout="vertical" onFinish={onFinish} ref={formRef} >
-          <div className='test-cont'>
+          <div className='test-cont-1'>
           <Col span={24}>
             <Form.Item
-              name="project_title"
-              label="Project Title"
+              name="club_name"
+              label="Club Name"
               rules={[
                 {
                   required: true,
-                  message: 'Please enter a project title content',
+                  message: 'Please enter the club name',
                 },
               ]}
             >
-              <Input name="title" placeholder="Enter post title" />
+              <Input name="title" placeholder="Enter club name" />
             </Form.Item>
           
             <Form.Item
-              name="project_content"
-              label="Project Content"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter a project description content',
-                },
-              ]}
-            >
-              <Input.TextArea rows={12} name="project_description" placeholder="Enter project content" />
-            </Form.Item>
-            <Form.Item
-              name={"image"}
+              name={"cover_image"}
               valuePropName='fileList'
               getValueFromEvent={(event)=>{
                 return event?.fileList;
               }}
-              label="Image"
+              label="Cover Image"
               rules={[
                 {
                   required: true,
@@ -379,7 +388,7 @@ function GeneralAboutUsMaintenance() {
                 {
                   validator(_,fileList){
                     return new Promise((resolve, reject) =>{
-                      if(fileList && fileList[0].size > 900000){
+                      if(fileList && fileList[0].size > 9999999){
                         reject('File size exceeded the accepted limit');
                       } else{
                         resolve("Success");
@@ -392,12 +401,12 @@ function GeneralAboutUsMaintenance() {
               <Upload
                 maxCount={1}
                 listType="picture-card"
-                fileList={fileList}
+                fileList={coverImageFileList}
                 onPreview={handlePreview}
-                onChange={handleChange}
+                onChange={({ fileList: newFileList }) => setCoverImageFileList(newFileList)}
                 beforeUpload={(file) => {
                   return new Promise((resolve, reject) => {
-                    if (file.size > 900000) {
+                    if (file.size > 9999999) {
                       reject('File size exceeded the accepted limit');
                     } else {
                       resolve();
@@ -412,6 +421,127 @@ function GeneralAboutUsMaintenance() {
                 {uploadButton}
               </Upload>
             </Form.Item>
+
+            <Form.Item
+              name="vision_content"
+              label="Vision Content"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a vision content',
+                },
+              ]}
+            >
+              <Input.TextArea rows={12} name="vision_content" placeholder="Enter vision content" />
+            </Form.Item>
+            <Form.Item
+              name={"logo"}
+              valuePropName='fileList'
+              getValueFromEvent={(event)=>{
+                return event?.fileList;
+              }}
+              label="Logo"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please upload an image',
+                },
+                {
+                  validator(_,fileList){
+                    return new Promise((resolve, reject) =>{
+                      if(fileList && fileList[0].size > 9999999){
+                        reject('File size exceeded the accepted limit');
+                      } else{
+                        resolve("Success");
+                      }
+                    });
+                  }
+                }
+              ]}
+            >
+              <Upload
+                maxCount={1}
+                listType="picture-card"
+                fileList={logoFileList}
+                onPreview={handlePreview}
+                onChange={({ fileList: newFileList }) => setLogoFileList(newFileList)}
+                beforeUpload={(file) => {
+                  return new Promise((resolve, reject) => {
+                    if (file.size > 9999999) {
+                      reject('File size exceeded the accepted limit');
+                    } else {
+                      resolve();
+                    }
+                  });
+                }}
+                customRequest={({ file, onSuccess }) => {
+                  handleChange({ file });
+                  onSuccess();
+                }}
+              >
+                {uploadButton}
+              </Upload>
+              </Form.Item>
+              <Form.Item
+              name="mission_content"
+              label="Mission Content"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a mission content',
+                },
+              ]}
+            >
+              <Input.TextArea rows={12} name="mission_content" placeholder="Enter mission content" />
+            </Form.Item>
+            <Form.Item
+              name={"post_image"}
+              valuePropName='fileList'
+              getValueFromEvent={(event)=>{
+                return event?.fileList;
+              }}
+              label="Post Image"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please upload an image',
+                },
+                {
+                  validator(_,fileList){
+                    return new Promise((resolve, reject) =>{
+                      if(fileList && fileList[0].size > 9999999){
+                        reject('File size exceeded the accepted limit');
+                      } else{
+                        resolve("Success");
+                      }
+                    });
+                  }
+                }
+              ]}
+            >
+              <Upload
+                maxCount={1}
+                listType="picture-card"
+                fileList={postImageFileList}
+                onPreview={handlePreview}
+                onChange={({ fileList: newFileList }) => setPostImageFileList(newFileList)}
+                beforeUpload={(file) => {
+                  return new Promise((resolve, reject) => {
+                    if (file.size > 9999999) {
+                      reject('File size exceeded the accepted limit');
+                    } else {
+                      resolve();
+                    }
+                  });
+                }}
+                customRequest={({ file, onSuccess }) => {
+                  handleChange({ file });
+                  onSuccess();
+                }}
+              >
+                {uploadButton}
+              </Upload>
+              </Form.Item>
             {previewImage && (
                 <Image
                   wrapperStyle={{

@@ -134,6 +134,19 @@ function GeneralProjectsMaintenance() {
       render: (text, record) => (
         <Space size="middle">
           <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#C40C0C',
+                        }
+                    }
+                }}
+            >
+                <Button type='primary' className='action-del1' size='large' icon={<DeleteOutlined />}>
+                    {/* <EditOutlined className='action-edit' /> */}
+                </Button>
+          </ConfigProvider>
+          <ConfigProvider
             theme={{
               components: {
                 Button: {
