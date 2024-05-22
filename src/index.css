@@ -497,7 +497,7 @@
 .search-container2{
   display: flex;
   justify-content: space-evenly;
-  padding: 20px 0px 10px 0px;
+  padding: 20px 20px 10px 20px;
 }
 
 .search{
@@ -506,7 +506,7 @@
 }
 
 .search2{
-  width: 96%;
+  width: 90%;
 }
 
 .action-del{

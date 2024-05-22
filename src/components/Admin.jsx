@@ -27,6 +27,7 @@ import GeneralHomeMaintenance from './GeneralHomeMaintenance';
 import GeneralAnnouncementMaintenance from './GeneralAnnouncementMaintenance';
 import GeneralProjectsMaintenance from './GeneralProjectsMaintenance';
 import GeneralAboutUsMaintenance from './GeneralAboutUsMaintenance';
+import GeneralOfficerMaintenance from './GeneralOfficerMaintenance';
 
 
 const Dashboard = () => <div>Dashboard Content</div>;
@@ -285,7 +286,7 @@ function Admin(){
       case 'general-about':
         return <GeneralAboutUsMaintenance />;
       case 'general-officers':
-        return <Officers />;
+        return <GeneralOfficerMaintenance />;
       default:
         return <Dashboard />;
     }
