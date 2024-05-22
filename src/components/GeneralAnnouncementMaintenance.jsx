@@ -29,6 +29,7 @@ function GeneralAnnouncementMaintenance() {
   const [bordered, setBordered] = useState(true);
   const [loading, setLoading] = useState(false); /////   IMPORTANT    //////
   const [clubId, setClubId] = useState(null); /////   IMPORTANT    //////
+  const [userId, setUserId] = useState(null); /////   IMPORTANT    //////
   const [size, setSize] = useState('large');
   const [expandable, setExpandable] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
@@ -41,6 +42,78 @@ function GeneralAnnouncementMaintenance() {
   const [ellipsis, setEllipsis] = useState(true);
   const [data, setData] = useState([]); /////   IMPORTANT    //////
   const [selectedAnnouncementId, setSelectedAnnouncementId] = useState(null);
+
+  //ADD COMPONENTS
+  const [modalOpen, setModalOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const handleCancel = () => {
+    console.log('Clicked cancel button');
+    setModalOpen(false);
+  };
+
+  const showModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleOk = async (event) => {
+    event.preventDefault();
+    setConfirmLoading(true);
+    try {
+        const values = await formRef.current.validateFields();
+        // Create form data to send file and other inputs
+        const formData = new FormData();
+        formData.append('club_id', clubId);
+        formData.append('title', values.title);
+        formData.append('description', values.description);
+        formData.append('cover_image', fileList[0]?.originFileObj);
+        formData.append('created_by', userId);
+  
+        // Perform API call
+        const response = await fetch(`http://127.0.0.1:8000/api/addAnnouncement`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+  
+        if (response.ok) {
+          message.success(data.messages.message);
+          setModalOpen(false);
+          formRef.current.resetFields();
+          setFileList([]);
+        } else {
+          message.error(data.messages.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        message.error('Validation failed or API error');
+      } finally {
+        const fetchData = async () => {
+            if (clubId !== null) {
+              console.log(`Fetching data for clubId: ${clubId}`);
+              try {
+                setLoading(true);
+                const response = await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/${clubId}`);
+                const announcement = response.data.map((announcement) => ({
+                  ...announcement,
+                  created_at: announcement.created_at.split('T')[0],
+                  updated_at: announcement.updated_at.split('T')[0]
+                }));
+                setData(announcement);
+                setLoading(false);
+              } catch (error) {
+                console.error('Error: ', error);
+                setLoading(false);
+              }
+            }
+          };
+      
+          fetchData();
+        setConfirmLoading(false);
+      }
+
+  };
 
   const formRef = useRef(null);
 
@@ -185,8 +258,9 @@ function GeneralAnnouncementMaintenance() {
       try {
         const userInfo = JSON.parse(storedUserInfo);
 
-        if (userInfo.response && userInfo.response.club_id !== undefined) {
+        if (userInfo.response && userInfo.response.club_id !== undefined && userInfo.response.user_id !== undefined) {
           setClubId(userInfo.response.club_id);
+          setUserId(userInfo.response.user_id);
         } else {
           console.log('club_id not found in userInfo.response');
         }
@@ -460,6 +534,113 @@ function GeneralAnnouncementMaintenance() {
       
       <div className='search-container2'>
         <Search placeholder="input search text" className='search2' size='large' onSearch={onSearch} enterButton />
+        <Button size='large' type="primary" onClick={showModal}>
+          Add Announcement
+        </Button>
+        <Modal
+          title="Add Announcement"
+          open={modalOpen}
+          centered
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+        >
+          <Form layout="vertical" onFinish={onFinish} ref={formRef} >
+          <div className='test-cont'>
+          <Col span={24}>
+            <Form.Item
+              name="title"
+              label="Announcement Title"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter an announcement title content',
+                },
+              ]}
+            >
+              <Input name="title" placeholder="Enter post title" />
+            </Form.Item>
+          
+            <Form.Item
+              name="announcement_content"
+              label="Announcement Content"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter an announcement description content',
+                },
+              ]}
+            >
+              <Input.TextArea rows={12} name="description" placeholder="Enter announcement content" />
+            </Form.Item>
+            <Form.Item
+              name={"image"}
+              valuePropName='fileList'
+              getValueFromEvent={(event)=>{
+                return event?.fileList;
+              }}
+              label="Image"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please upload an image',
+                },
+                {
+                  validator(_,fileList){
+                    return new Promise((resolve, reject) =>{
+                      if(fileList && fileList[0].size > 900000){
+                        reject('File size exceeded the accepted limit');
+                      } else{
+                        resolve("Success");
+                      }
+                    });
+                  }
+                }
+              ]}
+            >
+              <Upload
+                maxCount={1}
+                listType="picture-card"
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+                beforeUpload={(file) => {
+                  return new Promise((resolve, reject) => {
+                    if (file.size > 900000) {
+                      reject('File size exceeded the accepted limit');
+                    } else {
+                      resolve();
+                    }
+                  });
+                }}
+                customRequest={({ file, onSuccess }) => {
+                  // Call handleChange to update fileList state
+                  handleChange({ file });
+
+                  // Call onSuccess to inform Ant Design that upload is successful
+                  onSuccess();
+                }}
+              >
+                {uploadButton}
+              </Upload>
+            </Form.Item>
+            {previewImage && (
+                <Image
+                  wrapperStyle={{
+                    display: 'none',
+                  }}
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                  }}
+                  src={previewImage}
+                />
+              )}
+          </Col>
+          </div>
+        </Form>
+        </Modal>
       </div>
 
       <Table
