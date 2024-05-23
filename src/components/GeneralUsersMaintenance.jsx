@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Form from 'react-bootstrap/Form';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom'
 import axios from "axios";
-import { DownOutlined } from '@ant-design/icons';
-import { Radio, Space, Switch, Table, Divider, message, ConfigProvider } from 'antd';
-import { useParams } from 'react-router-dom';
+import { Radio, Space, Switch, Table, Divider, message, ConfigProvider, Select } from 'antd';
 import { Input } from 'antd';
-import { Button, Modal, notification } from 'antd';
+import { Button, Modal, Drawer, notification } from 'antd';
 import {
   SmileOutlined,
   DeleteOutlined,
@@ -90,9 +88,11 @@ function GeneralUsersMaintenance(){
     const [xScroll, setXScroll] = useState('fixed');
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
+    const [selectedUserID, setSelectedUserID] = useState(null);
     const [modalText, setModalText] = useState('Content of the modal');
     const [inputs, setInputs] = useState({ access_level: '0' });
     const navigate = useNavigate();
+    const formRef = useRef(null);
     const showModal = () => {
       setOpen(true);
     };
@@ -144,7 +144,7 @@ function GeneralUsersMaintenance(){
         title: 'Action',
         // key: 'action',
         // sorter: true,
-        render: () => (
+        render: (text, record) => (
           <Space size="middle">
             <ConfigProvider
                 theme={{
@@ -168,9 +168,7 @@ function GeneralUsersMaintenance(){
                     }
                 }}
             >
-                <Button type='primary' className='action-edit1' size='middle' icon={<EditOutlined />}>
-                    {/* <EditOutlined className='action-edit' /> */}
-                </Button>
+                <Button type='primary' onClick={() => showDrawer(record.user_id)} className='action-edit1' size='medium' icon={<EditOutlined />}></Button>
             </ConfigProvider>
             <ConfigProvider
                 theme={{
@@ -188,7 +186,52 @@ function GeneralUsersMaintenance(){
           </Space>
         ),
       },
-  ]
+  ];
+
+  const [defaultFirstName, setDefaultFirstName] = useState("");
+  const [defaultMiddleName, setDefaultMiddleName] = useState("");
+  const [defaultLastName, setDefaultLastName] = useState("");
+  const [defaultNumber, setDefaultNumber] = useState("");
+  const [defaultEmail, setDefaultEmail] = useState("");
+  const [defaultClub, setDefaultClub] = useState("");
+  const [defaultAccess, setDefaultAccess] = useState("");
+
+  // DRAWER ITEMS
+  // const handleChangeEdit = (event) => {
+  //   setDefaultFirstName(event.target.value);
+  //   setDefaultMiddleName(event.target.value);
+  // };
+
+  const { Option } = Select;
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const showDrawer = (userID) => {
+    const fetchData = async () => {
+      const result = await axios.get("http://127.0.0.1:8000/api/getOneUser/"+userID);
+      const users = result.data;
+      const firstName = users.map(user => user.first_name);
+      const middleName = users.map(user => user.middle_name);
+      const lastName = users.map(user => user.last_name);
+      const number = users.map(user => user.number);
+      const clubMember = users.map(user => user.club_id);
+      const accessLevel = users.map(user => user.access_level);
+      const email = users.map(user => user.email);
+      // setDe
+      setDefaultFirstName(firstName);
+      setDefaultMiddleName(middleName);
+      setDefaultLastName(lastName);
+      setDefaultNumber(number);
+      setDefaultEmail(email);
+      setDefaultClub(clubMember);
+      setDefaultAccess(accessLevel);
+    };
+    setSelectedUserID(userID);
+    fetchData();
+    setOpenDrawer(true);
+  };
+
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
 
   const { Search } = Input;
   const onSearch = (value) => {
@@ -258,6 +301,7 @@ function GeneralUsersMaintenance(){
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
         }));
+        
         setData(users);
         setLoading(false);
       } catch (error) {
@@ -425,9 +469,9 @@ function GeneralUsersMaintenance(){
         }
       };
 
-      if (accessLevel) {
-        fetchData();
-      }
+
+      fetchData();
+
 
       navigate('/admin/general-users');
       // openNotification();
@@ -440,10 +484,137 @@ function GeneralUsersMaintenance(){
     }
   };
 
+  // HANDLE SUBMIT
+  const onFinish = async (event) => {
+    event.preventDefault();
+    try {
+      const formData = new FormData();
+      // formData.append('image', fileList[0]?.originFileObj);
+      formData.append('first_name', defaultFirstName);
+      formData.append('middle_name', defaultMiddleName);
+      formData.append('last_name', defaultLastName);
+      formData.append('number', defaultNumber);
+      formData.append('access_level', defaultAccess);
+      formData.append('club_member', defaultClub);
+      formData.append('email', defaultEmail);
+
+      const response = await fetch(`http://127.0.0.1:8000/api/updateUser/${selectedUserID}?_method=POST`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        message.success(data.messages.message);
+        const fetchData = async () => {
+          try {
+            setLoading(true);
+            const response = await axios.get('http://127.0.0.1:8000/api/getUsers/0');
+            const users = response.data.map((user) => ({
+              ...user,
+              full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+            }));
+            setData(users);
+          } catch (error) {
+            console.error('Error: ', error);
+            message.error(response.data.messages.message);
+          } finally {
+            setLoading(false);
+          }
+        };
+  
+        fetchData();
+        setOpenDrawer(false);
+        
+      } else {
+        message.error(data.messages.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      message.error('Failed to update home contents.');
+    }
+  };
+
   return (
     <>
       {contextHolder}
       {contextHolderMsg}
+      <Drawer
+        title="Edit User"
+        width={500}
+        onClose={onClose}
+        open={openDrawer}
+        styles={{
+          body: {
+            paddingBottom: 80,
+          },
+        }}
+      >
+        <Form className='' layout="vertical"  onSubmit={() => onFinish(event)} ref={formRef}>
+        <div className='test-cont'>
+            <Col className='form-col'>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="first_name" className=''>First Name</Form.Label>
+                <Form.Control className='' type="text" name="first_name" id="first_name" onChange={(e) => setDefaultFirstName(e.target.value)} value={defaultFirstName} required placeholder="Enter first name" />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="middle_name" className=''>Middle Name</Form.Label>
+                <Form.Control className='' type="text" name="middle_name" id="middle_name" onChange={(e) => setDefaultMiddleName(e.target.value)} value={defaultMiddleName} placeholder="Enter middle name" />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="last_name" className=''>Last Name</Form.Label>
+                <Form.Control className='' type="text" name="last_name" id="last_name" onChange={(e) => setDefaultLastName(e.target.value)} value={defaultLastName} placeholder="Enter last name" />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="number" className=''>Number</Form.Label>
+                <Form.Control className='' type="number" name="number" id="number" onChange={(e) => setDefaultNumber(e.target.value)} value={defaultNumber} placeholder="Enter number" />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="club_member" className=''>Select Club</Form.Label>
+                <Form.Select name="club_member" id="club_member" onChange={(e) => setDefaultClub(e.target.value)} value={defaultClub} aria-label="Default select example">
+                  <option>Open this select menu</option>
+                  <option value="1">RMMEC</option>
+                  <option value="2">MMEC</option>
+                  <option value="3">LBAEC</option>
+                  <option value="4">RMMLEC</option>
+                  <option value="5">MBEAC</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="access_level" className=''>Access Level</Form.Label>
+                <Form.Select name="access_level" id="access_level" onChange={(e) => setDefaultAccess(e.target.value)} value={defaultAccess} aria-label="Default select example">
+                  <option>Open this select menu</option>
+                  <option value="0">Member</option>
+                  <option value="1">Admin</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="email" className=''>Email</Form.Label>
+                <Form.Control className='' type="text" name="email" id="email" onChange={(e) => setDefaultEmail(e.target.value)} value={defaultEmail} placeholder="Enter email" />
+              </Form.Group>
+            </Col>
+            <Row gutter={16} className='mt-4'>
+            <Col span={12}>
+              <Button htmlType='submit' type="primary" block>
+                Update
+              </Button>
+            </Col>
+            <Col span={12}>
+              <Button onClick={onClose} block>
+                Cancel
+              </Button>
+            </Col>
+          </Row>
+          </div>
+          </Form>
+      </Drawer>
       <div className='search-container'>
         <Search placeholder="input search text" className='search' size='large' onSearch={onSearch} enterButton />
         <Button size='large' type="primary" onClick={showModal}>
@@ -503,12 +674,12 @@ function GeneralUsersMaintenance(){
 
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="email" className=''>Email</Form.Label>
-                <Form.Control className='' type="text" name="email" id="email" onChange={handleChange} defaultValue='' value={inputs.email} placeholder="Enter email" />
+                <Form.Control className='' type="text" name="email" id="email" onChange={handleChange} value={inputs.email} placeholder="Enter email" />
               </Form.Group>
                                         
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="password" className=''>Password</Form.Label>
-                <Form.Control className='' type="password" name="password" id="password" onChange={handleChange} defaultValue='' value={inputs.password} placeholder="Password" />
+                <Form.Control className='' type="password" name="password" id="password" onChange={handleChange} value={inputs.password} placeholder="Password" />
               </Form.Group>
             </Col>
           </Form>

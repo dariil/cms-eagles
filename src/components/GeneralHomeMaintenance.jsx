@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { DownOutlined } from '@ant-design/icons';
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
-import { useParams } from 'react-router-dom';
 import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification } from 'antd';
 import {
   SmileOutlined,
@@ -127,9 +124,7 @@ function GeneralHomeMaintenance() {
               }
             }}
           >
-            <Button type='primary' onClick={showDrawer} className='action-edit1' size='large' icon={<EditOutlined />}>
-              {/* <EditOutlined className='action-edit' /> */}
-            </Button>
+            <Button type='primary' onClick={showDrawer} className='action-edit1' size='large' icon={<EditOutlined />}></Button>
           </ConfigProvider>
           <ConfigProvider
             theme={{
