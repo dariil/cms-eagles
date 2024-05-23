@@ -179,7 +179,7 @@ function GeneralUsersMaintenance(){
                     }
                 }}
             >
-                <Button type='primary' className='action-view1' size='middle' icon={<EyeOutlined />}>
+                <Button type='primary'  onClick={() => showViewDrawer(record.user_id)} className='action-view1' size='middle' icon={<EyeOutlined />}>
                     {/* <EyeOutlined className='action-view' /> */}
                 </Button>
             </ConfigProvider>
@@ -188,6 +188,50 @@ function GeneralUsersMaintenance(){
       },
   ];
 
+  //VIEW DRAWER
+  const [viewFirstName, setViewFirstName] = useState('');
+  const [viewMiddleName, setViewMiddleName] = useState('');
+  const [viewLastName, setViewLastName] = useState('');
+  const [viewNumber, setViewNumber] = useState('');
+  const [viewEmail, setViewEmail] = useState('');
+  const [viewClub, setViewClub] = useState('');
+  const [viewAccessLevel, setViewAccessLevel] = useState('');
+
+  const [openViewDrawer, setOpenViewDrawer] = useState(false);
+  const showViewDrawer = (userID) => {
+    const fetchData = async () => {
+      const result = await axios.get("http://127.0.0.1:8000/api/getOneUser/"+userID);
+      const users = result.data;
+      const firstName = users.map(user => user.first_name);
+      const middleName = users.map(user => user.middle_name);
+      const lastName = users.map(user => user.last_name);
+      const number = users.map(user => user.number);
+      const clubMember = users.map(user => user.club_id);
+      const accessLevel = users.map(user => user.access_level);
+      const email = users.map(user => user.email);
+
+      setViewFirstName(firstName);
+      setViewMiddleName(middleName);
+      setViewLastName(lastName);
+      setViewNumber(number);
+      setViewEmail(email);
+      setViewClub(clubMember);
+      setViewAccessLevel(accessLevel);
+
+    };
+    setSelectedUserID(userID);
+    fetchData();
+    setOpenViewDrawer(true);
+  }
+
+  const DescriptionItem = ({ title, content }) => (
+    <div className="site-description-item-profile-wrapper">
+      <p className="site-description-item-profile-p-label">{title}:</p>
+      {content}
+    </div>
+  );
+
+  //EDIT DRAWER
   const [defaultFirstName, setDefaultFirstName] = useState("");
   const [defaultMiddleName, setDefaultMiddleName] = useState("");
   const [defaultLastName, setDefaultLastName] = useState("");
@@ -195,12 +239,6 @@ function GeneralUsersMaintenance(){
   const [defaultEmail, setDefaultEmail] = useState("");
   const [defaultClub, setDefaultClub] = useState("");
   const [defaultAccess, setDefaultAccess] = useState("");
-
-  // DRAWER ITEMS
-  // const handleChangeEdit = (event) => {
-  //   setDefaultFirstName(event.target.value);
-  //   setDefaultMiddleName(event.target.value);
-  // };
 
   const { Option } = Select;
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -231,6 +269,7 @@ function GeneralUsersMaintenance(){
 
   const onClose = () => {
     setOpenDrawer(false);
+    setOpenViewDrawer(false)
   };
 
   const { Search } = Input;
@@ -540,6 +579,50 @@ function GeneralUsersMaintenance(){
     <>
       {contextHolder}
       {contextHolderMsg}
+      <Drawer
+        title="User Details"
+        width={550}
+        onClose={onClose}
+        open={openViewDrawer}
+        
+      >
+        <p className="site-description-item-profile-p">Personal</p>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="First Name" content={viewFirstName} />
+          </Col>
+
+          <Col span={12}>
+            <DescriptionItem title="Contact Number" content={viewNumber}/>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="Middle Name" content={viewMiddleName} />
+          </Col>
+          <Col span={12}>
+            <DescriptionItem title="Email" content={viewEmail} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="Last Name" content={viewLastName} />
+          </Col>
+        </Row>
+        <Divider />
+        <p className="site-description-item-profile-p">Club Membership</p>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="Club" content={viewClub} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="Access Level" content={viewAccessLevel} />
+          </Col>
+        </Row>
+        <Divider />
+      </Drawer>
       <Drawer
         title="Edit User"
         width={500}
