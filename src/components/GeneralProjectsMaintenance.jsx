@@ -6,13 +6,12 @@ import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload }
 import { useParams } from 'react-router-dom';
 import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification } from 'antd';
 import {
-  SmileOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  InboxOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import Projects from './Projects';
 
 // HANDLE IMAGE PREVIEW
 const getBase64 = (file) =>
@@ -133,6 +132,13 @@ function GeneralProjectsMaintenance() {
     scroll.x = '80vw';
   }
 
+  //VIEW DRAWER
+  const [openViewDrawer, setOpenViewDrawer] = useState(false);
+  const showViewDrawer = () => {
+    setOpenViewDrawer(true);
+  }
+
+
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
@@ -142,6 +148,7 @@ function GeneralProjectsMaintenance() {
   };
   const onClose = () => {
     setOpen(false);
+    setOpenViewDrawer(false);
   };
 
   //UPLOAD HANDLING COMPONENTS
@@ -241,7 +248,7 @@ function GeneralProjectsMaintenance() {
               }
             }}
           >
-            <Button type='primary' className='action-view1' size='large' icon={<EyeOutlined />}>
+            <Button type='primary'  onClick={() => showViewDrawer()} className='action-view1' size='large' icon={<EyeOutlined />}>
               {/* <EyeOutlined className='action-view' /> */}
             </Button>
           </ConfigProvider>
@@ -412,6 +419,15 @@ function GeneralProjectsMaintenance() {
 
   return (
     <>
+    <Drawer
+        // title="Admin Details"
+        width={'100%'}
+        onClose={onClose}
+        open={openViewDrawer}
+        
+      >
+        <Projects></Projects>
+      </Drawer>
       <Drawer
         title="Edit Project Contents"
         width={500}
