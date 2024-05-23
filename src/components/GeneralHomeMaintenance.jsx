@@ -10,6 +10,7 @@ import {
   InboxOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import Home from './Home';
 
 // HANDLE IMAGE PREVIEW
 const getBase64 = (file) =>
@@ -56,6 +57,12 @@ function GeneralHomeMaintenance() {
     scroll.x = '80vw';
   }
 
+  //VIEW DRAWER
+  const [openViewDrawer, setOpenViewDrawer] = useState(false);
+  const showViewDrawer = () => {
+    setOpenViewDrawer(true);
+  }
+
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
@@ -64,6 +71,7 @@ function GeneralHomeMaintenance() {
   };
   const onClose = () => {
     setOpen(false);
+    setOpenViewDrawer(false);
   };
 
   //UPLOAD HANDLING COMPONENTS
@@ -135,7 +143,7 @@ function GeneralHomeMaintenance() {
               }
             }}
           >
-            <Button type='primary' className='action-view1' size='large' icon={<EyeOutlined />}>
+            <Button type='primary'  onClick={() => showViewDrawer()} className='action-view1' size='large' icon={<EyeOutlined />}>
               {/* <EyeOutlined className='action-view' /> */}
             </Button>
           </ConfigProvider>
@@ -304,6 +312,15 @@ function GeneralHomeMaintenance() {
 
   return (
     <>
+      <Drawer
+        // title="Admin Details"
+        width={'100%'}
+        onClose={onClose}
+        open={openViewDrawer}
+        
+      >
+        <Home></Home>
+      </Drawer>
       <Drawer
         title="Edit Home Contents"
         width={500}
