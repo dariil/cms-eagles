@@ -13,6 +13,7 @@ import {
   InboxOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import About from './About';
 
 // HANDLE IMAGE PREVIEW
 const getBase64 = (file) =>
@@ -131,6 +132,12 @@ function GeneralOfficerMaintenance() {
     scroll.x = '80vw';
   }
 
+  //VIEW DRAWER
+  const [openViewDrawer, setOpenViewDrawer] = useState(false);
+  const showViewDrawer = () => {
+    setOpenViewDrawer(true);
+  }
+
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
@@ -141,6 +148,7 @@ function GeneralOfficerMaintenance() {
   };
   const onClose = () => {
     setOpen(false);
+    setOpenViewDrawer(false);
   };
 
   //UPLOAD HANDLING COMPONENTS
@@ -236,7 +244,7 @@ function GeneralOfficerMaintenance() {
               }
             }}
           >
-            <Button type='primary' className='action-view1' size='large' icon={<EyeOutlined />}>
+            <Button type='primary'  onClick={() => showViewDrawer()} className='action-view1' size='large' icon={<EyeOutlined />}>
               {/* <EyeOutlined className='action-view' /> */}
             </Button>
           </ConfigProvider>
@@ -407,6 +415,15 @@ function GeneralOfficerMaintenance() {
 
   return (
     <>
+    <Drawer
+        // title="Admin Details"
+        width={'100%'}
+        onClose={onClose}
+        open={openViewDrawer}
+        
+      >
+        <About></About>
+      </Drawer>
       <Drawer
         title="Edit Officer Details"
         width={500}
