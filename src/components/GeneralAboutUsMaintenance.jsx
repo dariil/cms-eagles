@@ -13,6 +13,7 @@ import {
   InboxOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import About from './About';
 
 // HANDLE IMAGE PREVIEW
 const getBase64 = (file) =>
@@ -60,6 +61,12 @@ function GeneralAboutUsMaintenance() {
     scroll.x = '80vw';
   }
 
+  //VIEW DRAWER
+  const [openViewDrawer, setOpenViewDrawer] = useState(false);
+  const showViewDrawer = () => {
+    setOpenViewDrawer(true);
+  }
+
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
@@ -72,6 +79,7 @@ function GeneralAboutUsMaintenance() {
     setCoverImageFileList([]);
     setLogoFileList([]);
     setPostImageFileList([]);
+    setOpenViewDrawer(false);
   };
 
   // useEffect(() => {
@@ -171,7 +179,7 @@ function GeneralAboutUsMaintenance() {
               }
             }}
           >
-            <Button type='primary' className='action-view1' size='large' icon={<EyeOutlined />}>
+            <Button type='primary'  onClick={() => showViewDrawer()} className='action-view1' size='large' icon={<EyeOutlined />}>
               {/* <EyeOutlined className='action-view' /> */}
             </Button>
           </ConfigProvider>
@@ -346,6 +354,15 @@ function GeneralAboutUsMaintenance() {
 
   return (
     <>
+    <Drawer
+        // title="Admin Details"
+        width={'100%'}
+        onClose={onClose}
+        open={openViewDrawer}
+        
+      >
+        <About></About>
+      </Drawer>
       <Drawer
         title="Edit About Contents"
         width={500}
