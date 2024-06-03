@@ -1,15 +1,33 @@
-import React from 'react';
+import axios from "axios";
+import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header'
 import Footer from './Footer'
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 
 function About(){
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        getData();
+    }, [])
+
+    async function getData(){
+        try {
+            await axios.get(`http://127.0.0.1:8000/api/getAboutClub/0`).then(function(response){
+            console.log(response.data);
+            setData(response.data[0]);
+            });
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    }
+
     return(
         <>
         <Header></Header>
         <div className='about-main-container'>
-            <div className="about-image-container" style={{ backgroundImage: 'url(/assets/eagle-bg.jpg)' }}>
-                <h1>The Fraternal Order of Ealges - Philippine Eagles</h1>
+            <div className="about-image-container" style={{ backgroundImage: `url(http://localhost:8000/${data.cover_image})` }}>
+                <h1>{data.club_name}</h1>
             </div>
 
         </div>
@@ -22,7 +40,7 @@ function About(){
                                 <h2 className='font-weight-bold font-spcase-large'>Our Vision</h2>
                                 <br></br>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    {data.vision_content}
                                 </p>
                                 <br></br>
                             </Col>
@@ -34,16 +52,16 @@ function About(){
                         </Row>
                     </Col>
                     <Col lg={6} md={12} className="mb-3 mb-lg-0">
-                        <Image src="/assets/eagles-nobg-logo.png" fluid className="img-fluid rounded-lg" />
+                        <Image src={"http://localhost:8000/"+data.club_logo} fluid className="img-fluid rounded-lg" />
                     </Col>
                 </Row>
             </Container>
             <div className='our-mission-main-container'>
-                <div className="blog" style={{ backgroundImage: 'url(/assets/placeholder_img.png)' }}></div>
+                <div className="blog" style={{ backgroundImage: `url(http://localhost:8000/${data.club_post_image})` }}></div>
                 <div className='our-mission-text-container'>
                 <h2 className='font-weight-bold font-spcase-large'>Our Mission</h2>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    {data.mission_content}
                 </p>
                 </div>
             </div>
