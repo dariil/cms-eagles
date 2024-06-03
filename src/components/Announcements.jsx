@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from "axios";
+import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header'
 import Footer from './Footer'
 import Slider from 'react-slick';
@@ -7,6 +8,41 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 function Announcements(){
+    const [latestAnnouncement, setLatestAnnouncement] = useState([]); /////   IMPORTANT    //////
+    const [data, setData] = useState([]); /////   IMPORTANT    //////
+
+    useEffect(() =>{
+        getLatestAnnouncement();
+        getData();
+    }, []);
+
+    async function getLatestAnnouncement(){
+        try {
+            await axios.get(`http://127.0.0.1:8000/api/getRecentAnnouncement/0`).then(function(response){
+            console.log(response.data[0]);
+            setLatestAnnouncement(response.data[0]);
+            });
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    }
+
+    async function getData(){
+        try {
+            await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/0`).then(function(response){
+            // console.log(response.data);
+            setData(response.data);
+            });
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    }
+
+    useEffect(() => {
+        console.log(latestAnnouncement.title);
+        // console.log(data[1].title);
+    }, [data]);
+
     // const PrevArrow = (props) => {
     //     const { className, onClick } = props;
     //     return (
@@ -31,18 +67,11 @@ function Announcements(){
         infinite: true,
         speed: 500,
         slidesToShow: 3,
-        slidesToScroll: 4,
+        slidesToScroll: 3,
         initialSlide: 0,
         responsive: [
-          {
-            // breakpoint: 1439,
-            settings: {
-              slidesToShow: 3,
-              slidesToScroll: 3,
-              infinite: true,
-              dots: true
-            }
-          },
+          
+          
           {
             breakpoint: 1439,
             settings: {
@@ -59,8 +88,6 @@ function Announcements(){
             }
           }
         ],
-        // prevArrow: <PrevArrow />,
-        // nextArrow: <NextArrow />
       };
 
     return(
@@ -70,17 +97,24 @@ function Announcements(){
                 <Container className='w-75 home-container' fluid>
                     <Row className="align-items-center justify-content-center justify-content-lg-evenly">
                         <Col lg={6} md={12} className="mb-3 mb-lg-0">
-                        <Image src="/assets/philippine-flag-eagle.png" fluid className="img-fluid rounded-lg" />
+                        <Image src={"http://localhost:8000/"+latestAnnouncement.cover_image} fluid className="img-fluid rounded-lg" />
                         </Col>
                         <Col lg={6} md={12}>
                         <Row className="text-center text-md-start">
                             <Col>
                             <h2 className='font-weight-bold font-spcase-large'>Latest News</h2>
                             <br></br>
-                            <h2 className='font-weight-bold font-size-large'>November 10, 2023</h2>
+                            <h2 className='font-weight-bold font-size-large'>
+                            {latestAnnouncement && latestAnnouncement.created_at && (
+                                <>
+                                    <h2 className='font-weight-bold font-size-large'>{latestAnnouncement.created_at.split('T')[0]}</h2>
+                                    <br />
+                                </>
+                            )}    
+                            </h2>
                             <br></br>
                             <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            {latestAnnouncement.description}
                             </p>
                             <br></br>
                             </Col>
@@ -97,82 +131,22 @@ function Announcements(){
                 <div className='carousel-main-container'>
                 <div className='carousel-container'>
                     <Slider {...settings}>
-                    <div className='box'>
-                        {/* <img className='announcement-img' src="/assets/placeholder_img.png"></img> */}
-                        <div className="blog-post-image" style={{ backgroundImage: 'url(assets/placeholder_img.png)' }}></div>
-                        <h3 className='font-weight-bold mt-3'>Title here</h3>
-                        <div className='announcement-content-container'>
-                            <p className='announcment-content'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                        <div className='read-more-container mt-4'>
-                            <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                        </div>
-                    </div>
-                    <div className='box'>
-                        {/* <img className='announcement-img' src="/assets/placeholder_img.png"></img> */}
-                        <div className="blog-post-image" style={{ backgroundImage: 'url(assets/placeholder_img.png)' }}></div>
-                        <h3 className='font-weight-bold mt-3'>Title here</h3>
-                        <div className='announcement-content-container'>
-                            <p className='announcment-content'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                        <div className='read-more-container mt-4'>
-                            <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                        </div>
-                    </div>
-                    <div className='box'>
-                        {/* <img className='announcement-img' src="/assets/placeholder_img.png"></img> */}
-                        <div className="blog-post-image" style={{ backgroundImage: 'url(assets/placeholder_img.png)' }}></div>
-                        <h3 className='font-weight-bold mt-3'>Title here</h3>
-                        <div className='announcement-content-container'>
-                            <p className='announcment-content'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                        <div className='read-more-container mt-4'>
-                            <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                        </div>
-                    </div>
-                    <div className='box'>
-                        {/* <img className='announcement-img' src="/assets/placeholder_img.png"></img> */}
-                        <div className="blog-post-image" style={{ backgroundImage: 'url(assets/placeholder_img.png)' }}></div>
-                        <div className='announcement-content-container'>
-                            <p className='announcment-content'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                        <div className='read-more-container mt-4'>
-                            <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                        </div>
-                    </div>
-                    <div className='box'>
-                        {/* <img className='announcement-img' src="/assets/placeholder_img.png"></img> */}
-                        <div className="blog-post-image" style={{ backgroundImage: 'url(assets/placeholder_img.png)' }}></div>
-                        <h3 className='font-weight-bold mt-3'>Title here</h3>
-                        <div className='announcement-content-container'>
-                            <p className='announcment-content'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                        <div className='read-more-container mt-4'>
-                            <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                        </div>
-                    </div>
-                    <div className='box'>
-                        {/* <img className='announcement-img' src="/assets/placeholder_img.png"></img> */}
-                        <div className="blog-post-image" style={{ backgroundImage: 'url(assets/placeholder_img.png)' }}></div>
-                        <h3 className='font-weight-bold mt-3'>Title here</h3>
-                        <div className='announcement-content-container'>
-                            <p className='announcment-content'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                        <div className='read-more-container mt-4'>
-                            <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                        </div>
-                    </div>
-                    <div className='box'>
-                        {/* <img className='announcement-img' src="/assets/placeholder_img.png"></img> */}
-                        <div className="blog-post-image" style={{ backgroundImage: 'url(assets/placeholder_img.png)' }}></div>
-                        <h3 className='font-weight-bold mt-3'>Title here</h3>
-                        <div className='announcement-content-container'>
-                            <p className='announcment-content'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                        <div className='read-more-container mt-4'>
-                            <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                        </div>
-                    </div>
+                        {
+                            data.map((item) => (
+                                <div className='box'>
+                                    <div className="blog-post-image" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
+                                    <h3 className='font-weight-bold mt-3'>{item.title}</h3>
+                                    <div className='announcement-content-container'>
+                                        <p className='announcment-content'>
+                                            {item.description}
+                                        </p>
+                                    </div>
+                                    <div className='read-more-container mt-4'>
+                                        <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
+                                    </div>
+                                </div>
+                            ))
+                        }
                     </Slider>
                 </div>
                 </div>
