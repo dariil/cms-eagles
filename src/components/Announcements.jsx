@@ -132,8 +132,8 @@ function Announcements(){
                 <div className='carousel-container'>
                     <Slider {...settings}>
                         {
-                            data.map((item) => (
-                                <div className='box'>
+                            data.map((item, index) => (
+                                <div className='box' key={index}>
                                     <div className="blog-post-image" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
                                     <h3 className='font-weight-bold mt-3'>{item.title}</h3>
                                     <div className='announcement-content-container'>
