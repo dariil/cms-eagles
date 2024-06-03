@@ -4,12 +4,13 @@ import axios from "axios";
 import { DownOutlined } from '@ant-design/icons';
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
 import { useParams } from 'react-router-dom';
-import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification, Popconfirm } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
   PlusOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import Projects from './Projects';
 
@@ -64,7 +65,7 @@ function GeneralProjectsMaintenance() {
         const formData = new FormData();
         formData.append('club_id', clubId);
         formData.append('project_title', values.project_title);
-        formData.append('project_description', values.project_content);
+        formData.append('project_description', values.project_description);
         formData.append('cover_image', fileList[0]?.originFileObj);
         formData.append('created_by', userId);
   
@@ -222,9 +223,22 @@ function GeneralProjectsMaintenance() {
                     }
                 }}
             >
+                <Popconfirm
+                title="Delete the task"
+                description="Are you sure to delete this task?"
+                onConfirm={() => deleteConfirm(record.project_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: 'red',
+                    }}
+                  />
+                }
+              >
                 <Button type='primary' className='action-del1' size='large' icon={<DeleteOutlined />}>
                     {/* <EditOutlined className='action-edit' /> */}
                 </Button>
+              </Popconfirm>
           </ConfigProvider>
           <ConfigProvider
             theme={{
@@ -257,6 +271,38 @@ function GeneralProjectsMaintenance() {
       ),
     },
   ]
+
+  //DELETE FUNCTION
+  const deleteConfirm = async (projectID) => {
+    setSelectedProjectId(projectID);
+    await axios.delete('http://localhost:8000/api/deleteProject/'+projectID).then(function(response){
+            console.log(response.data);
+            message.success(response.data.messages.message);
+            // getUsers();
+    });
+
+    const fetchData = async () => {
+      if (clubId !== null) {
+        console.log(`Fetching data for clubId: ${clubId}`);
+        try {
+          setLoading(true);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/${clubId}`);
+          const projects = response.data.map((projects) => ({
+            ...projects,
+            created_at: projects.created_at.split('T')[0],
+            updated_at: projects.updated_at.split('T')[0]
+          }));
+          setData(projects);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error: ', error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem('user-info');

@@ -4,12 +4,13 @@ import axios from "axios";
 import { DownOutlined } from '@ant-design/icons';
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
 import { useParams } from 'react-router-dom';
-import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification, Popconfirm } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
   PlusOutlined,
+  QuestionCircleOutlined
 } from '@ant-design/icons';
 import Announcements from './Announcements';
 
@@ -64,12 +65,12 @@ function GeneralAnnouncementMaintenance() {
         const formData = new FormData();
         formData.append('club_id', clubId);
         formData.append('title', values.title);
-        formData.append('description', values.description);
+        formData.append('description', values.announcement_content);
         formData.append('cover_image', fileList[0]?.originFileObj);
         formData.append('created_by', userId);
   
         // Perform API call
-        const response = await fetch(`http://127.0.0.1:8000/api/addAnnouncement`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/addAnnouncement/${clubId}`, {
           method: 'POST',
           body: formData,
         });
@@ -221,9 +222,22 @@ function GeneralAnnouncementMaintenance() {
                     }
                 }}
             >
+                <Popconfirm
+                title="Delete the task"
+                description="Are you sure to delete this task?"
+                onConfirm={() => deleteConfirm(record.announcement_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: 'red',
+                    }}
+                  />
+                }
+              >
                 <Button type='primary' className='action-del1' size='large' icon={<DeleteOutlined />}>
                     {/* <EditOutlined className='action-edit' /> */}
                 </Button>
+              </Popconfirm>
           </ConfigProvider>
           <ConfigProvider
             theme={{
@@ -256,6 +270,38 @@ function GeneralAnnouncementMaintenance() {
       ),
     },
   ]
+
+  //DELETE FUNCTION
+  const deleteConfirm = async (announcementID) => {
+    setSelectedAnnouncementId(announcementID);
+    await axios.delete('http://localhost:8000/api/deleteAnnouncement/'+announcementID).then(function(response){
+            console.log(response.data);
+            message.success(response.data.messages.message);
+            // getUsers();
+    });
+    
+    const fetchData = async () => {
+      if (clubId !== null) {
+        console.log(`Fetching data for clubId: ${clubId}`);
+        try {
+          setLoading(true);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/${clubId}`);
+          const announcements = response.data.map((announcement) => ({
+            ...announcement,
+            created_at: announcement.created_at.split('T')[0],
+            updated_at: announcement.updated_at.split('T')[0]
+          }));
+          setData(announcements);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error: ', error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem('user-info');

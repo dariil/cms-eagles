@@ -5,12 +5,13 @@ import {Link, useNavigate} from 'react-router-dom'
 import axios from "axios";
 import { Radio, Space, Switch, Table, Divider, message, ConfigProvider, Select } from 'antd';
 import { Input } from 'antd';
-import { Button, Modal, Drawer, notification } from 'antd';
+import { Button, Modal, Drawer, notification, Popconfirm } from 'antd';
 import {
   SmileOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  QuestionCircleOutlined
 } from '@ant-design/icons';
 
 // const columns = [
@@ -158,9 +159,22 @@ function GeneralAdminMaintenance(){
                     }
                 }}
             >
+                <Popconfirm
+                title="Delete the task"
+                description="Are you sure to delete this task?"
+                onConfirm={() => deleteConfirm(record.user_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: 'red',
+                    }}
+                  />
+                }
+              >
                 <Button type='primary' className='action-del1' size='middle' icon={<DeleteOutlined />}>
                     {/* <EditOutlined className='action-edit' /> */}
                 </Button>
+              </Popconfirm>
             </ConfigProvider>
             <ConfigProvider
                 theme={{
@@ -190,6 +204,34 @@ function GeneralAdminMaintenance(){
         ),
       },
   ]
+
+  //DELETE FUNCTION
+  const deleteConfirm = async (userID) => {
+    setSelectedUserID(userID);
+    await axios.delete('http://localhost:8000/api/deleteUser/'+userID).then(function(response){
+            console.log(response.data);
+            message.success(response.data.messages.message);
+            // getUsers();
+    });
+    
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://127.0.0.1:8000/api/getUsers/1');
+        const users = response.data.map((user) => ({
+          ...user,
+          full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+        }));
+        setData(users);
+      } catch (error) {
+        console.error('Error: ', error);
+        message.error(response.data.messages.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }
 
   //VIEW DRAWER
   const [viewFirstName, setViewFirstName] = useState('');

@@ -12,6 +12,7 @@ import {
   EyeOutlined,
   InboxOutlined,
   PlusOutlined,
+  QuestionCircleOutlined
 } from '@ant-design/icons';
 import About from './About';
 
@@ -218,9 +219,22 @@ function GeneralOfficerMaintenance() {
                     }
                 }}
             >
+                <Popconfirm
+                title="Delete the task"
+                description="Are you sure to delete this task?"
+                onConfirm={() => deleteConfirm(record.official_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: 'red',
+                    }}
+                  />
+                }
+              >
                 <Button type='primary' className='action-del1' size='large' icon={<DeleteOutlined />}>
                     {/* <EditOutlined className='action-edit' /> */}
                 </Button>
+              </Popconfirm>
           </ConfigProvider>
           <ConfigProvider
             theme={{
@@ -253,6 +267,37 @@ function GeneralOfficerMaintenance() {
       ),
     },
   ]
+
+  //DELETE FUNCTION
+  const deleteConfirm = async (officialID) => {
+    setSelectedOfficerId(officialID);
+    await axios.delete('http://localhost:8000/api/deleteOfficer/'+officialID).then(function(response){
+            console.log(response.data);
+            message.success(response.data.messages.message);
+    });
+
+    const fetchData = async () => {
+      if (clubId !== null) {
+        console.log(`Fetching data for clubId: ${clubId}`);
+        try {
+          setLoading(true);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getOfficials/${clubId}`);
+          const officer = response.data.map((officer) => ({
+            ...officer,
+            // created_at: projects.created_at.split('T')[0],
+            // updated_at: projects.updated_at.split('T')[0]
+          }));
+          setData(officer);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error: ', error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem('user-info');
