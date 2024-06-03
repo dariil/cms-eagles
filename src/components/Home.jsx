@@ -1,12 +1,34 @@
 import Header from './Header'
 import Footer from './Footer'
-import React from 'react';
+import axios from "axios";
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import './App.css'; // You can create your custom CSS file for additional styling if needed
 
 
 function Home(){
+    const [data, setData] = useState([]); /////   IMPORTANT    //////
+
+    useEffect(() =>{
+        getData();
+    }, []);
+
+    async function getData(){
+        try {
+            await axios.get(`http://127.0.0.1:8000/api/getHome/0`).then(function(response){
+            console.log(response.data[0]);
+            setData(response.data[0]);
+            });
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    }
+
+    useEffect(() => {
+        console.log(data.home_id);
+    }, [data]);
+
     return (
         <>
             <Header></Header>
@@ -14,7 +36,7 @@ function Home(){
                 <Container className='w-75 home-container' fluid>
                     <Row className="align-items-center justify-content-center justify-content-lg-evenly">
                         <Col lg={6} md={12} className="mb-3 mb-lg-0">
-                        <Image src="/assets/eagles-nobg-logo.png" fluid className="img-fluid rounded-lg" />
+                        <Image src={"http://localhost:8000/"+data.logo} fluid className="img-fluid rounded-lg" />
                         </Col>
                         <Col lg={6} md={12}>
                         <Row className="text-center text-md-start">
@@ -22,7 +44,7 @@ function Home(){
                             <h2 className='font-weight-bold font-spcase-large'>WHO WE ARE</h2>
                             <br></br>
                             <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                {data.description}
                             </p>
                             <br></br>
                             </Col>
