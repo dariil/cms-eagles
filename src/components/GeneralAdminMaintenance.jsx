@@ -138,7 +138,7 @@ function GeneralAdminMaintenance(){
       // },
       {
           title: 'Club',
-          dataIndex: 'club_id',
+          dataIndex: 'club_name',
       },
       {
           title: 'Date Created',
