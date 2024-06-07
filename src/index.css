@@ -34,7 +34,7 @@
 }
 
 .logo{
-  width: 100px;
+  width: 90px;
   margin-right: 10px;
 }
 
@@ -104,6 +104,46 @@
 
 .dimmed-background{
   background-color: rgba(0, 0, 0, 0.4); /* Adjust alpha value for dimming strength */
+}
+
+.hero-main{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.hero-vid-container{
+  /* position: relative; */
+  width: 100%;
+  height: 100vh;
+}
+
+.hero-vid{
+  width: 100%;
+  height: 88%;
+  object-fit: cover;
+}
+
+.hero-overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 88%;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.hero-title{
+  position: absolute;
+  width: 100%;
+  height: 80%;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
 }
 
 .fgit{

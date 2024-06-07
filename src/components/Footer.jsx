@@ -1,5 +1,9 @@
 import React from 'react';
 import { MDBFooter, MDBContainer, MDBRow, MDBCol, MDBIcon } from 'mdb-react-ui-kit';
+import {
+    FacebookFilled,
+    InstagramFilled
+  } from '@ant-design/icons';
 import 'boxicons';
 
 function Footer(){
@@ -81,8 +85,22 @@ function Footer(){
                                 <MDBCol md="4" lg="3" xl="3" className='mx-auto mb-md-0 mb-4'>
                                     <h6 className='footer-text fw-bold mb-4'>Get in touch</h6>
                                     <div className='fgit'>
-                                        <box-icon name='facebook-square' type='logo' color="white" size="md"></box-icon>
-                                        <box-icon type='logo' name='instagram-alt' color="white" size="md"></box-icon>
+                                        <FacebookFilled 
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 30,
+                                                marginRight: 10
+                                            }}
+                                        />
+                                        
+                                        <InstagramFilled
+                                             style={{
+                                                color: 'white',
+                                                fontSize: 30,
+                                            }}
+                                        />
+                                        {/* <box-icon name='facebook-square' type='logo' color="white" size="md"></box-icon> */}
+                                        {/* <box-icon type='logo' name='instagram-alt' color="white" size="md"></box-icon> */}
                                     </div>
                                 </MDBCol>
                             </MDBRow>

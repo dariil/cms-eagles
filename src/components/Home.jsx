@@ -32,6 +32,17 @@ function Home(){
     return (
         <>
             <Header></Header>
+            <div className='hero-main'>
+                <div className='hero-overlay'></div>
+                <div className='hero-vid-container'>
+                    <video src="assets/hero_vid.mp4" autoPlay loop muted className='hero-vid'></video>
+                </div>
+                <div className='hero-title'>
+                    <h1 className='font-spcase-large font-weight-bold'>The Fraternal Order of Ealges - Philippine Eagles</h1>
+                    <br></br>
+                    <p className='font-size-large'>Unity | Service | Brotherhood</p>
+                </div>
+            </div>
             <div>
                 <Container className='w-75 home-container' fluid>
                     <Row className="align-items-center justify-content-center justify-content-lg-evenly">

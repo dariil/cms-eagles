@@ -8,7 +8,7 @@ function Header(){
     return(
         <>
             <div>
-            <Navbar collapseOnSelect expand="lg" bg="primary" data-bs-theme="dark" className="bg-body-tertiary">
+            <Navbar collapseOnSelect expand="lg" bg="transparent" data-bs-theme="dark" className="bg-body-tertiary">
                 <Container>
                     <img className="logo" src="/assets/eagles-nobg-logo.png"></img>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
