@@ -2,13 +2,32 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {Link, useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 function Header(){
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+        if (window.scrollY > 100) {
+            setIsScrolled(true);
+        } else {
+            setIsScrolled(false);
+        }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+        window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return(
         <>
-            <div>
-            <Navbar collapseOnSelect expand="lg" bg="transparent" data-bs-theme="dark" className="bg-body-tertiary">
+            <div className={`navbar-main-container ${isScrolled ? 'scrolled' : ''}`}>
+            <Navbar collapseOnSelect expand="lg" bg="transparent" data-bs-theme="tranparent" className="">
                 <Container>
                     <img className="logo" src="/assets/eagles-nobg-logo.png"></img>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />

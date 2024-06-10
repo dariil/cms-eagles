@@ -43,7 +43,7 @@ function Home(){
                     <p className='font-size-large'>Unity | Service | Brotherhood</p>
                 </div>
             </div>
-            <div>
+            <div className='home-sub-content'>
                 <Container className='w-75 home-container' fluid>
                     <Row className="align-items-center justify-content-center justify-content-lg-evenly">
                         <Col lg={6} md={12} className="mb-3 mb-lg-0">
