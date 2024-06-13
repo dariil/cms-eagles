@@ -4,9 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
     InfoCircleOutlined,
     PlusOutlined,
+    MinusCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Form, Input, Radio, Tag } from 'antd';
-import { Space, Table, ConfigProvider, message, Upload } from 'antd';
+import { Space, Table, ConfigProvider, message, DatePicker, Upload } from 'antd';
 import { Col, Drawer, Modal, Row, Image, Select, Popconfirm } from 'antd';
 
 // HANDLE IMAGE PREVIEW
@@ -20,7 +21,7 @@ const getBase64 = (file) =>
 
 const customizeRequiredMark = (label, { required }) => (
     <>
-        {required ? <Tag color="warning">Required</Tag> : <Tag color="warning">optional</Tag>}
+        {required ? <Tag color="warning">Required</Tag> : <Tag color="orange">Optional</Tag>}
         {label}
     </>
 );
@@ -61,6 +62,10 @@ function Register(){
         </button>
       );
 
+    const dateOfBirthOnChange = (date, dateString) => {
+        console.log(date, dateString);
+    };
+
     return(
         <>
             <Header />
@@ -80,81 +85,84 @@ function Register(){
                     >
                         <div className='register-formfields-main-container'>
                             <Col span={24}>
-                                <h3>Name</h3>
+                                <h3>Personal Information</h3>
                                 <br></br>
                                 <div className='form-snap-2'>
                                     <Form.Item
-                                    tooltip="This is a required field"
-                                    className='form-item-snap-1'
-                                    name="firstname"
-                                    label="First name"
-                                    rules={[
-                                        {
-                                        required: true,
-                                        message: 'Please enter your first name',
-                                        },
-                                    ]}
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="firstname"
+                                        label="First name"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your first name',
+                                            },
+                                        ]}
                                     >
                                         <Input name="title" placeholder="Enter your first name" />
                                     </Form.Item>
 
                                     <Form.Item
-                                    tooltip="This is a required field"
-                                    className='form-item-snap-1'
-                                    name="middlename"
-                                    label="Middle name"
-                                    rules={[
-                                        {
-                                        required: true,
-                                        message: 'Please enter your middle name',
-                                        },
-                                    ]}
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="middlename"
+                                        label="Middle name"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your middle name',
+                                            },
+                                        ]}
                                     >
                                         <Input name="title" placeholder="Enter your middle name" />
                                     </Form.Item>
 
                                     <Form.Item
-                                    tooltip="This is a required field"
-                                    className='form-item-snap-1'
-                                    name="lastname"
-                                    label="Last name"
-                                    rules={[
-                                        {
-                                        required: true,
-                                        message: 'Please enter your last name',
-                                        },
-                                    ]}
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="lastname"
+                                        label="Last name"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your last name',
+                                            },
+                                        ]}
                                     >
                                         <Input name="title" placeholder="Enter your last name" />
                                     </Form.Item>
-                                </div>
-                                <br></br>
-                                <div className='form-cat-snap-2'>
-                                    <div className='form-cat-item-snap-1'>
-                                        <h3>Place of Birth</h3>
-                                        <br></br>
-                                        <div className='form-snap-2'>
-                                            <Form.Item
-                                            tooltip="This is a required field"
-                                            className='form-item-snap-2'
-                                            name="birthplace"
-                                            label="Birthplace"
-                                            rules={[
-                                                {
+                                    
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="birthplace"
+                                        label="Birthplace"
+                                        rules={[
+                                            {
                                                 required: true,
                                                 message: 'Please enter your birthplace',
-                                                },
-                                            ]}
-                                            >
-                                                <Input name="title" placeholder="Enter your borthplace" />
-                                            </Form.Item>
-                                        </div>
-                                    </div>
-                                    <div className='form-cat-item-snap-1'>
-                                        <h3>Civil Status</h3>
-                                        <br></br>
-                                        <div className='form-snap-2'>
-                                        <Form.Item 
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your birthplace" />
+                                    </Form.Item>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="dateOfBirth"
+                                        label="Date of Birth"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please enter your date of birth',
+                                            },
+                                        ]}
+                                    >
+                                        <DatePicker onChange={dateOfBirthOnChange} />
+                                    </Form.Item>
+                                    <Form.Item 
+                                        className='form-item-snap-1'
                                         tooltip="This is a required field"
                                         label="Civil Status"
                                         name="civil_status"
@@ -164,24 +172,528 @@ function Register(){
                                             message: 'Please select your current civil status',
                                             },
                                         ]}
-                                        >
-                                            <Radio.Group>
-                                            <Radio.Button value>Single</Radio.Button>
-                                            <Radio.Button value="optional">Married</Radio.Button>
-                                            <Radio.Button value={false}>Separated</Radio.Button>
-                                            <Radio.Button value="customize">Widowed</Radio.Button>
-                                            </Radio.Group>
-                                        </Form.Item>
-                                        </div>
-                                    </div>
+                                    >
+                                        <Radio.Group>
+                                        <Radio.Button value>Single</Radio.Button>
+                                        <Radio.Button value="optional">Married</Radio.Button>
+                                        <Radio.Button value={false}>Separated</Radio.Button>
+                                        <Radio.Button value="customize">Widowed</Radio.Button>
+                                        </Radio.Group>
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="citizenship"
+                                        label="Citizenship"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please enter your citizenship',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your citizenship" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="religion"
+                                        label="Religion"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please enter your religion',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your religion" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="bloodType"
+                                        label="Blood Type"
+                                        rules={[
+                                            {
+                                                required: false,
+                                                message: 'Please enter your blood type',
+                                            },
+                                        ]}
+                                    >
+                                        <Radio.Group>
+                                            <Radio.Button value="O-">O-</Radio.Button>
+                                            <Radio.Button value="O+">O+</Radio.Button>
+                                            <Radio.Button value="A-">A-</Radio.Button>
+                                            <Radio.Button value="A+">A+</Radio.Button>
+                                            <Radio.Button value="B+">B+</Radio.Button>
+                                            <Radio.Button value="B-">B-</Radio.Button>
+                                            <Radio.Button value="AB-">AB-</Radio.Button>
+                                            <Radio.Button value="AB+">AB+</Radio.Button>
+                                        </Radio.Group>
+                                    </Form.Item>
                                 </div>
+                                <br></br>
+                                <h3>Address</h3>
+                                <div className='form-snap-2'>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="street_number"
+                                        label="Street Number"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your street number',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your street number" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="barangay"
+                                        label="Barangay"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your barangay',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your barangay" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="municipality"
+                                        label="Municipality/City"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your municipality/city',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your municipality/city" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="province"
+                                        label="Province"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your province',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your province" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="zip_code"
+                                        label="Zip Code"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your zip code',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your zip code" />
+                                    </Form.Item>
+                                </div>
+                                <br></br>
+                                <h3>Contact Information</h3>
+                                <div className='form-snap-2'>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="cellphone_number"
+                                        label="Cellphone Number"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your cell number',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your cell number" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="telephone_number"
+                                        label="Telephone Number"
+                                        rules={[
+                                            {
+                                            required: false,
+                                            message: 'Please enter your telephone number',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your telephone number" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="email"
+                                        label="Email"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your email',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your email" />
+                                    </Form.Item>
+                                </div>
+                                <br></br>
+                                <h3>Employment/Profession</h3>
+                                <div className='form-snap-2'>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="name_of_company"
+                                        label="Name of Office Line of Business"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your name of business',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your name of business" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="position"
+                                        label="Position/Designation"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your title/designation',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your title/designation" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="office_address"
+                                        label="Address"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter office address',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter office address" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="business_telephone_number"
+                                        label="Telephone Number"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter business telephone number',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter business telephone number" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="fax_number"
+                                        label="Fax Number"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter fax number',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter fax number" />
+                                    </Form.Item>
+                                </div>
+                                <br></br>
+
+                                <h3>List of Legal Dependents</h3>
+                                <div className='form-snap-2'>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="spouse_name"
+                                        label="Name of Spouse"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name fo your spouse.',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of your spouse." />
+                                    </Form.Item>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="spouse_date_of_birth"
+                                        label="Spouse's Date of Birth"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please enter your spouse\'s date of birth',
+                                            },
+                                        ]}
+                                    >
+                                        <DatePicker onChange={dateOfBirthOnChange} />
+                                    </Form.Item>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="spouse_age"
+                                        label="Age of Spouse"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the age of your spouse.',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the age of your spouse." />
+                                    </Form.Item>
+                                </div>
+                                
+                                <Form.List name="name_of_children">
+                                    {(fields, { add, remove }) => (
+                                        <>
+                                        {fields.map(({ key, name, ...restField }) => (
+                                            <Space
+                                            key={key}
+                                            style={{
+                                                display: 'flex',
+                                                marginBottom: 8,
+                                            }}
+                                            align="baseline"
+                                            >
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'name_of_dependent']}
+                                                rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Missing name',
+                                                },
+                                                ]}
+                                            >
+                                                <Input placeholder="Name" />
+                                            </Form.Item>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'birth_date_of_dependent']}
+                                                rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Missing date of birth',
+                                                },
+                                                ]}
+                                            >
+                                                <Input placeholder="Birthdate" />
+                                            </Form.Item>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'age_of_dependent']}
+                                                rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Missing age',
+                                                },
+                                                ]}
+                                            >
+                                                <Input placeholder="Age" />
+                                            </Form.Item>
+                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                            </Space>
+                                        ))}
+                                        <Form.Item>
+                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                            Add field
+                                            </Button>
+                                        </Form.Item>
+                                        </>
+                                    )}
+                                    </Form.List>
+                                <br></br>
+
+                                <h3>Educational Attainment</h3>
+                                <div className='form-snap-2'>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="attended_elementary"
+                                        label="Elementary"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of attended elementary school',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of attended elementary school" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="year_graduated_elementary"
+                                        label="Year Graduated"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the year you graduated (elementary',
+                                            },
+                                        ]}
+                                    >
+                                        <DatePicker onChange={dateOfBirthOnChange} picker="year" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="attended_hs"
+                                        label="High School"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of attended high school',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of attended high school" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="year_graduated_hs"
+                                        label="Year Graduated"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the year you graduated (high school',
+                                            },
+                                        ]}
+                                    >
+                                        <DatePicker onChange={dateOfBirthOnChange} picker="year" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="attended_college"
+                                        label="College"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of attended college',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of attended college" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="year_graduated_college"
+                                        label="Year Graduated"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the year you graduated (college)',
+                                            },
+                                        ]}
+                                    >
+                                        <DatePicker onChange={dateOfBirthOnChange} picker="year" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="course"
+                                        label="Course"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of your college course',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of your college course" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="hobbies"
+                                        label="Hobbies"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your hobbies',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your hobbies" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="Special Skills"
+                                        label="special_skills"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your special skills',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your special skills" />
+                                    </Form.Item>
+                                </div>
+                                <br></br>
+
                                 <Form.Item
-                                name={"image"}
+                                name={"2_by_2"}
                                 valuePropName='fileList'
                                 getValueFromEvent={(event)=>{
                                     return event?.fileList;
                                 }}
-                                label="Image"
+                                label="2x2 Picture"
                                 rules={[
                                     {
                                     required: true,
