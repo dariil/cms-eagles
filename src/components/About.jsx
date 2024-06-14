@@ -25,12 +25,12 @@ function About(){
     return(
         <>
         <Header></Header>
-        <div className='about-main-container'>
+        {/* <div className='about-main-container'>
             <div className="about-image-container" style={{ backgroundImage: `url(http://localhost:8000/${data.cover_image})` }}>
                 <h1>{data.club_name}</h1>
             </div>
 
-        </div>
+        </div> */}
         <div>
             <Container className='w-75 home-container' fluid>
                 <Row className="align-items-center justify-content-center justify-content-lg-evenly">
