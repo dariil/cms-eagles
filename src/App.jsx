@@ -34,6 +34,7 @@ function App() {
           <Route path='/admin/general-projects' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-aboutUs' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-officers' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/general-applications' element={<Protected component = {Admin}/>}></Route>
             {/* <Route path="/"></Route>
             <Route path="/login"></Route>
             <Route path='/register'></Route>

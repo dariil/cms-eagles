@@ -19,6 +19,7 @@ import {
   IdcardOutlined,
   TeamOutlined,
   SettingOutlined,
+  ProfileOutlined,
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 import GeneralUsersMaintenance from './GeneralUsersMaintenance';
@@ -28,6 +29,7 @@ import GeneralAnnouncementMaintenance from './GeneralAnnouncementMaintenance';
 import GeneralProjectsMaintenance from './GeneralProjectsMaintenance';
 import GeneralAboutUsMaintenance from './GeneralAboutUsMaintenance';
 import GeneralOfficerMaintenance from './GeneralOfficerMaintenance';
+import GeneralApplicationsMaintenance from './GeneralApplicationsMaintenance';
 
 
 const Dashboard = () => <div>Dashboard Content</div>;
@@ -88,8 +90,8 @@ function Admin(){
       type: 'divider',
     },
     {
-      key: 'general-grp',
-      label: 'Manage General',
+      key: 'region-grp',
+      label: 'Manage Region',
       type: 'group',
     },
     {
@@ -138,6 +140,18 @@ function Admin(){
           key: 'general-officers',
           icon: <SolutionOutlined />,
           label: <Link to="/admin/general-officers" className='mt-2 admin-menu-items'>Officers</Link>,
+        },
+      ]
+    },
+    {
+      key: 'general-applications',
+      icon: <SettingOutlined />,
+      label: 'Applications Maintenance',
+      children: [
+        {
+          key: 'general-applications-tab',
+          icon: <ProfileOutlined />,
+          label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Applications</Link>,
         },
       ]
     },
@@ -199,61 +213,16 @@ function Admin(){
       ],
     },
     {
-      type: 'divider',
-    },
-    {
-      key: 'region-grp',
-      label: 'Manage Region',
-      type: 'group',
-    },
-    {
-      key: 'region-account-sub',
-      icon: <TeamOutlined />,
-      label: 'Accounts',
-      children: [
-        {
-          key: 'users-region',
-          icon: <UserOutlined />,
-          label: 'Users',
-        },
-        {
-          key: 'admin-region',
-          icon: <IdcardOutlined />,
-          label: 'Admin',
-        },
-      ],
-    },
-    {
-      key: 'region-maintenance',
+      key: 'club-applications',
       icon: <SettingOutlined />,
-      label: 'Region Maintenance',
+      label: 'Applications Maintenance',
       children: [
         {
-          key: 'region-home',
-          icon: <HomeOutlined />,
-          label: 'Home',
+          key: 'club-applications-tab',
+          icon: <ProfileOutlined />,
+          label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Applications</Link>,
         },
-        {
-          key: 'region-announcements',
-          icon: <NotificationOutlined />,
-          label: 'Announcements',
-        },
-        {
-          key: 'region-projects',
-          icon: <ProjectOutlined />,
-          label: 'Projects',
-        },
-        {
-          key: 'region-about',
-          icon: <InfoCircleOutlined />,
-          label: 'About Us',
-        },
-        {
-          key: 'region-officers',
-          icon: <SolutionOutlined />,
-          label: 'Officers',
-        },
-      ],
+      ]
     },
   ];
 
@@ -287,6 +256,8 @@ function Admin(){
         return <GeneralAboutUsMaintenance />;
       case 'general-officers':
         return <GeneralOfficerMaintenance />;
+      case 'general-applications-tab':
+        return <GeneralApplicationsMaintenance />;
       default:
         return <Dashboard />;
     }
