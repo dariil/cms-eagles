@@ -145,7 +145,7 @@ function Admin(){
     },
     {
       key: 'general-applications',
-      icon: <SettingOutlined />,
+      icon: <ContainerOutlined />,
       label: 'Applications Maintenance',
       children: [
         {
@@ -214,7 +214,7 @@ function Admin(){
     },
     {
       key: 'club-applications',
-      icon: <SettingOutlined />,
+      icon: <ContainerOutlined />,
       label: 'Applications Maintenance',
       children: [
         {
