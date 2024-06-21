@@ -32,6 +32,7 @@ function Register(){
     //UPLOAD HANDLING COMPONENTS
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
+    const [applicantImage, setApplicantImage] = useState('');
     const [fileList, setFileList] = useState([]);
     const [requiredMark, setRequiredMarkType] = useState('customize');
     const [outputPdf, setOutputPdf] = useState(null);
@@ -86,7 +87,7 @@ function Register(){
 
     const handleFinish = async (values) => {
         try {
-            const pdfBytes = await generatePDF(values, previewImage);
+            const pdfBytes = await generatePDF(values, applicantImage);
             const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
             // const values = await formRef.current.validateFields();
             const Formdata = new FormData();
@@ -136,7 +137,8 @@ function Register(){
         if (newFileList.length > 0) {
             const file = newFileList[0].originFileObj;
             const base64 = await getBase64(file);
-            setPreviewImage(base64);
+            // setPreviewImage(base64);
+            setApplicantImage(base64);
         }
     }
 
