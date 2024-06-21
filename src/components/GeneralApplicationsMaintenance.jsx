@@ -48,24 +48,49 @@ function GeneralApplicationsMaintenance(){
   const [selectedOfficerId, setSelectedOfficerId] = useState(null);
 
   // ADD COMPONENTS
-  const [modalOpen, setModalOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setModalOpen(false);
-  };
-
-  const showModal = () => {
-    setModalOpen(true);
-  };
 
   //HANDLE FORM DATA
   const formRef = useRef(null);
 
   const [formData, setFormData] = useState({
-    description: '',
-    image: null,
+    firstname: '',
+    middlename: '',
+    lastname: '',
+    birthplace: '',
+    dateOfBirth: null,
+    height: '',
+    weight: '',
+    civil_status: '',
+    citizenship: '',
+    religion: '',
+    bloodType: '',
+    street_number: '',
+    barangay: '',
+    municipality: '',
+    province: '',
+    zip_code: '',
+    cellphone_number: '',
+    telephone_number: '',
+    email: '',
+    name_of_company: '',
+    position: '',
+    office_address: '',
+    business_telephone_number: '',
+    fax_number: '',
+    spouse_name: '',
+    spouse_date_of_birth: null,
+    spouse_age: '',
+    name_of_children: [],
+    attended_elementary: '',
+    year_graduated_elementary: null,
+    attended_hs: '',
+    year_graduated_hs: null,
+    attended_college: '',
+    year_graduated_college: null,
+    course: '',
+    hobbies: '',
+    special_skills: '',
   });
 
   /////////////////////////////////////////////////
@@ -79,7 +104,6 @@ function GeneralApplicationsMaintenance(){
   }
 
   //VIEW DRAWER
-  const [openViewDrawer, setOpenViewDrawer] = useState(false);
   const viewApplicationClick = (fileLink) => {
     // setOpenViewDrawer(true);
     const linkToFile = `http://127.0.0.1:8000/${fileLink}`;
@@ -100,8 +124,15 @@ function GeneralApplicationsMaintenance(){
     setPreviewOpen(true);
   };
 
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChange = async ({ fileList: newFileList }) => {
+    setFileList(newFileList);
 
+    if (newFileList.length > 0) {
+        const file = newFileList[0].originFileObj;
+        const base64 = await getBase64(file);
+        setPreviewImage(base64);
+    }
+}
   const uploadButton = (
     <button
       style={{
@@ -357,54 +388,6 @@ function GeneralApplicationsMaintenance(){
     tableColumns[tableColumns.length - 1].fixed = 'right';
   }
 
-  const onFinish = async (values) => {
-    try {
-      const formData = new FormData();
-      formData.append('official_name', values.official_name);
-      formData.append('official_position', values.official_position);
-      formData.append('official_image', fileList[0]?.originFileObj);
-      formData.append('official_description', values.official_description);
-  
-      const response = await fetch(`http://127.0.0.1:8000/api/updateOfficer/${selectedOfficerId}?_method=POST`, {
-        method: 'POST',
-        body: formData,
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        message.success(data.messages.message);
-        const fetchData = async () => {
-          if (clubId !== null) {
-            console.log(`Fetching data for clubId: ${clubId}`);
-            try {
-              setLoading(true);
-              const response = await axios.get(`http://127.0.0.1:8000/api/getApplications/${clubId}`);
-              const applicants = response.data.map((applicants) => ({
-                ...applicants,
-              }));
-              setData(applicants);
-              setLoading(false);
-            } catch (error) {
-              console.error('Error: ', error);
-              setLoading(false);
-            }
-          }
-        };
-        setOpen(false);
-    
-        fetchData();
-        formRef.current.resetFields();
-        setFileList([]);
-      } else {
-        message.error(data.messages.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      message.error('Failed to update officer.');
-    }
-  };  
-
   // EDIT COMPONENTS (KILL ME PLEASE THIS IS EXTREMELY HARD TO HANDLE)
   const customizeRequiredMark = (label, { required }) => (
     <>
@@ -415,16 +398,16 @@ function GeneralApplicationsMaintenance(){
 
   const [requiredMark, setRequiredMarkType] = useState('customize');
 
+  const dateOfBirthOnChange = (date, dateString) => {
+    console.log(date, dateString);
+  };
+
   const handleInputChange = (changedValues) => {
     setFormData((prevData) => ({
       ...prevData,
       ...changedValues,
     }));
-  };
-
-  const dateOfBirthOnChange = (date, dateString) => {
-    console.log(date, dateString);
-  };
+};
 
   const handleEditFinish = async (values) => {
       try {
@@ -432,41 +415,184 @@ function GeneralApplicationsMaintenance(){
           const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
           // const values = await formRef.current.validateFields();
           const Formdata = new FormData();
-          Formdata.append('firstname', formData.firstname);
-          Formdata.append('middlename', formData.middlename);
-          Formdata.append('lastname', formData.lastname);
-          Formdata.append('email', formData.email);
-          Formdata.append('number', formData.cellphone_number);
+          Formdata.append('firstname', values.firstname);
+          Formdata.append('middlename', values.middlename);
+          Formdata.append('lastname', values.lastname);
+          Formdata.append('email', values.email);
+          Formdata.append('number', values.cellphone_number);
           Formdata.append('application_file', pdfBlob);
           Formdata.append('club_id', 0);
 
           // Perform API call
-          const response = await fetch(`http://127.0.0.1:8000/api/addApplication`, {
+          const response = await fetch(`http://127.0.0.1:8000/api/updateApplication/${selectedApplicationID}`, {
               method: 'POST',
               body: Formdata,
           });
 
           const data = await response.json();
 
-          saveAs(pdfBlob, `${formData.lastname}_Application_File`);
-
           if (response.ok) {
               message.success(data.messages.message);
-              // formRef.current.resetFields();
+
+              const fetchData = async () => {
+                if (clubId !== null) {
+                  console.log(`Fetching data for clubId: ${clubId}`);
+                  try {
+                    setLoading(true);
+                    const response = await axios.get(`http://127.0.0.1:8000/api/getApplications/${clubId}`);
+                    const officer = response.data.map((officer) => ({
+                      ...officer,
+                      // created_at: projects.created_at.split('T')[0],
+                      // updated_at: projects.updated_at.split('T')[0]
+                    }));
+                    setData(officer);
+                    setLoading(false);
+                  } catch (error) {
+                    console.error('Error: ', error);
+                    setLoading(false);
+                  }
+                }
+              };
+          
+              fetchData();
+
+              formRef.current.resetFields();
               setFileList([]);
+              setOpen(false);
           } else {
               message.error(data.messages.message);
+              formRef.current.resetFields();
           }
-          // formRef.current.resetFields();
       } catch (error) {
           console.error('Error generating PDF:', error);
           message.error('Failed to generate PDF.');
       }
   };
 
+  const generatePDF = async (data, imageBase64) => {
+    const linkToFile = `http://127.0.0.1:8000/api/get-pdf/${selectedApplicationID}`;
+    try {
+
+        const response = await fetch(linkToFile);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const existingPdfBytes = await response.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        const form = pdfDoc.getForm();
+        const pages = pdfDoc.getPages();
+        const firstPage = pages[0];
+
+        let image;
+
+            if (imageBase64.startsWith('data:image/png')) {
+                image = await pdfDoc.embedPng(imageBase64);
+            } else if (imageBase64.startsWith('data:image/jpeg') || imageBase64.startsWith('data:image/jpg')) {
+                image = await pdfDoc.embedJpg(imageBase64);
+            } else {
+                throw new Error('Unsupported image format');
+            }
+
+            const pngDims = image.scale(1);
+
+            // Draw the image at a specific location on the page (e.g., top-right corner)
+            firstPage.drawImage(image, {
+                x: 437,
+                y: 715,
+                width: 2 * 72, // 2 inches in points (1 inch = 72 points)
+                height: 2 * 72,
+            });
+        
+
+        // Populate PDF form fields
+        form.getTextField('first_name').setText(data.firstname);
+        form.getTextField('nickname').setText(data.nickname);
+        form.getTextField('middle_name').setText(data.middlename);
+        form.getTextField('last_name').setText(data.lastname);
+        form.getTextField('birthplace').setText(data.birthplace);
+    
+        // Example for date fields, adjust as per your DatePicker implementation
+        if (data.dateOfBirth) {
+            form.getTextField('birthdate').setText(data.dateOfBirth.format('MM/DD/YYYY'));
+        }
+
+        form.getTextField('height').setText(data.height);
+        form.getTextField('weight').setText(data.weight);
+    
+        // Handle Radio.Group field
+        form.getRadioGroup('civil_status').select(data.civil_status);
+    
+        form.getTextField('citizenship').setText(data.citizenship);
+        form.getTextField('religion').setText(data.religion);
+        form.getTextField('blood_type').setText(data.bloodType);
+    
+        form.getTextField('street_number').setText(data.street_number);
+        form.getTextField('barangay').setText(data.barangay);
+        form.getTextField('municipality').setText(data.municipality);
+        form.getTextField('province').setText(data.province);
+        form.getTextField('zip_code').setText(data.zip_code);
+        form.getTextField('cellphone_number').setText(data.cellphone_number);
+        form.getTextField('telephone_number').setText(data.telephone_number);
+        form.getTextField('email').setText(data.email);
+        form.getTextField('name_of_company').setText(data.name_of_company);
+        form.getTextField('position').setText(data.position);
+        form.getTextField('company_address').setText(data.office_address);
+        form.getTextField('company_telephone_number').setText(data.business_telephone_number);
+        form.getTextField('fax_number').setText(data.fax_number);
+        form.getTextField('spouse_name').setText(data.spouse_name);
+        if (data.spouse_date_of_birth) {
+            form.getTextField('spouse_birthdate').setText(data.spouse_date_of_birth.format('MM/DD/YYYY'));
+        }
+        form.getTextField('spouse_age').setText(data.spouse_age);
+    
+        const maxDependents = 6;
+        for (let i = 0; i < maxDependents; i++) {
+            const nameField = form.getTextField(`dependent${i + 1}_name`);
+            const birthdateField = form.getTextField(`dependent${i + 1}_birthdate`);
+            const ageField = form.getTextField(`dependent${i + 1}_age`);
+            
+            if (data.name_of_children[i]) {
+                const child = data.name_of_children[i];
+                nameField.setText(child.name_of_dependent || '');
+                birthdateField.setText(child.birth_date_of_dependent ? child.birth_date_of_dependent.format('MM/DD/YYYY') : '');
+                ageField.setText(child.age_of_dependent || '');
+            } else {
+                nameField.setText('');
+                birthdateField.setText('');
+                ageField.setText('');
+            }
+        }
+
+        // Handle educational attainment fields
+        form.getTextField('elementary').setText(data.attended_elementary);
+        if (data.year_graduated_elementary) {
+            form.getTextField('elementary_year').setText(data.year_graduated_elementary.format('YYYY'));
+        }
+        form.getTextField('high_school').setText(data.attended_hs);
+        if (data.year_graduated_hs) {
+            form.getTextField('hs_year').setText(data.year_graduated_hs.format('YYYY'));
+        }
+        form.getTextField('college').setText(data.attended_college);
+        if (data.year_graduated_college) {
+            form.getTextField('college_year').setText(data.year_graduated_college.format('YYYY'));
+        }
+        form.getTextField('course').setText(data.course);
+        form.getTextField('hobbies').setText(data.hobbies);
+        form.getTextField('special_skills').setText(data.special_skills);
+    
+        // Save PDF and return bytes
+        const pdfBytes = await pdfDoc.save();
+        return pdfBytes;
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        throw error;
+    }
+};
+
 
 
   //GET DEFAULT TEXTS
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedApplicationID, setSelectedApplicationID] = useState(null);
   const { Option } = Select;
   const [open, setOpen] = useState(false);
@@ -509,9 +635,11 @@ function GeneralApplicationsMaintenance(){
   const [defaultHobbies, setDefaultHobbies] = useState("");
   const [defaultSpecialSkills, setDefaultSpecialSkills] = useState("");
 
-  const showDrawer = (applicationID) => {
+  const showDrawer = async (applicationID) => {
+    setIsLoading(true);
     const fetchData = async () => {
       const result = await axios.get("http://127.0.0.1:8000/api/getOneApplication/" + applicationID);
+      setSelectedApplicationID(applicationID);
       const application = result.data;
       const applicationFile = application.map(application_data => application_data.application_file);
       const trimAppLink = applicationFile[0].replace("magiting_laguna", "");
@@ -641,40 +769,34 @@ function GeneralApplicationsMaintenance(){
         setDefaultHighSchool(form.getTextField('high_school').getText());
         setDefaultHSYear(form.getTextField('hs_year').getText());
         setDefaultCollege(form.getTextField('college').getText());
-        setDefaultCollegeYear(form.getTextField('college_year').getText())
+        setDefaultCollegeYear(form.getTextField('college_year').getText());
         setDefaultCollegeCourse(form.getTextField('course').getText());
         setDefaultHobbies(form.getTextField('hobbies').getText());
         setDefaultSpecialSkills(form.getTextField('special_skills').getText());
 
-        setOpen(true);
       } catch (error) {
         console.error("Error fetching PDF:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-    fetchData();
+     fetchData();
+     setOpen(true);
   };
+
   const onClose = () => {
     setOpen(false);
-    setOpenViewDrawer(false);
   };
 
 
   return (
     <>
-    <Drawer
-        // title="Admin Details"
-        width={'100%'}
-        onClose={onClose}
-        open={openViewDrawer}
-        
-      >
-        <About></About>
-      </Drawer>
       <Drawer
         title="Edit Applicant Details"
         width={500}
         onClose={onClose}
         open={open}
+        loading={isLoading}
         styles={{
           body: {
             paddingBottom: 80,
@@ -725,7 +847,7 @@ function GeneralApplicationsMaintenance(){
                           }}
                         requiredMark={requiredMark === 'customize' ? customizeRequiredMark : requiredMark}  
                         onFinish={handleEditFinish}
-                        // onValuesChange={handleInputChange}
+                        onValuesChange={handleInputChange}
                         ref={formRef}
                     >
                         <div className=''>
@@ -1388,7 +1510,7 @@ function GeneralApplicationsMaintenance(){
                                 label="2x2 Picture"
                                 rules={[
                                     {
-                                    required: true,
+                                    required: false,
                                     message: 'Please upload an image',
                                     },
                                     {

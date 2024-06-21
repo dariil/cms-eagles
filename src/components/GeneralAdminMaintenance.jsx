@@ -305,10 +305,10 @@ function GeneralAdminMaintenance(){
       setDefaultEmail(email);
       setDefaultClub(clubMember);
       setDefaultAccess(accessLevel);
+      setOpenDrawer(true);
     };
     setSelectedUserID(userID);
     fetchData();
-    setOpenDrawer(true);
   };
 
   const onClose = () => {

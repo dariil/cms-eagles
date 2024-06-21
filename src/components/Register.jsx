@@ -106,7 +106,7 @@ function Register(){
     
             const data = await response.json();
 
-            saveAs(pdfBlob, `${formData.lastname}_Application_File`);
+            // saveAs(pdfBlob, `${formData.lastname}_Application_File`);
 
             if (response.ok) {
                 message.success(data.messages.message);
