@@ -5,6 +5,7 @@ import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload }
 import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, Popconfirm, Tag, notification } from 'antd';
 import { PDFDocument, rgb } from 'pdf-lib';
 import { saveAs } from 'file-saver';
+import moment from 'moment';
 import {
     SmileOutlined,
     DeleteOutlined,
@@ -469,21 +470,188 @@ function GeneralApplicationsMaintenance(){
   const [selectedApplicationID, setSelectedApplicationID] = useState(null);
   const { Option } = Select;
   const [open, setOpen] = useState(false);
-  
+  const [defaultFirstName, setDefaultFirstName] = useState("");
+  const [defaultNickName, setDefaultNickName] = useState("");
+  const [defaultMiddleName, setDefaultMiddleName] = useState("");
+  const [defaultLastName, setDefaultLastName] = useState("");
+  const [defaultBirthplace, setDefaultBirthPlace] = useState("");
+  const [defaultBirthDate, setDefaultBirthDate] = useState("");
+  const [defaultHeight, setDefaultHeight] = useState("");
+  const [defaultWeight, setDefaultWeight] = useState("");
+  const [defaultCivilStatus, setDefaultCivilStatus] = useState("");
+  const [defaultCitizenship, setDefaultCitizenship] = useState("");
+  const [defaultReligion, setDefaultReligion] = useState("");
+  const [defaultBloodType, setDefaultBloodType] = useState("");
+  const [defaultStreetNumber, setDefaultStreetNumber] = useState("");
+  const [defaultBarangay, setDefaultBarangay] = useState("");
+  const [defaultMunicipality, setDefaultMunicipality] = useState("");
+  const [defaultProvince, setDefaultProvince] = useState("");
+  const [defaultZipCode, setDefaultZipCode] = useState("");
+  const [defaultCellphoneNumber, setDefaultCellphoneNumber] = useState("");
+  const [defaultTelephoneNumber, setDefaultTelephoneNumber] = useState("");
+  const [defaultEmail, setDefaultEmail] = useState("");
+  const [defaultCompanyName, setDefaultCompanyName] = useState("");
+  const [defaultPosition, setDefaultPosition] = useState("");
+  const [defaultCompanyAddress, setDefaultCompanyAddress] = useState("");
+  const [defaultCompanyTelephoneNumber, setDefaultCompanyTelephoneNumber] = useState("");
+  const [defaultCompanyFaxNumber, setDefaultCompanyFaxNumber] = useState("");
+  const [defaultSpouseName, setDefaultSpouseName] = useState("");
+  const [defaultSpouseBirthDate, setDefaultSpouseBirthDate] = useState("");
+  const [defaultSpouseAge, setDefaultSpouseAge] = useState("");
+  const [defaultDependents, setDefaultDependents] = useState(null);
+  const [defaultElementarySchool, setDefaultElementarySchool] = useState("");
+  const [defaultHighSchool, setDefaultHighSchool] = useState("");
+  const [defaultCollege, setDefaultCollege] = useState("");
+  const [defaultElementaryYear, setDefaultElementaryYear] = useState("");
+  const [defaultHSYear, setDefaultHSYear] = useState("");
+  const [defaultCollegeYear, setDefaultCollegeYear] = useState("");
+  const [defaultCollegeCourse, setDefaultCollegeCourse] = useState("");
+  const [defaultHobbies, setDefaultHobbies] = useState("");
+  const [defaultSpecialSkills, setDefaultSpecialSkills] = useState("");
+
   const showDrawer = (applicationID) => {
     const fetchData = async () => {
-      const result = await axios.get("http://127.0.0.1:8000/api/getOneApplication/"+applicationID);
+      const result = await axios.get("http://127.0.0.1:8000/api/getOneApplication/" + applicationID);
       const application = result.data;
       const applicationFile = application.map(application_data => application_data.application_file);
+      const trimAppLink = applicationFile[0].replace("magiting_laguna", "");
+      console.log(trimAppLink);
 
-      const linkToFile = `http://127.0.0.1:8000/${applicationFile[0]}`;
-      const trimmedFileLink = linkToFile.replace("magiting_laguna/", "");
-      console.log(trimmedFileLink);
+      const linkToFile = `http://127.0.0.1:8000/api/get-pdf/${applicationID}`;
 
-      // const existingPdfBytes = await fetch(trimmedFileLink).then((res) => res.arrayBuffer());
+      try {
+        const response = await fetch(linkToFile);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const existingPdfBytes = await response.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        const form = pdfDoc.getForm();
+        const pages = pdfDoc.getPages();
+        const firstPage = pages[0];
+
+        const dependentsData = [];
+
+        setDefaultFirstName(form.getTextField('first_name').getText());
+        setDefaultNickName(form.getTextField('nickname').getText());
+        setDefaultMiddleName(form.getTextField('middle_name').getText());
+        setDefaultLastName(form.getTextField('last_name').getText());
+        setDefaultBirthPlace(form.getTextField('birthplace').getText());
+        setDefaultBirthDate(form.getTextField('birthdate').getText());
+        setDefaultWeight(form.getTextField('weight').getText());
+        setDefaultHeight(form.getTextField('height').getText());
+        setDefaultCivilStatus(form.getRadioGroup('civil_status').getSelected());
+        setDefaultCitizenship(form.getTextField('citizenship').getText());
+        setDefaultReligion(form.getTextField('religion').getText());
+        setDefaultBloodType(form.getTextField('blood_type').getText());
+        setDefaultStreetNumber(form.getTextField('street_number').getText());
+        setDefaultBarangay(form.getTextField('barangay').getText());
+        setDefaultMunicipality(form.getTextField('municipality').getText());
+        setDefaultProvince(form.getTextField('province').getText());
+        setDefaultZipCode(form.getTextField('zip_code').getText());
+        setDefaultCellphoneNumber(form.getTextField('cellphone_number').getText());
+        setDefaultTelephoneNumber(form.getTextField('telephone_number').getText());
+        setDefaultEmail(form.getTextField('email').getText());
+        setDefaultCompanyName(form.getTextField('name_of_company').getText());
+        setDefaultPosition(form.getTextField('position').getText());
+        setDefaultCompanyAddress(form.getTextField('company_address').getText());
+        setDefaultCompanyTelephoneNumber(form.getTextField('company_telephone_number').getText());
+        setDefaultCompanyFaxNumber(form.getTextField('fax_number').getText());
+        setDefaultSpouseName(form.getTextField('spouse_name').getText());
+        setDefaultSpouseBirthDate(form.getTextField('spouse_birthdate').getText());
+        setDefaultSpouseAge(form.getTextField('spouse_age').getText());
+
+        const dependent1Name = form.getTextField('dependent1_name').getText();
+        const dependent1Birthdate = form.getTextField('dependent1_birthdate').getText();
+        const dependent1Age = form.getTextField('dependent1_age').getText();
+
+        if (dependent1Name || dependent1Birthdate || dependent1Age) {
+          dependentsData.push({
+            name_of_dependent: dependent1Name,
+            birth_date_of_dependent: dependent1Birthdate ? moment(dependent1Birthdate, 'MM/DD/YYYY') : null,
+            age_of_dependent: dependent1Age,
+          });
+        }
+
+        const dependent2Name = form.getTextField('dependent2_name').getText();
+        const dependent2Birthdate = form.getTextField('dependent2_birthdate').getText();
+        const dependent2Age = form.getTextField('dependent2_age').getText();
+
+        if (dependent2Name || dependent2Birthdate || dependent2Age) {
+          dependentsData.push({
+            name_of_dependent: dependent2Name,
+            birth_date_of_dependent: dependent2Birthdate ? moment(dependent2Birthdate, 'MM/DD/YYYY') : null,
+            age_of_dependent: dependent2Age,
+          });
+        }
+
+        const dependent3Name = form.getTextField('dependent3_name').getText();
+        const dependent3Birthdate = form.getTextField('dependent3_birthdate').getText();
+        const dependent3Age = form.getTextField('dependent3_age').getText();
+
+        if (dependent3Name || dependent3Birthdate || dependent3Age) {
+          dependentsData.push({
+            name_of_dependent: dependent3Name,
+            birth_date_of_dependent: dependent3Birthdate ? moment(dependent3Birthdate, 'MM/DD/YYYY') : null,
+            age_of_dependent: dependent3Age,
+          });
+        }
+
+        const dependent4Name = form.getTextField('dependent4_name').getText();
+        const dependent4Birthdate = form.getTextField('dependent4_birthdate').getText();
+        const dependent4Age = form.getTextField('dependent4_age').getText();
+
+        if (dependent4Name || dependent4Birthdate || dependent4Age) {
+          dependentsData.push({
+            name_of_dependent: dependent4Name,
+            birth_date_of_dependent: dependent4Birthdate ? moment(dependent4Birthdate, 'MM/DD/YYYY') : null,
+            age_of_dependent: dependent4Age,
+          });
+        }
+
+        const dependent5Name = form.getTextField('dependent5_name').getText();
+        const dependent5Birthdate = form.getTextField('dependent5_birthdate').getText();
+        const dependent5Age = form.getTextField('dependent5_age').getText();
+
+        if (dependent5Name || dependent5Birthdate || dependent5Age) {
+          dependentsData.push({
+            name_of_dependent: dependent5Name,
+            birth_date_of_dependent: dependent5Birthdate ? moment(dependent5Birthdate, 'MM/DD/YYYY') : null,
+            age_of_dependent: dependent5Age,
+          });
+        }
+
+        const dependent6Name = form.getTextField('dependent6_name').getText();
+        const dependent6Birthdate = form.getTextField('dependent6_birthdate').getText();
+        const dependent6Age = form.getTextField('dependent6_age').getText();
+
+        if (dependent6Name || dependent6Birthdate || dependent6Age) {
+          dependentsData.push({
+            name_of_dependent: dependent6Name,
+            birth_date_of_dependent: dependent6Birthdate ? moment(dependent6Birthdate, 'MM/DD/YYYY') : null,
+            age_of_dependent: dependent6Age,
+          });
+        }
+
+        setDefaultDependents(dependentsData);
+
+        setDefaultElementarySchool(form.getTextField('elementary').getText());
+        setDefaultElementaryYear(form.getTextField('elementary_year').getText());
+        setDefaultHighSchool(form.getTextField('high_school').getText());
+        setDefaultHSYear(form.getTextField('hs_year').getText());
+        setDefaultCollege(form.getTextField('college').getText());
+        setDefaultCollegeYear(form.getTextField('college_year').getText())
+        setDefaultCollegeCourse(form.getTextField('course').getText());
+        setDefaultHobbies(form.getTextField('hobbies').getText());
+        setDefaultSpecialSkills(form.getTextField('special_skills').getText());
+
+        setOpen(true);
+      } catch (error) {
+        console.error("Error fetching PDF:", error);
+      }
     }
-    fetchData()
-    setOpen(true);
+    fetchData();
   };
   const onClose = () => {
     setOpen(false);
@@ -516,7 +684,44 @@ function GeneralApplicationsMaintenance(){
         <Form layout="vertical"
                         initialValues={{
                             requiredMarkValue: requiredMark,
-                            firstname: "TEST",
+                            firstname: defaultFirstName,
+                            nickname: defaultNickName,
+                            middlename: defaultMiddleName,
+                            lastname: defaultLastName,
+                            birthplace: defaultBirthplace,
+                            dateOfBirth: moment(defaultBirthDate, 'MM/DD/YYYY'),
+                            height: defaultHeight,
+                            weight: defaultWeight,
+                            civil_status: defaultCivilStatus,
+                            citizenship: defaultCitizenship,
+                            religion: defaultReligion,
+                            bloodType: defaultBloodType,
+                            street_number: defaultStreetNumber,
+                            barangay: defaultBarangay,
+                            municipality: defaultMunicipality,
+                            province: defaultProvince,
+                            zip_code: defaultZipCode,
+                            cellphone_number: defaultCellphoneNumber,
+                            telephone_number: defaultTelephoneNumber,
+                            email: defaultEmail,
+                            name_of_company: defaultCompanyName,
+                            position: defaultPosition,
+                            office_address: defaultCompanyAddress,
+                            business_telephone_number: defaultCompanyTelephoneNumber,
+                            fax_number: defaultCompanyFaxNumber,
+                            spouse_name: defaultSpouseName,
+                            spouse_date_of_birth: moment(defaultSpouseBirthDate, 'MM/DD/YYYY'),
+                            spouse_age: defaultSpouseAge,
+                            name_of_children: defaultDependents,
+                            attended_elementary: defaultElementarySchool,
+                            year_graduated_elementary: moment(defaultElementaryYear, 'YYYY'),
+                            attended_hs: defaultHighSchool,
+                            year_graduated_hs: moment(defaultHSYear, 'YYYY'),
+                            attended_college: defaultCollege,
+                            year_graduated_college: moment(defaultCollegeYear, 'YYYY'),
+                            course: defaultCollegeCourse,
+                            hobbies: defaultHobbies,
+                            special_skills: defaultSpecialSkills,
                           }}
                         requiredMark={requiredMark === 'customize' ? customizeRequiredMark : requiredMark}  
                         onFinish={handleEditFinish}
@@ -540,7 +745,7 @@ function GeneralApplicationsMaintenance(){
                                             },
                                         ]}
                                     >
-                                        <Input name="title" value={"TEST"} placeholder="Enter your first name" />
+                                        <Input name="title" placeholder="Enter your first name" />
                                     </Form.Item>
 
                                     <Form.Item
