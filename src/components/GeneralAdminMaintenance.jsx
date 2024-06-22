@@ -475,11 +475,6 @@ function GeneralAdminMaintenance(){
     }));
   };
 
-  useEffect(() => {
-      if(localStorage.getItem('user-info')){
-          navigate('/admin')
-      }
-  }, []);
 
   const [api, contextHolder] = notification.useNotification();
   const [messageApi, contextHolderMsg] = message.useMessage();

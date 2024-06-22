@@ -35,8 +35,7 @@ function Register(){
     const [applicantImage, setApplicantImage] = useState('');
     const [fileList, setFileList] = useState([]);
     const [requiredMark, setRequiredMarkType] = useState('customize');
-    const [outputPdf, setOutputPdf] = useState(null);
-    const [form] = Form.useForm();
+    // const [form] = Form.useForm();
     const [formData, setFormData] = useState({
         firstname: '',
         middlename: '',
@@ -107,16 +106,15 @@ function Register(){
     
             const data = await response.json();
 
-            // saveAs(pdfBlob, `${formData.lastname}_Application_File`);
+            saveAs(pdfBlob, `${formData.lastname}_Application_File`);
 
             if (response.ok) {
                 message.success(data.messages.message);
-                // formRef.current.resetFields();
+                formRef.current.resetFields();
                 setFileList([]);
             } else {
                 message.error(data.messages.message);
             }
-            // formRef.current.resetFields();
         } catch (error) {
             console.error('Error generating PDF:', error);
             message.error('Failed to generate PDF.');
@@ -247,7 +245,7 @@ function Register(){
                 const birthdateField = form.getTextField(`dependent${i + 1}_birthdate`);
                 const ageField = form.getTextField(`dependent${i + 1}_age`);
                 
-                if (data.name_of_children[i]) {
+                if (data.name_of_children && data.name_of_children[i]) {
                     const child = data.name_of_children[i];
                     nameField.setText(child.name_of_dependent || '');
                     birthdateField.setText(child.birth_date_of_dependent ? child.birth_date_of_dependent.format('MM/DD/YYYY') : '');

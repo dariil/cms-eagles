@@ -100,12 +100,12 @@ function Admin(){
       label: 'Accounts',
       children: [
         {
-          key: 'users-general',
+          key: 'general-users',
           icon: <UserOutlined />,
           label: <Link to={"/admin/general-users"} className='mt-2 admin-menu-items'>Users</Link>,
         },
         {
-          key: 'admin-general',
+          key: 'general-admin',
           icon: <IdcardOutlined />,
           label: <Link to="/admin/general-admin" className='mt-2 admin-menu-items'>Admin</Link>,
         },
@@ -242,9 +242,9 @@ function Admin(){
     switch (selectedKey) {
       case 'dashboard':
         return <Dashboard />;
-      case 'users-general':
+      case 'general-users':
         return <GeneralUsersMaintenance />;
-      case 'admin-general':
+      case 'general-admin':
         return <GeneralAdminMaintenance />;
       case 'general-home':
         return <GeneralHomeMaintenance />;

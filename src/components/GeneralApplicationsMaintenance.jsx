@@ -467,7 +467,7 @@ function GeneralApplicationsMaintenance(){
           }
       } catch (error) {
           console.error('Error generating PDF:', error);
-          message.error('Failed to generate PDF.');
+          message.error('Failed to edit application form.');
       }
   };
 
@@ -486,7 +486,7 @@ function GeneralApplicationsMaintenance(){
         const firstPage = pages[0];
 
         let image;
-
+        if (imageBase64) {
             if (imageBase64.startsWith('data:image/png')) {
                 image = await pdfDoc.embedPng(imageBase64);
             } else if (imageBase64.startsWith('data:image/jpeg') || imageBase64.startsWith('data:image/jpg')) {
@@ -504,7 +504,7 @@ function GeneralApplicationsMaintenance(){
                 width: 2 * 72, // 2 inches in points (1 inch = 72 points)
                 height: 2 * 72,
             });
-        
+          }
 
         // Populate PDF form fields
         form.getTextField('first_name').setText(data.firstname);
