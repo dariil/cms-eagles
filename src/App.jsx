@@ -35,6 +35,11 @@ function App() {
           <Route path='/admin/general-aboutUs' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-officers' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-applications' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/general-users-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/general-announcements-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/general-projects-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/general-officers-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/general-applications-archives' element={<Protected component = {Admin}/>}></Route>
             {/* <Route path="/"></Route>
             <Route path="/login"></Route>
             <Route path='/register'></Route>

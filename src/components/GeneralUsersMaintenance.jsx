@@ -11,7 +11,8 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  QuestionCircleOutlined
+  QuestionCircleOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
 
 // const columns = [
@@ -168,7 +169,7 @@ function GeneralUsersMaintenance(){
                   />
                 }
               >
-                <Button type='primary' className='action-del1' size='middle' icon={<DeleteOutlined />}>
+                <Button type='primary' className='action-del1' size='middle' icon={<DownOutlined />}>
                     {/* <EditOutlined className='action-edit' /> */}
                 </Button>
               </Popconfirm>

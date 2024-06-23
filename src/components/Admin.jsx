@@ -20,6 +20,8 @@ import {
   TeamOutlined,
   SettingOutlined,
   ProfileOutlined,
+  WarningOutlined,
+  UserDeleteOutlined,
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 import GeneralUsersMaintenance from './GeneralUsersMaintenance';
@@ -154,6 +156,38 @@ function Admin(){
           label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Applications</Link>,
         },
       ]
+    },
+    {
+      key: 'general-archives',
+      icon: <WarningOutlined />,
+      label: 'Archives',
+      children: [
+        {
+          key: 'general-users-archives',
+          icon: <UserDeleteOutlined />,
+          label: <Link to={"/admin/general-users-archives"} className='mt-2 admin-menu-items'>Accounts</Link>,
+        },
+        {
+          key: 'general-announcements-archives',
+          icon: <NotificationOutlined />,
+          label: <Link to="/admin/general-announcements-archives" className='mt-2 admin-menu-items'>Announcements</Link>,
+        },
+        {
+          key: 'general-projects-archives',
+          icon: <ProjectOutlined />,
+          label: <Link to="/admin/general-projects-archives" className='mt-2 admin-menu-items'>Projects</Link>,
+        },
+        {
+          key: 'general-officers-archives',
+          icon: <SolutionOutlined />,
+          label: <Link to="/admin/general-officers-archives" className='mt-2 admin-menu-items'>Officers</Link>,
+        },
+        {
+          key: 'general-applications-archives',
+          icon: <ProfileOutlined />,
+          label: <Link to="/admin/general-applications-archives" className='mt-2 admin-menu-items'>Applications</Link>,
+        },
+      ],
     },
     {
       type: 'divider',

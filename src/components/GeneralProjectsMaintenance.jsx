@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { DownOutlined } from '@ant-design/icons';
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
 import { useParams } from 'react-router-dom';
 import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification, Popconfirm } from 'antd';
@@ -11,6 +10,7 @@ import {
   EyeOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
 import Projects from './Projects';
 
@@ -235,7 +235,7 @@ function GeneralProjectsMaintenance() {
                   />
                 }
               >
-                <Button type='primary' className='action-del1' size='large' icon={<DeleteOutlined />}>
+                <Button type='primary' className='action-del1' size='large' icon={<DownOutlined />}>
                     {/* <EditOutlined className='action-edit' /> */}
                 </Button>
               </Popconfirm>

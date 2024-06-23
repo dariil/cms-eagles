@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
 import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, Popconfirm, Tag, notification } from 'antd';
@@ -16,6 +15,7 @@ import {
     QuestionCircleOutlined,
     PrinterOutlined,
     MinusCircleOutlined,
+    DownOutlined,
 } from '@ant-design/icons';
 import About from './About';
   
@@ -45,7 +45,6 @@ function GeneralApplicationsMaintenance(){
   const [bottom, setBottom] = useState('bottomLeft');
   const [ellipsis, setEllipsis] = useState(true);
   const [data, setData] = useState([]); /////   IMPORTANT    //////
-  const [selectedOfficerId, setSelectedOfficerId] = useState(null);
 
   // ADD COMPONENTS
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -202,7 +201,7 @@ function GeneralApplicationsMaintenance(){
                   />
                 }
               >
-                <Button type='primary' className='action-del1' size='medium' icon={<DeleteOutlined />}>
+                <Button type='primary' className='action-del1' size='medium' icon={<DownOutlined />}>
                     {/* <EditOutlined className='action-edit' /> */}
                 </Button>
               </Popconfirm>
@@ -255,9 +254,9 @@ function GeneralApplicationsMaintenance(){
   ]
 
   //DELETE FUNCTION
-  const deleteConfirm = async (officialID) => {
-    setSelectedOfficerId(officialID);
-    await axios.delete('http://localhost:8000/api/deleteOfficer/'+officialID).then(function(response){
+  const deleteConfirm = async (applicationID) => {
+    setSelectedApplicationID(applicationID);
+    await axios.delete('http://localhost:8000/api/deleteApplication/'+applicationID).then(function(response){
             console.log(response.data);
             message.success(response.data.messages.message);
     });
@@ -268,12 +267,12 @@ function GeneralApplicationsMaintenance(){
         try {
           setLoading(true);
           const response = await axios.get(`http://127.0.0.1:8000/api/getApplications/${clubId}`);
-          const officer = response.data.map((officer) => ({
-            ...officer,
+          const applicant = response.data.map((applicant) => ({
+            ...applicant,
             // created_at: projects.created_at.split('T')[0],
             // updated_at: projects.updated_at.split('T')[0]
           }));
-          setData(officer);
+          setData(applicant);
           setLoading(false);
         } catch (error) {
           console.error('Error: ', error);
@@ -312,10 +311,10 @@ function GeneralApplicationsMaintenance(){
         try {
           setLoading(true);
           const response = await axios.get(`http://127.0.0.1:8000/api/getApplications/${clubId}`);
-          const officer = response.data.map((officer) => ({
-            ...officer,
+          const applicant = response.data.map((applicant) => ({
+            ...applicant,
           }));
-          setData(officer);
+          setData(applicant);
           setLoading(false);
         } catch (error) {
           console.error('Error: ', error);
@@ -442,12 +441,12 @@ function GeneralApplicationsMaintenance(){
                   try {
                     setLoading(true);
                     const response = await axios.get(`http://127.0.0.1:8000/api/getApplications/${clubId}`);
-                    const officer = response.data.map((officer) => ({
-                      ...officer,
+                    const applicant = response.data.map((applicant) => ({
+                      ...applicant,
                       // created_at: projects.created_at.split('T')[0],
                       // updated_at: projects.updated_at.split('T')[0]
                     }));
-                    setData(officer);
+                    setData(applicant);
                     setLoading(false);
                   } catch (error) {
                     console.error('Error: ', error);
