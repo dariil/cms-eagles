@@ -158,9 +158,9 @@ function GeneralUsersMaintenance(){
                 }}
             >
               <Popconfirm
-                title="Delete the task"
-                description="Are you sure to delete this task?"
-                onConfirm={() => deleteConfirm(record.user_id)}
+                title="Archive the task"
+                description="Are you sure to archive this user?"
+                onConfirm={() => archiveConfirm(record.user_id)}
                 icon={
                   <QuestionCircleOutlined
                     style={{
@@ -203,10 +203,10 @@ function GeneralUsersMaintenance(){
       },
   ];
 
-  //DELETE FUNCTION
-  const deleteConfirm = async (userID) => {
+  //ARCHIVE FUNCTION
+  const archiveConfirm = async (userID) => {
     setSelectedUserID(userID);
-    await axios.delete('http://localhost:8000/api/deleteUser/'+userID).then(function(response){
+    await axios.post('http://localhost:8000/api/archiveUser/'+userID).then(function(response){
             console.log(response.data);
             message.success(response.data.messages.message);
             // getUsers();

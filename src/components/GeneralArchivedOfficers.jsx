@@ -10,7 +10,7 @@ import {
   InboxOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
-  DownOutlined
+  UpOutlined
 } from '@ant-design/icons';
 import About from './About';
 
@@ -234,6 +234,30 @@ function GeneralArchivedOfficers() {
               </Popconfirm>
           </ConfigProvider>
           <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#7ABA78',
+                        }
+                    }
+                }}
+            >
+                <Popconfirm
+                title="Restore the task"
+                description="Are you sure to restore this officer?"
+                onConfirm={() => restoreConfirm(record.official_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: '#7ABA78',
+                    }}
+                  />
+                }
+              >
+              <Button type='primary' className='action-edit' size='large' icon={<UpOutlined />}></Button>
+            </Popconfirm>
+          </ConfigProvider>
+          <ConfigProvider
             theme={{
               components: {
                 Button: {
@@ -251,6 +275,36 @@ function GeneralArchivedOfficers() {
       ),
     },
   ]
+  //RESTORE FUNCTION
+  const restoreConfirm = async (officerID) => {
+    setSelectedOfficerId(officerID);
+      await axios.post('http://localhost:8000/api/restoreOfficer/'+officerID).then(function(response){
+        console.log(response.data);
+        message.success(response.data.messages.message);
+    });
+
+    const fetchData = async () => {
+      if (clubId !== null) {
+        console.log(`Fetching data for clubId: ${clubId}`);
+        try {
+          setLoading(true);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedOfficers/${clubId}`);
+          const officer = response.data.map((officer) => ({
+            ...officer,
+            // created_at: projects.created_at.split('T')[0],
+            // updated_at: projects.updated_at.split('T')[0]
+          }));
+          setData(officer);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error: ', error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }
 
   //DELETE FUNCTION
   const deleteConfirm = async (officialID) => {
@@ -265,7 +319,7 @@ function GeneralArchivedOfficers() {
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getOfficials/${clubId}`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedOfficers/${clubId}`);
           const officer = response.data.map((officer) => ({
             ...officer,
             // created_at: projects.created_at.split('T')[0],

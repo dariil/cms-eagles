@@ -8,7 +8,7 @@ import {
   EyeOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
-  DownOutlined,
+  UpOutlined,
 } from '@ant-design/icons';
 import Projects from './Projects';
 
@@ -146,6 +146,30 @@ function GeneralArchivedProjects() {
               </Popconfirm>
           </ConfigProvider>
           <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#7ABA78',
+                        }
+                    }
+                }}
+            >
+                <Popconfirm
+                title="Restore the task"
+                description="Are you sure to restore this project?"
+                onConfirm={() => restoreConfirm(record.project_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: '#7ABA78',
+                    }}
+                  />
+                }
+              >
+              <Button type='primary' className='action-edit' size='large' icon={<UpOutlined />}></Button>
+            </Popconfirm>
+          </ConfigProvider>
+          <ConfigProvider
             theme={{
               components: {
                 Button: {
@@ -164,6 +188,37 @@ function GeneralArchivedProjects() {
     },
   ]
 
+  //RESTORE FUNCTION
+  const restoreConfirm = async (projectID) => {
+    setSelectedProjectId(projectID);
+      await axios.post('http://localhost:8000/api/restoreProject/'+projectID).then(function(response){
+        console.log(response.data);
+        message.success(response.data.messages.message);
+    });
+
+    const fetchData = async () => {
+      if (clubId !== null) {
+        console.log(`Fetching data for clubId: ${clubId}`);
+        try {
+          setLoading(true);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedProjects/${clubId}`);
+          const projects = response.data.map((projects) => ({
+            ...projects,
+            created_at: projects.created_at.split('T')[0],
+            updated_at: projects.updated_at.split('T')[0]
+          }));
+          setData(projects);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error: ', error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }
+
   //DELETE FUNCTION
   const deleteConfirm = async (projectID) => {
     setSelectedProjectId(projectID);
@@ -178,7 +233,7 @@ function GeneralArchivedProjects() {
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/${clubId}`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedProjects/${clubId}`);
           const projects = response.data.map((projects) => ({
             ...projects,
             created_at: projects.created_at.split('T')[0],

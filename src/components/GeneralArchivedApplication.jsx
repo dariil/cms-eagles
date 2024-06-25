@@ -15,7 +15,7 @@ import {
     QuestionCircleOutlined,
     PrinterOutlined,
     MinusCircleOutlined,
-    DownOutlined,
+    UpOutlined,
 } from '@ant-design/icons';
 import About from './About';
   
@@ -114,7 +114,30 @@ function GeneralArchivedApplication(){
                 <Button type='primary' className='action-del1' size='medium' icon={<DeleteOutlined />}></Button>
               </Popconfirm>
           </ConfigProvider>
-
+          <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#7ABA78',
+                        }
+                    }
+                }}
+            >
+                <Popconfirm
+                title="Restore the task"
+                description="Are you sure to restore this application?"
+                onConfirm={() => restoreConfirm(record.application_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: '#7ABA78',
+                    }}
+                  />
+                }
+              >
+              <Button type='primary' className='action-edit' size='medium' icon={<UpOutlined />}></Button>
+            </Popconfirm>
+          </ConfigProvider>
           <ConfigProvider
             theme={{
               components: {
@@ -134,6 +157,36 @@ function GeneralArchivedApplication(){
     },
   ]
 
+  const [selectedApplicationID, setSelectedApplicationID] = useState("");
+
+  const restoreConfirm = async (applicationID) => {
+    setSelectedApplicationID(applicationID);
+      await axios.post('http://localhost:8000/api/restoreApplication/'+applicationID).then(function(response){
+        console.log(response.data);
+        message.success(response.data.messages.message);
+    });
+
+    const fetchData = async () => {
+      if (clubId !== null) {
+        console.log(`Fetching data for clubId: ${clubId}`);
+        try {
+          setLoading(true);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedApplications/${clubId}`);
+          const applicant = response.data.map((applicant) => ({
+            ...applicant,
+          }));
+          setData(applicant);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error: ', error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }
+
   //DELETE FUNCTION
   const deleteConfirm = async (applicationID) => {
     setSelectedApplicationID(applicationID);
@@ -147,7 +200,7 @@ function GeneralArchivedApplication(){
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getApplications/${clubId}`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedApplications/${clubId}`);
           const applicant = response.data.map((applicant) => ({
             ...applicant,
             // created_at: projects.created_at.split('T')[0],

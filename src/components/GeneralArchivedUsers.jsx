@@ -12,7 +12,7 @@ import {
   EditOutlined,
   EyeOutlined,
   QuestionCircleOutlined,
-  DownOutlined,
+  UpOutlined,
 } from '@ant-design/icons';
 
 const defaultTitle = () => 'Here is title';
@@ -103,6 +103,31 @@ function GeneralArchivedUsers(){
                 }
               >
                 <Button type='primary' className='action-del1' size='middle' icon={<DeleteOutlined />}>
+                </Button>
+              </Popconfirm>
+            </ConfigProvider>
+            <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#7ABA78',
+                        }
+                    }
+                }}
+            >
+                <Popconfirm
+                title="Restore the task"
+                description="Are you sure to restore this user?"
+                onConfirm={() => restoreConfirm(record.user_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: '#7ABA78',
+                    }}
+                  />
+                }
+              >
+                <Button type='primary' className='action-edit' size='medium' icon={<UpOutlined />}>
                     {/* <EditOutlined className='action-edit' /> */}
                 </Button>
               </Popconfirm>
@@ -124,6 +149,33 @@ function GeneralArchivedUsers(){
         ),
       },
   ];
+
+  //RESTORE FUNCTION
+  const restoreConfirm = async (userID) => {
+    setSelectedUserID(userID);
+      await axios.post('http://localhost:8000/api/restoreUser/'+userID).then(function(response){
+        console.log(response.data);
+        message.success(response.data.messages.message);
+    });
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://127.0.0.1:8000/api/getAllArchivedUsers');
+        const users = response.data.map((user) => ({
+          ...user,
+          full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+        }));
+        setData(users);
+      } catch (error) {
+        console.error('Error: ', error);
+        message.error(response.data.messages.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }
 
   //DELETE FUNCTION
   const deleteConfirm = async (userID) => {

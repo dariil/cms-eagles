@@ -8,7 +8,7 @@ import {
   EyeOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
-  DownOutlined,
+  UpOutlined,
 } from '@ant-design/icons';
 import Announcements from './Announcements';
 
@@ -238,6 +238,32 @@ function GeneralArchivedAnnouncement() {
               </Popconfirm>
           </ConfigProvider>
           <ConfigProvider
+                theme={{
+                    components:{
+                        Button:{
+                            colorPrimaryHover: '#7ABA78',
+                        }
+                    }
+                }}
+            >
+                <Popconfirm
+                title="Restore the task"
+                description="Are you sure to restore this announcement?"
+                onConfirm={() => restoreConfirm(record.announcement_id)}
+                icon={
+                  <QuestionCircleOutlined
+                    style={{
+                      color: '#7ABA78',
+                    }}
+                  />
+                }
+              >
+                <Button type='primary' className='action-edit' size='large' icon={<UpOutlined />}>
+                    {/* <EditOutlined className='action-edit' /> */}
+                </Button>
+              </Popconfirm>
+          </ConfigProvider>
+          <ConfigProvider
             theme={{
               components: {
                 Button: {
@@ -256,6 +282,37 @@ function GeneralArchivedAnnouncement() {
     },
   ]
 
+  //RESTORE FUNCTION
+  const restoreConfirm = async (announcementID) => {
+    setSelectedAnnouncementId(announcementID);
+      await axios.post('http://localhost:8000/api/restoreAnnouncement/'+announcementID).then(function(response){
+        console.log(response.data);
+        message.success(response.data.messages.message);
+    });
+
+    const fetchData = async () => {
+      if (clubId !== null) {
+        console.log(`Fetching data for clubId: ${clubId}`);
+        try {
+          setLoading(true);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedAnnouncements/${clubId}`);
+          const announcements = response.data.map((announcement) => ({
+            ...announcement,
+            created_at: announcement.created_at.split('T')[0],
+            updated_at: announcement.updated_at.split('T')[0]
+          }));
+          setData(announcements);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error: ', error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }
+
   //DELETE FUNCTION
   const deleteConfirm = async (announcementID) => {
     setSelectedAnnouncementId(announcementID);
@@ -270,7 +327,7 @@ function GeneralArchivedAnnouncement() {
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/${clubId}`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedAnnouncements/${clubId}`);
           const announcements = response.data.map((announcement) => ({
             ...announcement,
             created_at: announcement.created_at.split('T')[0],
