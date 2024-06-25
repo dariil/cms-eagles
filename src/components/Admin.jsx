@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {Link, useNavigate} from 'react-router-dom'
 import {
-  AppstoreOutlined,
   ContainerOutlined,
-  DesktopOutlined,
-  MailOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PieChartOutlined,
-  DashboardTwoTone,
   DashboardOutlined,
   UserOutlined,
   HomeOutlined,
@@ -32,16 +27,14 @@ import GeneralProjectsMaintenance from './GeneralProjectsMaintenance';
 import GeneralAboutUsMaintenance from './GeneralAboutUsMaintenance';
 import GeneralOfficerMaintenance from './GeneralOfficerMaintenance';
 import GeneralApplicationsMaintenance from './GeneralApplicationsMaintenance';
+import GeneralArchivedUsers from './GeneralArchivedUsers';
+import GeneralArchivedAnnouncement from './GeneralArchivedAnnouncements';
+import GeneralArchivedProjects from './GeneralArchivedProjects';
+import GeneralArchivedOfficers from './GeneralArchivedOfficers';
+import GeneralArchivedApplication from './GeneralArchivedApplication';
 
 
 const Dashboard = () => <div>Dashboard Content</div>;
-const Users = () => <div>Users Content</div>;
-const AdminGeneral = () => <div>Admin Content</div>;
-const Home = () => <div>Home Content</div>;
-const Announcements = () => <div>Announcements Content</div>;
-const Projects = () => <div>Projects Content</div>;
-const AboutUs = () => <div>About Us Content</div>;
-const Officers = () => <div>Officers Content</div>;
 
 function Admin(){
   const [clubId, setClubId] = useState(null);
@@ -292,6 +285,16 @@ function Admin(){
         return <GeneralOfficerMaintenance />;
       case 'general-applications-tab':
         return <GeneralApplicationsMaintenance />;
+      case 'general-users-archives':
+        return <GeneralArchivedUsers />
+      case 'general-announcements-archives':
+        return <GeneralArchivedAnnouncement />
+      case 'general-projects-archives':
+        return <GeneralArchivedProjects />
+      case 'general-officers-archives':
+        return <GeneralArchivedOfficers />
+      case 'general-applications-archives':
+        return <GeneralArchivedApplication />
       default:
         return <Dashboard />;
     }

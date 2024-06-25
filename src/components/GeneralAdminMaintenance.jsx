@@ -790,6 +790,7 @@ function GeneralAdminMaintenance(){
                 <Form.Label htmlFor="club_member" className=''>Select Club</Form.Label>
                 <Form.Select name="club_member" id="club_member" onChange={handleChange} value={inputs.club_member} aria-label="Default select example">
                   <option>Open this select menu</option>
+                  <option value="0">AGILA</option>
                   <option value="1">RMMEC</option>
                   <option value="2">MMEC</option>
                   <option value="3">LBAEC</option>

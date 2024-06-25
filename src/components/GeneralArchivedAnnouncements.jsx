@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
-import { useParams } from 'react-router-dom';
 import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, notification, Popconfirm } from 'antd';
 import {
   DeleteOutlined,
@@ -23,7 +21,7 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-function GeneralAnnouncementMaintenance() {
+function GeneralArchivedAnnouncement() {
   const defaultTitle = () => 'Here is title';
   const defaultFooter = () => 'Here is footer';
   const [bordered, setBordered] = useState(true);
@@ -225,7 +223,7 @@ function GeneralAnnouncementMaintenance() {
                 <Popconfirm
                 title="Delete the task"
                 description="Are you sure to delete this task?"
-                onConfirm={() => archiveConfirm(record.announcement_id)}
+                onConfirm={() => deleteConfirm(record.announcement_id)}
                 icon={
                   <QuestionCircleOutlined
                     style={{
@@ -234,22 +232,10 @@ function GeneralAnnouncementMaintenance() {
                   />
                 }
               >
-                <Button type='primary' className='action-del1' size='large' icon={<DownOutlined />}>
+                <Button type='primary' className='action-del1' size='large' icon={<DeleteOutlined />}>
+                    {/* <EditOutlined className='action-edit' /> */}
                 </Button>
               </Popconfirm>
-          </ConfigProvider>
-          <ConfigProvider
-            theme={{
-              components: {
-                Button: {
-                  colorPrimaryHover: '#7ABA78',
-                }
-              }
-            }}
-          >
-            <Button type='primary' onClick={() => showDrawer(record.announcement_id)} className='action-edit1' size='large' icon={<EditOutlined />}>
-              {/* <EditOutlined className='action-edit' /> */}
-            </Button>
           </ConfigProvider>
           <ConfigProvider
             theme={{
@@ -271,11 +257,12 @@ function GeneralAnnouncementMaintenance() {
   ]
 
   //DELETE FUNCTION
-  const archiveConfirm = async (announcementID) => {
+  const deleteConfirm = async (announcementID) => {
     setSelectedAnnouncementId(announcementID);
-    await axios.post('http://localhost:8000/api/archiveAnnouncement/'+announcementID).then(function(response){
+    await axios.delete('http://localhost:8000/api/deleteAnnouncement/'+announcementID).then(function(response){
             console.log(response.data);
             message.success(response.data.messages.message);
+            // getUsers();
     });
     
     const fetchData = async () => {
@@ -328,7 +315,7 @@ function GeneralAnnouncementMaintenance() {
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/${clubId}`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedAnnouncements/${clubId}`);
           const announcements = response.data.map((announcement) => ({
             ...announcement,
             created_at: announcement.created_at.split('T')[0],
@@ -354,7 +341,7 @@ function GeneralAnnouncementMaintenance() {
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/${clubId}`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedAnnouncements/${clubId}`);
             const announcements = response.data.map((announcement) => ({
               ...announcement,
               created_at: announcement.created_at.split('T')[0],
@@ -411,55 +398,6 @@ function GeneralAnnouncementMaintenance() {
     tableColumns[tableColumns.length - 1].fixed = 'right';
   }
 
-  const onFinish = async (values) => {
-    try {
-      const formData = new FormData();
-      formData.append('image', fileList[0]?.originFileObj);
-      formData.append('description', values.announcement_content);
-      formData.append('title', values.title);
-  
-      const response = await fetch(`http://127.0.0.1:8000/api/updateAnnouncement/${selectedAnnouncementId}?_method=POST`, {
-        method: 'POST',
-        body: formData,
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        message.success(data.messages.message);
-        const fetchData = async () => {
-          if (clubId !== null) {
-            console.log(`Fetching data for clubId: ${clubId}`);
-            try {
-              setLoading(true);
-              const response = await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/${clubId}`);
-              const announcements = response.data.map((announcement) => ({
-                ...announcement,
-                created_at: announcement.created_at.split('T')[0],
-                updated_at: announcement.updated_at.split('T')[0]
-              }));
-              setData(announcements);
-              setLoading(false);
-            } catch (error) {
-              console.error('Error: ', error);
-              setLoading(false);
-            }
-          }
-        };
-        setOpen(false);
-    
-        fetchData();
-        formRef.current.resetFields();
-        setFileList([]);
-      } else {
-        message.error(data.messages.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      message.error('Failed to update announcement.');
-    }
-  };  
-
   return (
     <>
     <Drawer
@@ -471,235 +409,9 @@ function GeneralAnnouncementMaintenance() {
       >
         <Announcements></Announcements>
       </Drawer>
-      <Drawer
-        title="Edit Announcement Contents"
-        width={500}
-        onClose={onClose}
-        open={open}
-        styles={{
-          body: {
-            paddingBottom: 80,
-          },
-        }}
-      >
-        <Form layout="vertical" onFinish={onFinish} ref={formRef} >
-          <div className='test-cont'>
-          <Col span={24}>
-            <Form.Item
-              name="title"
-              label="Announcement Title"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter an announcement title content',
-                },
-              ]}
-            >
-              <Input name="title" placeholder="Enter post title" />
-            </Form.Item>
-          
-            <Form.Item
-              name="announcement_content"
-              label="Announcement Content"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter an announcement description content',
-                },
-              ]}
-            >
-              <Input.TextArea rows={12} name="description" placeholder="Enter announcement content" />
-            </Form.Item>
-            <Form.Item
-              name={"image"}
-              valuePropName='fileList'
-              getValueFromEvent={(event)=>{
-                return event?.fileList;
-              }}
-              label="Image"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please upload an image',
-                },
-                {
-                  validator(_,fileList){
-                    return new Promise((resolve, reject) =>{
-                      if(fileList && fileList[0].size > 900000){
-                        reject('File size exceeded the accepted limit');
-                      } else{
-                        resolve("Success");
-                      }
-                    });
-                  }
-                }
-              ]}
-            >
-              <Upload
-                maxCount={1}
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                beforeUpload={(file) => {
-                  return new Promise((resolve, reject) => {
-                    if (file.size > 900000) {
-                      reject('File size exceeded the accepted limit');
-                    } else {
-                      resolve();
-                    }
-                  });
-                }}
-                customRequest={({ file, onSuccess }) => {
-                  // Call handleChange to update fileList state
-                  handleChange({ file });
-
-                  // Call onSuccess to inform Ant Design that upload is successful
-                  onSuccess();
-                }}
-              >
-                {uploadButton}
-              </Upload>
-            </Form.Item>
-            {previewImage && (
-                <Image
-                  wrapperStyle={{
-                    display: 'none',
-                  }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                  }}
-                  src={previewImage}
-                />
-              )}
-          </Col>
-          <Row gutter={16} className='mt-4'>
-            <Col span={12}>
-              <Button htmlType='submit' type="primary" block>
-                Update
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button onClick={onClose} block>
-                Cancel
-              </Button>
-            </Col>
-          </Row>
-          </div>
-        </Form>
-      </Drawer>
       
       <div className='search-container2'>
         <Search placeholder="input search text" className='search2' size='large' onSearch={onSearch} enterButton />
-        <Button size='large' type="primary" onClick={showModal}>
-          Add Announcement
-        </Button>
-        <Modal
-          title="Add Announcement"
-          open={modalOpen}
-          centered
-          onOk={handleOk}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-        >
-          <Form layout="vertical" onFinish={onFinish} ref={formRef} >
-          <div className='test-cont'>
-          <Col span={24}>
-            <Form.Item
-              name="title"
-              label="Announcement Title"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter an announcement title content',
-                },
-              ]}
-            >
-              <Input name="title" placeholder="Enter post title" />
-            </Form.Item>
-          
-            <Form.Item
-              name="announcement_content"
-              label="Announcement Content"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter an announcement description content',
-                },
-              ]}
-            >
-              <Input.TextArea rows={12} name="description" placeholder="Enter announcement content" />
-            </Form.Item>
-            <Form.Item
-              name={"image"}
-              valuePropName='fileList'
-              getValueFromEvent={(event)=>{
-                return event?.fileList;
-              }}
-              label="Image"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please upload an image',
-                },
-                {
-                  validator(_,fileList){
-                    return new Promise((resolve, reject) =>{
-                      if(fileList && fileList[0].size > 900000){
-                        reject('File size exceeded the accepted limit');
-                      } else{
-                        resolve("Success");
-                      }
-                    });
-                  }
-                }
-              ]}
-            >
-              <Upload
-                maxCount={1}
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                beforeUpload={(file) => {
-                  return new Promise((resolve, reject) => {
-                    if (file.size > 900000) {
-                      reject('File size exceeded the accepted limit');
-                    } else {
-                      resolve();
-                    }
-                  });
-                }}
-                customRequest={({ file, onSuccess }) => {
-                  // Call handleChange to update fileList state
-                  handleChange({ file });
-
-                  // Call onSuccess to inform Ant Design that upload is successful
-                  onSuccess();
-                }}
-              >
-                {uploadButton}
-              </Upload>
-            </Form.Item>
-            {previewImage && (
-                <Image
-                  wrapperStyle={{
-                    display: 'none',
-                  }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                  }}
-                  src={previewImage}
-                />
-              )}
-          </Col>
-          </div>
-        </Form>
-        </Modal>
       </div>
 
       <Table
@@ -718,4 +430,4 @@ function GeneralAnnouncementMaintenance() {
   )
 }
 
-export default GeneralAnnouncementMaintenance;
+export default GeneralArchivedAnnouncement;

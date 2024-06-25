@@ -226,7 +226,7 @@ function GeneralProjectsMaintenance() {
                 <Popconfirm
                 title="Delete the task"
                 description="Are you sure to delete this task?"
-                onConfirm={() => deleteConfirm(record.project_id)}
+                onConfirm={() => archiveConfirm(record.project_id)}
                 icon={
                   <QuestionCircleOutlined
                     style={{
@@ -273,9 +273,9 @@ function GeneralProjectsMaintenance() {
   ]
 
   //DELETE FUNCTION
-  const deleteConfirm = async (projectID) => {
+  const archiveConfirm = async (projectID) => {
     setSelectedProjectId(projectID);
-    await axios.delete('http://localhost:8000/api/deleteProject/'+projectID).then(function(response){
+    await axios.post('http://localhost:8000/api/archiveProject/'+projectID).then(function(response){
             console.log(response.data);
             message.success(response.data.messages.message);
             // getUsers();

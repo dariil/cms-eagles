@@ -192,7 +192,7 @@ function GeneralApplicationsMaintenance(){
                 <Popconfirm
                 title="Delete the task"
                 description="Are you sure to delete this task?"
-                onConfirm={() => deleteConfirm(record.application_id)}
+                onConfirm={() => archiveConfirm(record.application_id)}
                 icon={
                   <QuestionCircleOutlined
                     style={{
@@ -201,9 +201,7 @@ function GeneralApplicationsMaintenance(){
                   />
                 }
               >
-                <Button type='primary' className='action-del1' size='medium' icon={<DownOutlined />}>
-                    {/* <EditOutlined className='action-edit' /> */}
-                </Button>
+                <Button type='primary' className='action-del1' size='medium' icon={<DownOutlined />}></Button>
               </Popconfirm>
           </ConfigProvider>
           <ConfigProvider
@@ -254,9 +252,9 @@ function GeneralApplicationsMaintenance(){
   ]
 
   //DELETE FUNCTION
-  const deleteConfirm = async (applicationID) => {
+  const archiveConfirm = async (applicationID) => {
     setSelectedApplicationID(applicationID);
-    await axios.delete('http://localhost:8000/api/deleteApplication/'+applicationID).then(function(response){
+    await axios.post('http://localhost:8000/api/archiveApplication/'+applicationID).then(function(response){
             console.log(response.data);
             message.success(response.data.messages.message);
     });

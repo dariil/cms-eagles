@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
-import { useParams } from 'react-router-dom';
 import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, Popconfirm, notification } from 'antd';
 import {
   SmileOutlined,
@@ -25,7 +23,7 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-function GeneralOfficerMaintenance() {
+function GeneralArchivedOfficers() {
   const defaultTitle = () => 'Here is title';
   const defaultFooter = () => 'Here is footer';
   const [bordered, setBordered] = useState(true);
@@ -222,7 +220,7 @@ function GeneralOfficerMaintenance() {
                 <Popconfirm
                 title="Delete the task"
                 description="Are you sure to delete this task?"
-                onConfirm={() => archiveConfirm(record.official_id)}
+                onConfirm={() => deleteConfirm(record.official_id)}
                 icon={
                   <QuestionCircleOutlined
                     style={{
@@ -231,23 +229,9 @@ function GeneralOfficerMaintenance() {
                   />
                 }
               >
-                <Button type='primary' className='action-del1' size='large' icon={<DownOutlined />}>
-                    {/* <EditOutlined className='action-edit' /> */}
+                <Button type='primary' className='action-del1' size='large' icon={<DeleteOutlined />}>
                 </Button>
               </Popconfirm>
-          </ConfigProvider>
-          <ConfigProvider
-            theme={{
-              components: {
-                Button: {
-                  colorPrimaryHover: '#7ABA78',
-                }
-              }
-            }}
-          >
-            <Button type='primary' onClick={() => showDrawer(record.official_id)} className='action-edit1' size='large' icon={<EditOutlined />}>
-              {/* <EditOutlined className='action-edit' /> */}
-            </Button>
           </ConfigProvider>
           <ConfigProvider
             theme={{
@@ -269,9 +253,9 @@ function GeneralOfficerMaintenance() {
   ]
 
   //DELETE FUNCTION
-  const archiveConfirm = async (officialID) => {
+  const deleteConfirm = async (officialID) => {
     setSelectedOfficerId(officialID);
-    await axios.post('http://localhost:8000/api/archiveOfficer/'+officialID).then(function(response){
+    await axios.delete('http://localhost:8000/api/deleteOfficer/'+officialID).then(function(response){
             console.log(response.data);
             message.success(response.data.messages.message);
     });
@@ -325,7 +309,7 @@ function GeneralOfficerMaintenance() {
         console.log(`Fetching data for clubId: ${clubId}`);
         try {
           setLoading(true);
-          const response = await axios.get(`http://127.0.0.1:8000/api/getOfficials/${clubId}`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedOfficers/${clubId}`);
           const officer = response.data.map((officer) => ({
             ...officer,
             // created_at: projects.created_at.split('T')[0],
@@ -351,7 +335,7 @@ function GeneralOfficerMaintenance() {
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/getOfficials/${clubId}`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/getArchivedOfficers/${clubId}`);
             const officer = response.data.map((officer) => ({
               ...officer,
             //   created_at: officer.created_at.split('T')[0],
@@ -408,59 +392,9 @@ function GeneralOfficerMaintenance() {
     tableColumns[tableColumns.length - 1].fixed = 'right';
   }
 
-  const onFinish = async (values) => {
-    try {
-      const formData = new FormData();
-      formData.append('official_name', values.official_name);
-      formData.append('official_position', values.official_position);
-      formData.append('official_image', fileList[0]?.originFileObj);
-      formData.append('official_description', values.official_description);
-  
-      const response = await fetch(`http://127.0.0.1:8000/api/updateOfficer/${selectedOfficerId}?_method=POST`, {
-        method: 'POST',
-        body: formData,
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        message.success(data.messages.message);
-        const fetchData = async () => {
-          if (clubId !== null) {
-            console.log(`Fetching data for clubId: ${clubId}`);
-            try {
-              setLoading(true);
-              const response = await axios.get(`http://127.0.0.1:8000/api/getOfficials/${clubId}`);
-              const officer = response.data.map((officer) => ({
-                ...officer,
-                // created_at: officer.created_at.split('T')[0],
-                // updated_at: officer.updated_at.split('T')[0]
-              }));
-              setData(officer);
-              setLoading(false);
-            } catch (error) {
-              console.error('Error: ', error);
-              setLoading(false);
-            }
-          }
-        };
-        setOpen(false);
-    
-        fetchData();
-        formRef.current.resetFields();
-        setFileList([]);
-      } else {
-        message.error(data.messages.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      message.error('Failed to update officer.');
-    }
-  };  
-
   return (
     <>
-    <Drawer
+        <Drawer
         // title="Admin Details"
         width={'100%'}
         onClose={onClose}
@@ -469,268 +403,8 @@ function GeneralOfficerMaintenance() {
       >
         <About></About>
       </Drawer>
-      <Drawer
-        title="Edit Officer Details"
-        width={500}
-        onClose={onClose}
-        open={open}
-        styles={{
-          body: {
-            paddingBottom: 80,
-          },
-        }}
-      >
-        <Form layout="vertical" onFinish={onFinish} ref={formRef} >
-          <div className='test-cont'>
-          <Col span={24}>
-            <Form.Item
-              name="official_name"
-              label="Officer Name"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter officer name',
-                },
-              ]}
-            >
-              <Input name="title" placeholder="Enter officer name" />
-            </Form.Item>
-
-            <Form.Item
-              name="official_position"
-              label="Officer Position"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter officer position',
-                },
-              ]}
-            >
-              <Input name="title" placeholder="Enter officer name" />
-            </Form.Item>
-          
-            <Form.Item
-              name={"image"}
-              valuePropName='fileList'
-              getValueFromEvent={(event)=>{
-                return event?.fileList;
-              }}
-              label="Image"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please upload an image',
-                },
-                {
-                  validator(_,fileList){
-                    return new Promise((resolve, reject) =>{
-                      if(fileList && fileList[0].size > 900000){
-                        reject('File size exceeded the accepted limit');
-                      } else{
-                        resolve("Success");
-                      }
-                    });
-                  }
-                }
-              ]}
-            >
-              <Upload
-                maxCount={1}
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                beforeUpload={(file) => {
-                  return new Promise((resolve, reject) => {
-                    if (file.size > 900000) {
-                      reject('File size exceeded the accepted limit');
-                    } else {
-                      resolve();
-                    }
-                  });
-                }}
-                customRequest={({ file, onSuccess }) => {
-                  handleChange({ file });
-                  onSuccess();
-                }}
-              >
-                {uploadButton}
-              </Upload>
-            </Form.Item>
-            <Form.Item
-              name="official_description"
-              label="Description"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter officer\'s description',
-                },
-              ]}
-            >
-              <Input.TextArea rows={12} name="official_description" placeholder="Enter officer description" />
-            </Form.Item>
-            {previewImage && (
-                <Image
-                  wrapperStyle={{
-                    display: 'none',
-                  }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                  }}
-                  src={previewImage}
-                />
-              )}
-          </Col>
-          <Row gutter={16} className='mt-4'>
-            <Col span={12}>
-              <Button htmlType='submit' type="primary" block>
-                Update
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button onClick={onClose} block>
-                Cancel
-              </Button>
-            </Col>
-          </Row>
-          </div>
-        </Form>
-      </Drawer>
-      
       <div className='search-container2'>
         <Search placeholder="input search text" className='search2' size='large' onSearch={onSearch} enterButton />
-        <Button size='large' type="primary" onClick={showModal}>
-          Add Officer
-        </Button>
-        <Modal
-          title="Add Officer"
-          open={modalOpen}
-          centered
-          onOk={handleOk}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-        >
-            <Divider />
-            <Form layout="vertical" ref={formRef} >
-          <div className='test-cont'>
-          <Col span={24}>
-            <Form.Item
-              name="official_name"
-              label="Officer Name"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter officer name',
-                },
-              ]}
-            >
-              <Input name="title" placeholder="Enter officer name" />
-            </Form.Item>
-
-            <Form.Item
-              name="official_position"
-              label="Officer Position"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter officer position',
-                },
-              ]}
-            >
-              <Input name="title" placeholder="Enter officer name" />
-            </Form.Item>
-          
-            <Form.Item
-              name={"official_image"}
-              valuePropName='fileList'
-              getValueFromEvent={(event)=>{
-                return event?.fileList;
-              }}
-              label="Image"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please upload an image',
-                },
-                {
-                  validator(_,fileList){
-                    return new Promise((resolve, reject) =>{
-                      if(fileList && fileList[0].size > 900000){
-                        reject('File size exceeded the accepted limit');
-                      } else{
-                        resolve("Success");
-                      }
-                    });
-                  }
-                }
-              ]}
-            >
-              <Upload
-                maxCount={1}
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                beforeUpload={(file) => {
-                  return new Promise((resolve, reject) => {
-                    if (file.size > 900000) {
-                      reject('File size exceeded the accepted limit');
-                    } else {
-                      resolve();
-                    }
-                  });
-                }}
-                customRequest={({ file, onSuccess }) => {
-                  handleChange({ file });
-                  onSuccess();
-                }}
-              >
-                {uploadButton}
-              </Upload>
-            </Form.Item>
-            <Form.Item
-              name="official_description"
-              label="Description"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter officer\'s description',
-                },
-              ]}
-            >
-              <Input.TextArea rows={12} name="official_description" placeholder="Enter officer description" />
-            </Form.Item>
-            {previewImage && (
-                <Image
-                  wrapperStyle={{
-                    display: 'none',
-                  }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                  }}
-                  src={previewImage}
-                />
-              )}
-          </Col>
-          {/* <Row gutter={16} className='mt-4'>
-            <Col span={12}>
-              <Button htmlType='submit' type="primary" block>
-                Update
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button onClick={onClose} block>
-                Cancel
-              </Button>
-            </Col>
-          </Row> */}
-          </div>
-        </Form>
-        </Modal>
       </div>
 
       <Table
@@ -749,4 +423,4 @@ function GeneralOfficerMaintenance() {
   )
 }
 
-export default GeneralOfficerMaintenance;
+export default GeneralArchivedOfficers;
