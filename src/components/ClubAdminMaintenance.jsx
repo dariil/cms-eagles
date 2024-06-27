@@ -12,7 +12,7 @@ import {
   EditOutlined,
   EyeOutlined,
   QuestionCircleOutlined,
-  DownOutlined,
+  DownOutlined
 } from '@ant-design/icons';
 
 // const columns = [
@@ -66,10 +66,14 @@ import {
 //     },
 //   ];
 
-const defaultTitle = () => 'Here is title';
-const defaultFooter = () => 'Here is footer';
 
-function GeneralUsersMaintenance(){
+  const defaultExpandable = {
+    expandedRowRender: (record) => <p>{record.description}</p>,
+  };
+  const defaultTitle = () => 'Here is title';
+  const defaultFooter = () => 'Here is footer';
+
+function ClubAdminMaintenance(){
     const [bordered, setBordered] = useState(true);
     const [data, setData] = useState([]); /////   IMPORTANT    //////
     const [loading, setLoading] = useState(false); /////   IMPORTANT    //////
@@ -92,9 +96,8 @@ function GeneralUsersMaintenance(){
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [selectedUserID, setSelectedUserID] = useState(null);
     const [modalText, setModalText] = useState('Content of the modal');
-    const [inputs, setInputs] = useState({ access_level: '0' });
+    const [inputs, setInputs] = useState({ access_level: '1' });
     const navigate = useNavigate();
-    const formRef = useRef(null);
     const showModal = () => {
       setOpen(true);
     };
@@ -157,7 +160,7 @@ function GeneralUsersMaintenance(){
                     }
                 }}
             >
-              <Popconfirm
+                <Popconfirm
                 title="Archive the task"
                 description="Are you sure to archive this user?"
                 onConfirm={() => archiveConfirm(record.user_id)}
@@ -201,7 +204,7 @@ function GeneralUsersMaintenance(){
           </Space>
         ),
       },
-  ];
+  ]
 
   //ARCHIVE FUNCTION
   const archiveConfirm = async (userID) => {
@@ -215,7 +218,7 @@ function GeneralUsersMaintenance(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://127.0.0.1:8000/api/getUsers/0');
+        const response = await axios.get('http://127.0.0.1:8000/api/getUsers/1');
         const users = response.data.map((user) => ({
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -283,7 +286,6 @@ function GeneralUsersMaintenance(){
   const [defaultClub, setDefaultClub] = useState("");
   const [defaultAccess, setDefaultAccess] = useState("");
 
-  const { Option } = Select;
   const [openDrawer, setOpenDrawer] = useState(false);
   const showDrawer = (userID) => {
     const fetchData = async () => {
@@ -296,7 +298,7 @@ function GeneralUsersMaintenance(){
       const clubMember = users.map(user => user.club_id);
       const accessLevel = users.map(user => user.access_level);
       const email = users.map(user => user.email);
-      // setDe
+
       setDefaultFirstName(firstName);
       setDefaultMiddleName(middleName);
       setDefaultLastName(lastName);
@@ -304,15 +306,15 @@ function GeneralUsersMaintenance(){
       setDefaultEmail(email);
       setDefaultClub(clubMember);
       setDefaultAccess(accessLevel);
+      setOpenDrawer(true);
     };
     setSelectedUserID(userID);
     fetchData();
-    setOpenDrawer(true);
   };
 
   const onClose = () => {
     setOpenDrawer(false);
-    setOpenViewDrawer(false)
+    setOpenViewDrawer(false);
   };
 
   const { Search } = Input;
@@ -322,7 +324,7 @@ function GeneralUsersMaintenance(){
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/0`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/1`);
             const users = response.data.map((user) => ({
               ...user,
               full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -365,8 +367,8 @@ function GeneralUsersMaintenance(){
 
             if (userInfo.response && userInfo.response.access_level) {
               setAccessLevel(userInfo.response.access_level)
-            // setClubId(userInfo.response.club_id);
-            console.log(accessLevel);
+                setClubId(userInfo.response.club_id);
+
             }
         } catch (error) {
             console.error("Failed to parse user info from localStorage:", error);
@@ -378,12 +380,11 @@ function GeneralUsersMaintenance(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/0`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/1`);
         const users = response.data.map((user) => ({
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
         }));
-        
         setData(users);
         setLoading(false);
       } catch (error) {
@@ -412,7 +413,9 @@ function GeneralUsersMaintenance(){
   const handleTableLayoutChange = (e) => {
     setTableLayout(e.target.value);
   };
-
+  const handleExpandChange = (enable) => {
+    setExpandable(enable ? defaultExpandable : undefined);
+  };
   const handleEllipsisChange = (enable) => {
     setEllipsis(enable);
   };
@@ -473,6 +476,7 @@ function GeneralUsersMaintenance(){
     }));
   };
 
+
   const [api, contextHolder] = notification.useNotification();
   const [messageApi, contextHolderMsg] = message.useMessage();
   const openNotification = () => {
@@ -531,7 +535,7 @@ function GeneralUsersMaintenance(){
       const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await axios.get('http://127.0.0.1:8000/api/getUsers/0');
+          const response = await axios.get('http://127.0.0.1:8000/api/getUsers/1');
           const users = response.data.map((user) => ({
             ...user,
             full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -545,9 +549,9 @@ function GeneralUsersMaintenance(){
         }
       };
 
-
-      fetchData();
-
+      if (accessLevel) {
+        fetchData();
+      }
 
       navigate('/admin/general-users');
       // openNotification();
@@ -560,64 +564,64 @@ function GeneralUsersMaintenance(){
     }
   };
 
-  // HANDLE SUBMIT
-  const onFinish = async (event) => {
-    event.preventDefault();
-    try {
-      const formData = new FormData();
-      // formData.append('image', fileList[0]?.originFileObj);
-      formData.append('first_name', defaultFirstName);
-      formData.append('middle_name', defaultMiddleName);
-      formData.append('last_name', defaultLastName);
-      formData.append('number', defaultNumber);
-      formData.append('access_level', defaultAccess);
-      formData.append('club_member', defaultClub);
-      formData.append('email', defaultEmail);
-
-      const response = await fetch(`http://127.0.0.1:8000/api/updateUser/${selectedUserID}?_method=POST`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        message.success(data.messages.message);
-        const fetchData = async () => {
-          try {
-            setLoading(true);
-            const response = await axios.get('http://127.0.0.1:8000/api/getUsers/0');
-            const users = response.data.map((user) => ({
-              ...user,
-              full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
-            }));
-            setData(users);
-          } catch (error) {
-            console.error('Error: ', error);
-            message.error(response.data.messages.message);
-          } finally {
-            setLoading(false);
-          }
-        };
+    // HANDLE SUBMIT
+    const onFinish = async (event) => {
+      event.preventDefault();
+      try {
+        const formData = new FormData();
+        // formData.append('image', fileList[0]?.originFileObj);
+        formData.append('first_name', defaultFirstName);
+        formData.append('middle_name', defaultMiddleName);
+        formData.append('last_name', defaultLastName);
+        formData.append('number', defaultNumber);
+        formData.append('access_level', defaultAccess);
+        formData.append('club_member', defaultClub);
+        formData.append('email', defaultEmail);
   
-        fetchData();
-        setOpenDrawer(false);
-        
-      } else {
-        message.error(data.messages.message);
+        const response = await fetch(`http://127.0.0.1:8000/api/updateUser/${selectedUserID}?_method=POST`, {
+          method: 'POST',
+          body: formData,
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          message.success(data.messages.message);
+          const fetchData = async () => {
+            try {
+              setLoading(true);
+              const response = await axios.get('http://127.0.0.1:8000/api/getUsers/1');
+              const users = response.data.map((user) => ({
+                ...user,
+                full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+              }));
+              setData(users);
+            } catch (error) {
+              console.error('Error: ', error);
+              message.error(response.data.messages.message);
+            } finally {
+              setLoading(false);
+            }
+          };
+    
+          fetchData();
+          setOpenDrawer(false);
+          
+        } else {
+          message.error(data.messages.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        message.error('Failed to update home contents.');
       }
-    } catch (error) {
-      console.error('Error:', error);
-      message.error('Failed to update home contents.');
-    }
-  };
+    };
 
   return (
     <>
       {contextHolder}
       {contextHolderMsg}
       <Drawer
-        title="User Details"
+        title="Admin Details"
         width={550}
         onClose={onClose}
         open={openViewDrawer}
@@ -670,8 +674,19 @@ function GeneralUsersMaintenance(){
             paddingBottom: 80,
           },
         }}
+      ></Drawer>
+      <Drawer
+        title="Edit User"
+        width={500}
+        onClose={onClose}
+        open={openDrawer}
+        styles={{
+          body: {
+            paddingBottom: 80,
+          },
+        }}
       >
-        <Form className='' layout="vertical"  onSubmit={() => onFinish(event)} ref={formRef}>
+        <Form className='' layout="vertical"  onSubmit={() => onFinish(event)} >
         <div className='test-cont'>
             <Col className='form-col'>
               <Form.Group className="mb-3">
@@ -698,7 +713,6 @@ function GeneralUsersMaintenance(){
                 <Form.Label htmlFor="club_member" className=''>Select Club</Form.Label>
                 <Form.Select name="club_member" id="club_member" onChange={(e) => setDefaultClub(e.target.value)} value={defaultClub} aria-label="Default select example">
                   <option>Open this select menu</option>
-                  <option value="0">AGILA</option>
                   <option value="1">RMMEC</option>
                   <option value="2">MMEC</option>
                   <option value="3">LBAEC</option>
@@ -739,10 +753,10 @@ function GeneralUsersMaintenance(){
       <div className='search-container'>
         <Search placeholder="input search text" className='search' size='large' onSearch={onSearch} enterButton />
         <Button size='large' type="primary" onClick={showModal}>
-          Add User
+          Add Admin
         </Button>
         <Modal
-          title="Add User"
+          title="Add Admin"
           open={open}
           centered
           onOk={handleOk}
@@ -796,12 +810,12 @@ function GeneralUsersMaintenance(){
 
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="email" className=''>Email</Form.Label>
-                <Form.Control className='' type="text" name="email" id="email" onChange={handleChange} value={inputs.email} placeholder="Enter email" />
+                <Form.Control className='' type="text" name="email" id="email" onChange={handleChange} defaultValue='' value={inputs.email} placeholder="Enter email" />
               </Form.Group>
                                         
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="password" className=''>Password</Form.Label>
-                <Form.Control className='' type="password" name="password" id="password" onChange={handleChange} value={inputs.password} placeholder="Password" />
+                <Form.Control className='' type="password" name="password" id="password" onChange={handleChange} defaultValue='' value={inputs.password} placeholder="Password" />
               </Form.Group>
             </Col>
           </Form>
@@ -825,4 +839,4 @@ function GeneralUsersMaintenance(){
   );
 }
 
-export default GeneralUsersMaintenance;
+export default ClubAdminMaintenance;

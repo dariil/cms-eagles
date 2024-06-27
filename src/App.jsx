@@ -42,6 +42,19 @@ function App() {
           <Route path='/admin/general-applications-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-users-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-announcements-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/users-club' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/admin-club' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-home' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-announcements' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-projects' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-about' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-officers' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-applications-tab' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-users-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-announcements-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-projects-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-officers-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-applications-archives' element={<Protected component = {Admin}/>}></Route>
             {/* <Route path="/"></Route>
             <Route path="/login"></Route>
             <Route path='/register'></Route>

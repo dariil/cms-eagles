@@ -32,6 +32,8 @@ import GeneralArchivedAnnouncement from './GeneralArchivedAnnouncements';
 import GeneralArchivedProjects from './GeneralArchivedProjects';
 import GeneralArchivedOfficers from './GeneralArchivedOfficers';
 import GeneralArchivedApplication from './GeneralArchivedApplication';
+import ClubUsersMaintenance from './ClubUsersMaintenance';
+import ClubAdminMaintenance from './ClubAdminMaintenance';
 
 
 const Dashboard = () => <div>Dashboard Content</div>;
@@ -70,188 +72,222 @@ function Admin(){
     console.log(clubId);
   })
 
-  const items = [
-    {
-      key: 'main-grp',
-      label: 'Main',
-      type: 'group',
-    },
-    {
-      key: 'dashboard',
-      icon: <DashboardOutlined />,
-      label: 'Dashboard',
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'region-grp',
-      label: 'Manage Region',
-      type: 'group',
-    },
-    {
-      key: 'general-account-sub',
-      icon: <TeamOutlined />,
-      label: 'Accounts',
-      children: [
-        {
-          key: 'general-users',
-          icon: <UserOutlined />,
-          label: <Link to={"/admin/general-users"} className='mt-2 admin-menu-items'>Users</Link>,
-        },
-        {
-          key: 'general-admin',
-          icon: <IdcardOutlined />,
-          label: <Link to="/admin/general-admin" className='mt-2 admin-menu-items'>Admin</Link>,
-        },
-      ],
-    },
-    {
-      key: 'general-maintenance',
-      icon: <SettingOutlined />,
-      label: 'General Maintenance',
-      children: [
-        {
-          key: 'general-home',
-          icon: <HomeOutlined />,
-          label: <Link to="/admin/general-home" className='mt-2 admin-menu-items'>Home</Link>,
-        },
-        {
-          key: 'general-announcements',
-          icon: <NotificationOutlined />,
-          label: <Link to="/admin/general-announcements" className='mt-2 admin-menu-items'>Announcements</Link>,
-        },
-        {
-          key: 'general-projects',
-          icon: <ProjectOutlined />,
-          label: <Link to="/admin/general-projects" className='mt-2 admin-menu-items'>Projects</Link>,
-        },
-        {
-          key: 'general-about',
-          icon: <InfoCircleOutlined />,
-          label: <Link to="/admin/general-aboutUs" className='mt-2 admin-menu-items'>About Us</Link>,
-        },
-        {
-          key: 'general-officers',
-          icon: <SolutionOutlined />,
-          label: <Link to="/admin/general-officers" className='mt-2 admin-menu-items'>Officers</Link>,
-        },
-      ]
-    },
-    {
-      key: 'general-applications',
-      icon: <ContainerOutlined />,
-      label: 'Applications Maintenance',
-      children: [
-        {
-          key: 'general-applications-tab',
-          icon: <ProfileOutlined />,
-          label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Applications</Link>,
-        },
-      ]
-    },
-    {
-      key: 'general-archives',
-      icon: <WarningOutlined />,
-      label: 'Archives',
-      children: [
-        {
-          key: 'general-users-archives',
-          icon: <UserDeleteOutlined />,
-          label: <Link to={"/admin/general-users-archives"} className='mt-2 admin-menu-items'>Accounts</Link>,
-        },
-        {
-          key: 'general-announcements-archives',
-          icon: <NotificationOutlined />,
-          label: <Link to="/admin/general-announcements-archives" className='mt-2 admin-menu-items'>Announcements</Link>,
-        },
-        {
-          key: 'general-projects-archives',
-          icon: <ProjectOutlined />,
-          label: <Link to="/admin/general-projects-archives" className='mt-2 admin-menu-items'>Projects</Link>,
-        },
-        {
-          key: 'general-officers-archives',
-          icon: <SolutionOutlined />,
-          label: <Link to="/admin/general-officers-archives" className='mt-2 admin-menu-items'>Officers</Link>,
-        },
-        {
-          key: 'general-applications-archives',
-          icon: <ProfileOutlined />,
-          label: <Link to="/admin/general-applications-archives" className='mt-2 admin-menu-items'>Applications</Link>,
-        },
-      ],
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'club-grp',
-      label: 'Manage Club',
-      type: 'group',
-    },
-    {
-      key: 'club-account-sub',
-      icon: <TeamOutlined />,
-      label: 'Accounts',
-      children: [
-        {
-          key: 'users-club',
-          icon: <UserOutlined />,
-          label: 'Users',
-        },
-        {
-          key: 'admin-club',
-          icon: <IdcardOutlined />,
-          label: 'Admin',
-        },
-      ],
-    },
-    {
-      key: 'club-maintenance',
-      icon: <SettingOutlined />,
-      label: 'Club Maintenance',
-      children: [
-        {
-          key: 'club-home',
-          icon: <HomeOutlined />,
-          label: 'Home',
-        },
-        {
-          key: 'club-announcements',
-          icon: <NotificationOutlined />,
-          label: 'Announcements',
-        },
-        {
-          key: 'club-projects',
-          icon: <ProjectOutlined />,
-          label: 'Projects',
-        },
-        {
-          key: 'club-about',
-          icon: <InfoCircleOutlined />,
-          label: 'About Us',
-        },
-        {
-          key: 'club-officers',
-          icon: <SolutionOutlined />,
-          label: 'Officers',
-        },
-      ],
-    },
-    {
-      key: 'club-applications',
-      icon: <ContainerOutlined />,
-      label: 'Applications Maintenance',
-      children: [
-        {
-          key: 'club-applications-tab',
-          icon: <ProfileOutlined />,
-          label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Applications</Link>,
-        },
-      ]
-    },
-  ];
+    const regionalItems = [
+      {
+        key: 'main-grp',
+        label: 'Main',
+        type: 'group',
+      },
+      {
+        key: 'dashboard',
+        icon: <DashboardOutlined />,
+        label: 'Dashboard',
+      },
+      {
+        type: 'divider',
+      },
+      {
+        key: 'region-grp',
+        label: 'Manage Region',
+        type: 'group',
+      },
+      {
+        key: 'general-account-sub',
+        icon: <TeamOutlined />,
+        label: 'Accounts',
+        children: [
+          {
+            key: 'general-users',
+            icon: <UserOutlined />,
+            label: <Link to={"/admin/general-users"} className='mt-2 admin-menu-items'>Users</Link>,
+          },
+          {
+            key: 'general-admin',
+            icon: <IdcardOutlined />,
+            label: <Link to="/admin/general-admin" className='mt-2 admin-menu-items'>Admin</Link>,
+          },
+        ],
+      },
+      {
+        key: 'general-maintenance',
+        icon: <SettingOutlined />,
+        label: 'General Maintenance',
+        children: [
+          {
+            key: 'general-home',
+            icon: <HomeOutlined />,
+            label: <Link to="/admin/general-home" className='mt-2 admin-menu-items'>Home</Link>,
+          },
+          {
+            key: 'general-announcements',
+            icon: <NotificationOutlined />,
+            label: <Link to="/admin/general-announcements" className='mt-2 admin-menu-items'>Announcements</Link>,
+          },
+          {
+            key: 'general-projects',
+            icon: <ProjectOutlined />,
+            label: <Link to="/admin/general-projects" className='mt-2 admin-menu-items'>Projects</Link>,
+          },
+          {
+            key: 'general-about',
+            icon: <InfoCircleOutlined />,
+            label: <Link to="/admin/general-aboutUs" className='mt-2 admin-menu-items'>About Us</Link>,
+          },
+          {
+            key: 'general-officers',
+            icon: <SolutionOutlined />,
+            label: <Link to="/admin/general-officers" className='mt-2 admin-menu-items'>Officers</Link>,
+          },
+        ]
+      },
+      {
+        key: 'general-applications',
+        icon: <ContainerOutlined />,
+        label: 'Applications Maintenance',
+        children: [
+          {
+            key: 'general-applications-tab',
+            icon: <ProfileOutlined />,
+            label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Applications</Link>,
+          },
+        ]
+      },
+      {
+        key: 'general-archives',
+        icon: <WarningOutlined />,
+        label: 'Archives',
+        children: [
+          {
+            key: 'general-users-archives',
+            icon: <UserDeleteOutlined />,
+            label: <Link to={"/admin/general-users-archives"} className='mt-2 admin-menu-items'>Accounts</Link>,
+          },
+          {
+            key: 'general-announcements-archives',
+            icon: <NotificationOutlined />,
+            label: <Link to="/admin/general-announcements-archives" className='mt-2 admin-menu-items'>Announcements</Link>,
+          },
+          {
+            key: 'general-projects-archives',
+            icon: <ProjectOutlined />,
+            label: <Link to="/admin/general-projects-archives" className='mt-2 admin-menu-items'>Projects</Link>,
+          },
+          {
+            key: 'general-officers-archives',
+            icon: <SolutionOutlined />,
+            label: <Link to="/admin/general-officers-archives" className='mt-2 admin-menu-items'>Officers</Link>,
+          },
+          {
+            key: 'general-applications-archives',
+            icon: <ProfileOutlined />,
+            label: <Link to="/admin/general-applications-archives" className='mt-2 admin-menu-items'>Applications</Link>,
+          },
+        ],
+      },
+    ]
+
+    const clubItems = [
+      {
+        key: 'club-grp',
+        label: 'Manage Club',
+        type: 'group',
+      },
+      {
+        key: 'club-account-sub',
+        icon: <TeamOutlined />,
+        label: 'Accounts',
+        children: [
+          {
+            key: 'users-club',
+            icon: <UserOutlined />,
+            label: <Link to={"/admin/users-club"} className='mt-2 admin-menu-items'>Users</Link>,
+          },
+          {
+            key: 'admin-club',
+            icon: <IdcardOutlined />,
+            label: <Link to={"/admin/admin-club"} className='mt-2 admin-menu-items'>Admin</Link>,
+          },
+        ],
+      },
+      {
+        key: 'club-maintenance',
+        icon: <SettingOutlined />,
+        label: 'Club Maintenance',
+        children: [
+          {
+            key: 'club-home',
+            icon: <HomeOutlined />,
+            label: <Link to={"/admin/club-home"} className='mt-2 admin-menu-items'>Home</Link>,
+          },
+          {
+            key: 'club-announcements',
+            icon: <NotificationOutlined />,
+            label: <Link to={"/admin/club-announcements"} className='mt-2 admin-menu-items'>Announcements</Link>,
+          },
+          {
+            key: 'club-projects',
+            icon: <ProjectOutlined />,
+            label: <Link to={"/admin/club-projects"} className='mt-2 admin-menu-items'>Projects</Link>,
+          },
+          {
+            key: 'club-about',
+            icon: <InfoCircleOutlined />,
+            label: <Link to={"/admin/club-about"} className='mt-2 admin-menu-items'>About Us</Link>,
+          },
+          {
+            key: 'club-officers',
+            icon: <SolutionOutlined />,
+            label: <Link to={"/admin/club-officers"} className='mt-2 admin-menu-items'>Officers</Link>,
+          },
+        ],
+      },
+      {
+        key: 'club-applications',
+        icon: <ContainerOutlined />,
+        label: 'Applications Maintenance',
+        children: [
+          {
+            key: 'club-applications-tab',
+            icon: <ProfileOutlined />,
+            label: <Link to="/admin/club-applications-tab" className='mt-2 admin-menu-items'>Applications</Link>,
+          },
+        ]
+      },
+      {
+        key: 'club-archives',
+        icon: <WarningOutlined />,
+        label: 'Archives',
+        children: [
+          {
+            key: 'club-users-archives',
+            icon: <UserDeleteOutlined />,
+            label: <Link to={"/admin/club-users-archives"} className='mt-2 admin-menu-items'>Accounts</Link>,
+          },
+          {
+            key: 'club-announcements-archives',
+            icon: <NotificationOutlined />,
+            label: <Link to="/admin/club-announcements-archives" className='mt-2 admin-menu-items'>Announcements</Link>,
+          },
+          {
+            key: 'club-projects-archives',
+            icon: <ProjectOutlined />,
+            label: <Link to="/admin/club-projects-archives" className='mt-2 admin-menu-items'>Projects</Link>,
+          },
+          {
+            key: 'club-officers-archives',
+            icon: <SolutionOutlined />,
+            label: <Link to="/admin/club-officers-archives" className='mt-2 admin-menu-items'>Officers</Link>,
+          },
+          {
+            key: 'club-applications-archives',
+            icon: <ProfileOutlined />,
+            label: <Link to="/admin/club-applications-archives" className='mt-2 admin-menu-items'>Applications</Link>,
+          },
+        ],
+      },
+    ]
+
+  const itemsToRender = clubId === 0 ? regionalItems : clubItems;
 
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState('dashboard');
@@ -295,8 +331,36 @@ function Admin(){
         return <GeneralArchivedOfficers />
       case 'general-applications-archives':
         return <GeneralArchivedApplication />
+
+      case 'users-club':
+        return <ClubUsersMaintenance />;
+      case 'admin-club':
+        return <ClubAdminMaintenance />;
+      case 'club-home':
+        return <GeneralHomeMaintenance />;
+      case 'club-announcements':
+        return <GeneralAnnouncementMaintenance />;
+      case 'club-projects':
+        return <GeneralProjectsMaintenance />;
+      case 'club-about':
+        return <GeneralAboutUsMaintenance />;
+      case 'club-officers':
+        return <GeneralOfficerMaintenance />;
+      case 'club-applications-tab':
+        return <GeneralApplicationsMaintenance />;
+      case 'club-users-archives':
+        return <GeneralArchivedUsers />
+      case 'club-announcements-archives':
+        return <GeneralArchivedAnnouncement />
+      case 'club-projects-archives':
+        return <GeneralArchivedProjects />
+      case 'club-officers-archives':
+        return <GeneralArchivedOfficers />
+      case 'club-applications-archives':
+        return <GeneralArchivedApplication />
       default:
         return <Dashboard />;
+
     }
   };
 
@@ -327,7 +391,7 @@ function Admin(){
                   mode="inline"
                   theme="light"
                   inlineCollapsed={collapsed}
-                  items={items}
+                  items={itemsToRender}
                   style={{
                     width: !collapsed ? 300 : 80
                   }}
