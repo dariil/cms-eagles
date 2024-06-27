@@ -13,6 +13,12 @@ import Login from './components/Login'
 import Admin from './components/Admin'
 import Protected from './components/Protected'
 
+import RMMECHome from './components/RMMEC/Home'
+import RMMECAnnouncements from './components/RMMEC/Announcements'
+import RMMECProjects from './components/RMMEC/Projects'
+import RMMECAbout from './components/RMMEC/About'
+import RMMECRegister from './components/RMMEC/Register'
+
 function App() {
 
   return (
@@ -25,7 +31,13 @@ function App() {
           <Route path='/projects' element={<Projects />}></Route>
           <Route path='/about' element={<About />}></Route>
           <Route path='/register' element={<Register />}></Route>
-          <Route path='/login' element={<Login />}></Route>
+
+          <Route path='/rmmec' element={<Protected component = {RMMECHome}/>}></Route>
+          <Route path='/rmmec/announcements' element={<RMMECAnnouncements />}></Route>
+          <Route path='/rmmec/projects' element={<RMMECProjects />}></Route>
+          <Route path='/rmmec/about' element={<RMMECAbout />}></Route>
+          <Route path='/rmmec/register' element={<RMMECRegister />}></Route>
+
           <Route path='/admin' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-users' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-admin' element={<Protected component = {Admin}/>}></Route>
@@ -55,10 +67,7 @@ function App() {
           <Route path='/admin/club-projects-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-officers-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-applications-archives' element={<Protected component = {Admin}/>}></Route>
-            {/* <Route path="/"></Route>
-            <Route path="/login"></Route>
-            <Route path='/register'></Route>
-            <Route path='/add' ></Route> */}
+
           </Routes>
         </BrowserRouter>
       </div>
