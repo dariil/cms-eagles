@@ -173,7 +173,7 @@ function RMMECRegister(){
 
     const generatePDF = async (data, imageBase64) => {
         try {
-            const existingPdfBytes = await fetch('MagitingLaguna_EAGLES.pdf').then((res) => res.arrayBuffer());
+            const existingPdfBytes = await fetch('../MagitingLaguna_EAGLES.pdf').then((res) => res.arrayBuffer());
             const pdfDoc = await PDFDocument.load(existingPdfBytes);
             const form = pdfDoc.getForm();
             const pages = pdfDoc.getPages();

@@ -53,7 +53,7 @@ function Header(){
                             <NavDropdown.Divider /> 
                         </NavDropdown> */}
                         <Link to="/about" className='mt-2'>About</Link>
-                        <Link to="/register" className='mt-2'><span className='register-btn'>Register</span> </Link>
+                        {/* <Link to="/register" className='mt-2'><span className='register-btn'>Register</span> </Link> */}
                         {/* <Link to="/login" className='mt-2'><span className='login-btn'>Login</span> </Link> */}
                     </Nav>
                     </Navbar.Collapse>
