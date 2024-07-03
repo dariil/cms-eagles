@@ -114,6 +114,10 @@ function GeneralHomeMaintenance() {
       dataIndex: 'hero_title',
     },
     {
+      title: 'Tagline',
+      dataIndex: 'hero_tagline',
+    },
+    {
       title: 'Hero Video',
       dataIndex: 'hero_video',
       render: (hero_video) => <video src={"http://localhost:8000/" + hero_video} autoPlay loop muted alt="Hero Video" style={{ maxWidth: '70px' }} />
@@ -271,6 +275,7 @@ function GeneralHomeMaintenance() {
     try {
       const formData = new FormData();
       formData.append('home_title', values.title_home);
+      formData.append('home_tagline', values.tagline_home);
       formData.append('video', fileListVid[0]?.originFileObj);
       formData.append('image', fileList[0]?.originFileObj);
       formData.append('description', values.home_content);
@@ -355,6 +360,19 @@ function GeneralHomeMaintenance() {
               ]}
             >
               <Input name="home_title" placeholder="Enter home title content" />
+            </Form.Item>
+
+            <Form.Item
+              name="tagline_home"
+              label="Hero Tagline"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a home title content',
+                },
+              ]}
+            >
+              <Input name="home_tagline" placeholder="Enter home title content" />
             </Form.Item>
 
             <Form.Item
