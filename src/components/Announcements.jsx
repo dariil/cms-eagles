@@ -40,27 +40,7 @@ function Announcements(){
 
     useEffect(() => {
         console.log(latestAnnouncement.title);
-        // console.log(data[1].title);
     }, [data]);
-
-    // const PrevArrow = (props) => {
-    //     const { className, onClick } = props;
-    //     return (
-    //         <div className={className} onClick={onClick}>
-    //             <i className="fas fa-chevron-left"></i>
-    //         </div>
-    //     );
-    // };
-
-    // // Custom Next Arrow Component
-    // const NextArrow = (props) => {
-    //     const { className, onClick } = props;
-    //     return (
-    //         <div className={className} onClick={onClick}>
-    //             <i className="fas fa-chevron-right"></i>
-    //         </div>
-    //     );
-    // };
 
     var settings = {
         dots: true,

@@ -4,11 +4,13 @@ import Header from './Header'
 import Footer from './Footer'
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 
-function RMMECProjects(){
+function Projects(){
+    const [latestProject, setLatestProject] = useState([]); /////   IMPORTANT    //////
     const [data, setData] = useState([]);
 
     useEffect(() => {
         getData();
+        getLatestProject();
     }, []);
 
     async function getData(){
@@ -22,10 +24,38 @@ function RMMECProjects(){
         }
     }
 
+    async function getLatestProject(){
+        try {
+            await axios.get(`http://127.0.0.1:8000/api/getRecentProject/1`).then(function(response){
+            console.log(response.data[0]);
+            setLatestProject(response.data[0]);
+            });
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    }
+
+
     return(
         <>
             <Header></Header>
-            <img className='projects-img' src="/assets/team1_upscaled_1.jpg"></img>
+            {/* <img className='projects-img' src="/assets/team1_upscaled_1.jpg"></img> */}
+            <div className='hero-main'>
+                <div className='hero-project-overlay'></div>
+                <div className='hero-vid-container'>
+                    <div className='projects-img' style={{ backgroundImage: `url(http://localhost:8000/${latestProject.cover_image})` }}></div>
+                </div>
+                <div className='hero-project-title'>
+                    <h2 className='font-weight-bold font-size-large prjc-tag'>Latest Project</h2>
+                    <h1 className='font-spcase-large font-weight-bold'>{latestProject.project_title}</h1>
+                    {latestProject && latestProject.created_at && (
+                        <>
+                        <h2 className=' font-size-larger'>{latestProject.created_at.split('T')[0]}</h2>
+                        <p className='project-details-dark'>{latestProject.project_description}</p>
+                        </>
+                    )}
+                </div>
+            </div>
             {
                 data.map((item, index) => (
                     <div className={index%2==0 ? 'project-main-container-dark' : 'project-main-container-light'}>
@@ -47,4 +77,4 @@ function RMMECProjects(){
     )
 }
 
-export default RMMECProjects
+export default Projects
