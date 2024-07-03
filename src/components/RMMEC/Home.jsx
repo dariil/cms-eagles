@@ -40,7 +40,7 @@ function RMMECHome(){
                 <div className='hero-title'>
                     <h1 className='font-spcase-large font-weight-bold'>{data.hero_title}</h1>
                     <br></br>
-                    <p className='font-size-large'>Unity | Service | Brotherhood</p>
+                    <p className='font-size-large'>{data.hero_tagline}</p>
                 </div>
             </div>
             <div className='home-sub-content'>
