@@ -31,6 +31,7 @@ function App() {
           <Route path='/projects' element={<Projects />}></Route>
           <Route path='/about' element={<About />}></Route>
           <Route path='/register' element={<Register />}></Route>
+          <Route path='/login' element={<Login />}></Route>
 
           <Route path='/rmmec' element={<Protected component = {RMMECHome}/>}></Route>
           <Route path='/rmmec/announcements' element={<RMMECAnnouncements />}></Route>

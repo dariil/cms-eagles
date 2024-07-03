@@ -420,7 +420,7 @@ function GeneralApplicationsMaintenance(){
           Formdata.append('email', values.email);
           Formdata.append('number', values.cellphone_number);
           Formdata.append('application_file', pdfBlob);
-          Formdata.append('club_id', 0);
+          Formdata.append('club_id', clubId);
 
           // Perform API call
           const response = await fetch(`http://127.0.0.1:8000/api/updateApplication/${selectedApplicationID}`, {

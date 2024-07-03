@@ -38,6 +38,7 @@ function GeneralHomeMaintenance() {
   const [bottom, setBottom] = useState('bottomLeft');
   const [ellipsis, setEllipsis] = useState(true);
   const [data, setData] = useState([]); /////   IMPORTANT    //////
+  const [selectedHomeID, setSelectedHomeID] = useState('');
 
   const formRef = useRef(null);
 
@@ -66,8 +67,9 @@ function GeneralHomeMaintenance() {
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
-  const showDrawer = () => {
+  const showDrawer = (home_ID) => {
     setOpen(true);
+    setSelectedHomeID(home_ID);
   };
   const onClose = () => {
     setOpen(false);
@@ -121,7 +123,7 @@ function GeneralHomeMaintenance() {
     },
     {
       title: 'Action',
-      render: () => (
+      render: (record) => (
         <Space size="middle">
           <ConfigProvider
             theme={{
@@ -132,7 +134,7 @@ function GeneralHomeMaintenance() {
               }
             }}
           >
-            <Button type='primary' onClick={showDrawer} className='action-edit1' size='large' icon={<EditOutlined />}></Button>
+            <Button type='primary' onClick={() => showDrawer(record.home_id)} className='action-edit1' size='large' icon={<EditOutlined />}></Button>
           </ConfigProvider>
           <ConfigProvider
             theme={{
@@ -143,9 +145,7 @@ function GeneralHomeMaintenance() {
               }
             }}
           >
-            <Button type='primary'  onClick={() => showViewDrawer()} className='action-view1' size='large' icon={<EyeOutlined />}>
-              {/* <EyeOutlined className='action-view' /> */}
-            </Button>
+            <Button type='primary'  onClick={() => showViewDrawer()} className='action-view1' size='large' icon={<EyeOutlined />}></Button>
           </ConfigProvider>
 
         </Space>
@@ -267,7 +267,7 @@ function GeneralHomeMaintenance() {
       formData.append('image', fileList[0]?.originFileObj);
       formData.append('description', values.home_content);
 
-      const response = await fetch(`http://127.0.0.1:8000/api/updateHome/1?_method=POST`, {
+      const response = await fetch(`http://127.0.0.1:8000/api/updateHome/${selectedHomeID}?_method=POST`, {
         method: 'POST',
         body: formData,
       });
