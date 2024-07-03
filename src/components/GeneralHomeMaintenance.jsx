@@ -42,12 +42,6 @@ function GeneralHomeMaintenance() {
 
   const formRef = useRef(null);
 
-  //HANDLE FORM DATA
-  const [formData, setFormData] = useState({
-    description: '',
-    image: null,
-  });
-
   /////////////////////////////////////////////////
 
   const scroll = {};
@@ -79,7 +73,9 @@ function GeneralHomeMaintenance() {
   //UPLOAD HANDLING COMPONENTS
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
+  const [previewVideo, setPreviewVideo] = useState('');
   const [fileList, setFileList] = useState([]);
+  const [fileListVid, setFileListVid] = useState([]);
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -90,6 +86,7 @@ function GeneralHomeMaintenance() {
   };
 
   const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChangeVid = ({ fileList: newFileListVid }) => setFileListVid(newFileListVid);
 
   const uploadButton = (
     <button
@@ -112,6 +109,15 @@ function GeneralHomeMaintenance() {
 
   // TABLE ITEMS
   const columns = [
+    {
+      title: 'Hero Title',
+      dataIndex: 'hero_title',
+    },
+    {
+      title: 'Hero Video',
+      dataIndex: 'hero_video',
+      render: (hero_video) => <video src={"http://localhost:8000/" + hero_video} autoPlay loop muted alt="Hero Video" style={{ maxWidth: '70px' }} />
+    },
     {
       title: 'Image',
       dataIndex: 'logo',
@@ -264,6 +270,8 @@ function GeneralHomeMaintenance() {
   const onFinish = async (values) => {
     try {
       const formData = new FormData();
+      formData.append('home_title', values.title_home);
+      formData.append('video', fileListVid[0]?.originFileObj);
       formData.append('image', fileList[0]?.originFileObj);
       formData.append('description', values.home_content);
 
@@ -297,6 +305,7 @@ function GeneralHomeMaintenance() {
         };
         formRef.current.resetFields();
         setFileList([]);
+        setFileListVid([]);
     
         fetchData();
         setOpen(false);
@@ -313,7 +322,6 @@ function GeneralHomeMaintenance() {
   return (
     <>
       <Drawer
-        // title="Admin Details"
         width={'100%'}
         onClose={onClose}
         open={openViewDrawer}
@@ -331,22 +339,74 @@ function GeneralHomeMaintenance() {
             paddingBottom: 80,
           },
         }}
-        // extra={
-        //   <Space>
-        //     <Button onClick={onClose}>Cancel</Button>
-        //     <Button htmlType='submit'  type="primary">
-        //       Save
-        //     </Button>
-        //   </Space>
-        // }
-        // onFinish={(values) => {
-        //   console.log({values});
-        // }}
       >
         <Form layout="vertical" onFinish={onFinish} ref={formRef} >
-          <div className='test-cont'>
+          <div className='test-cont-1'>
           <Col span={24}>
           
+            <Form.Item
+              name="title_home"
+              label="Hero Title"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a home title content',
+                },
+              ]}
+            >
+              <Input name="home_title" placeholder="Enter home title content" />
+            </Form.Item>
+
+            <Form.Item
+              name={"video"}
+              valuePropName='fileListVid'
+              getValueFromEvent={(event)=>{
+                return event?.fileList;
+              }}
+              label="Hero Video"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please upload a video',
+                },
+                {
+                  validator(_,fileListVid){
+                    return new Promise((resolve, reject) =>{
+                      if(fileListVid && fileListVid[0].size > 999999999){
+                        reject('File size exceeded the accepted limit');
+                      } else{
+                        resolve("Success");
+                      }
+                    });
+                  }
+                }
+              ]}
+            >
+              <Upload
+                maxCount={1}
+                listType="picture-card"
+                fileList={fileListVid}
+                // onPreview={handlePreview}
+                onChange={handleChangeVid}
+                beforeUpload={(file) => {
+                  return new Promise((resolve, reject) => {
+                    if (file.size > 900000) {
+                      reject('File size exceeded the accepted limit');
+                    } else {
+                      resolve();
+                    }
+                  });
+                }}
+                customRequest={({ file, onSuccess }) => {
+                  handleChangeVid({ file });
+                  onSuccess();
+                }}
+              >
+                {uploadButton}
+                {/* {fileListVid[0]?.name} */}
+              </Upload>
+            </Form.Item>
+
             <Form.Item
               name="home_content"
               label="Home Content"
@@ -359,6 +419,7 @@ function GeneralHomeMaintenance() {
             >
               <Input.TextArea rows={12} name="description" placeholder="Enter home content" />
             </Form.Item>
+
             <Form.Item
               name={"image"}
               valuePropName='fileList'
@@ -425,6 +486,19 @@ function GeneralHomeMaintenance() {
                     afterOpenChange: (visible) => !visible && setPreviewImage(''),
                   }}
                   src={previewImage}
+                />
+            )}
+            {previewVideo && (
+                <Image
+                  wrapperStyle={{
+                    display: 'none',
+                  }}
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) => !visible && setPreviewVideo(''),
+                  }}
+                  src={previewVideo}
                 />
               )}
           </Col>
