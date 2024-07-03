@@ -56,7 +56,7 @@ function Projects(){
                     )}
                 </div>
             </div>
-            {
+            {/* {
                 data.map((item, index) => (
                     <div className={index%2==0 ? 'project-main-container-dark' : 'project-main-container-light'}>
                         <Container className='w-75' fluid>
@@ -71,6 +71,34 @@ function Projects(){
                         </Container>
                     </div>
                 ))
+            } */}
+            {
+                data.map((item, index) => (
+                    <div className="skewed-card-main">
+                        <div className="skewed-project-main">
+                            <div className="project-text">
+                                <div>
+                                <h4 className="project-details-dark">{item.created_at.split('T')[0]}</h4>
+                                <h1 className="project-name-dark font-spcase-large">{item.project_title}</h1>
+                                </div>
+                                <p className="project-details-dark">{item.project_description}</p>
+                                <br />
+                                <br />
+                                <a className="proj-read-more" href="#">Read More &rarr;</a>
+                            </div>
+                            <div className="project-image" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}>
+                                <div className="project-image-overlay"></div>
+                            </div>
+                            {/* <div className="prj-img-test">
+                                <div>
+                                    <img src={`http://localhost:8000/${item.cover_image}`}>
+                                    </img>
+                                </div>
+                            </div> */}
+                        </div>
+                    </div>
+                ))
+                
             }
             <Footer></Footer>
         </>
