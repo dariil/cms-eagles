@@ -56,23 +56,28 @@ function Projects(){
                     )}
                 </div>
             </div>
-            {/* {
+            {
                 data.map((item, index) => (
-                    <div className={index%2==0 ? 'project-main-container-dark' : 'project-main-container-light'}>
+                    <div className={index%2==0 ? 'project-main-container-dark' : 'project-main-container-light'} key={index}>
                         <Container className='w-75' fluid>
                             <Col>
-                                <Row className='justify-content-between mb-2'>
-                                    <h1 className={index%2==0 ? 'w-50 project-name-dark font-spcase-large' : 'w-50 project-name-light font-spcase-large'}>{item.project_title}</h1>
-                                    <h1 className={index%2==0 ? 'w-50 project-date-dark font-size-larger' : 'w-50 project-date-light font-size-larger'}>{item.created_at.split('T')[0]}</h1>
-                                </Row>
-                                <div className="project-image" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
-                                <p className={index%2==0 ? 'project-details-dark' : 'project-details-light'}>{item.project_description}</p>
+                                <div className={index%2==0 ? "project-txt-img-container-reverse" : "project-txt-img-container"}>
+                                    <div className="project-image-old" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
+                                    <div className="project-text-contents">
+                                        <div>
+                                            <h1 className={index%2==0 ? 'w-100 project-name-dark font-spcase-large' : 'w-100 project-name-light font-spcase-large'}>{item.project_title}</h1>
+                                            <h1 className={index%2==0 ? 'w-100 project-date-dark font-size-larger' : 'w-100 project-date-light font-size-larger'}>{item.created_at.split('T')[0]}</h1>
+                                        </div>
+                                        <p className={index%2==0 ? 'project-details-dark' : 'project-details-light'}>{item.project_description}</p>
+                                        <a className={index%2==0 ? "proj-read-more-dark" : "proj-read-more-light"} href="#">Read More &rarr;</a>
+                                    </div>
+                                </div>
                             </Col>
                         </Container>
                     </div>
                 ))
-            } */}
-            {
+            }
+            {/* 
                 data.map((item, index) => (
                     <div className="skewed-card-main">
                         <div className="skewed-project-main">
@@ -89,17 +94,11 @@ function Projects(){
                             <div className="project-image" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}>
                                 <div className="project-image-overlay"></div>
                             </div>
-                            {/* <div className="prj-img-test">
-                                <div>
-                                    <img src={`http://localhost:8000/${item.cover_image}`}>
-                                    </img>
-                                </div>
-                            </div> */}
                         </div>
                     </div>
                 ))
                 
-            }
+             */}
             <Footer></Footer>
         </>
     )
