@@ -93,64 +93,53 @@ function RMMECAnnouncements(){
     return(
         <>
         <Header></Header>
-            <div>
-                <Container className='w-75 home-container' fluid>
-                    <Row className="align-items-center justify-content-center justify-content-lg-evenly">
-                        <Col lg={6} md={12} className="mb-3 mb-lg-0">
-                        <Image src={"http://localhost:8000/"+latestAnnouncement.cover_image} fluid className="img-fluid rounded-lg" />
-                        </Col>
-                        <Col lg={6} md={12}>
-                        <Row className="text-center text-md-start">
-                            <Col>
-                            <h2 className='font-weight-bold font-spcase-large'>Latest News</h2>
-                            <br></br>
-                            <h2 className='font-weight-bold font-size-large'>
-                            {latestAnnouncement && latestAnnouncement.created_at && (
-                                <>
-                                    <h2 className='font-weight-bold font-size-large'>{latestAnnouncement.created_at.split('T')[0]}</h2>
-                                    <br />
-                                </>
-                            )}    
-                            </h2>
-                            <br></br>
-                            <p>
-                            {latestAnnouncement.description}
-                            </p>
-                            <br></br>
-                            </Col>
-                        </Row>
-                        <Row className="justify-content-center justify-content-md-start">
-                            <Col>
-                                <a className="font-size-large font-weight-bold a-btn-style-1" href="#">Learn more</a>
-                            </Col>
-                        </Row>
-                        </Col>
-                    </Row>
-                </Container>
-                {/* IMPLEMENT CARD SLIDER BELOW */}
-                <div className='carousel-main-container'>
-                <div className='carousel-container'>
-                    <Slider {...settings}>
-                        {
-                            data.map((item, index) => (
-                                <div className='box' key={index}>
-                                    <div className="blog-post-image" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
-                                    <h3 className='font-weight-bold mt-3'>{item.title}</h3>
-                                    <div className='announcement-content-container'>
-                                        <p className='announcment-content'>
-                                            {item.description}
-                                        </p>
-                                    </div>
-                                    <div className='read-more-container mt-4'>
-                                        <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                                    </div>
-                                </div>
-                            ))
-                        }
-                    </Slider>
+        <div className="announcement-main-container">
+            <p className="latest-post-tag">Latest Announcements (2)</p>
+            <div className="latest-post-container">
+                <div className="latest-large">
+                    <div className="latest-l-img"></div>
+                    <div>
+                        <h3 className="latest-blog-l-title">Lorem Ipsum dolor amet.</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    </div>
+                    <div className="post-info-row">
+                        <div className="date-posted">
+                            <p><strong>Mar 19, 2022</strong> at 10:25 PM</p>
+                        </div>
+                    </div>
                 </div>
+                <div className="latest-small">
+                    <div className="latest-s-img"></div>
+                    <div>
+                        <h3 className="latest-blog-l-title">Lorem Ipsum dolor amet.</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    </div>
+                    <div className="post-info-row">
+                        <div className="date-posted">
+                            <p><strong>Mar 19, 2022</strong> at 10:25 PM</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+        
+            <div className="main-parent-flex-container">
+                {
+                    data.map((item, index) => (
+                        <div className="child-content" key={index}>
+                            <a className="announcement-prev-a" href="">
+                            <div className="blog-post-image" style={{ backgroundImage: `url('http://localhost:8000/${item.cover_image}')` }}></div>
+                                <h1 className="blogs-title">{item.title}</h1>
+                                <p className="blogs-intro">{item.description}</p>
+                                <div className="date-posted">
+                                    <p><strong>Created at: </strong>{item.created_at.split('T')[0]}</p>
+                                </div>
+                            </a>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
         <Footer></Footer>
         </>
     )
