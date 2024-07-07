@@ -269,6 +269,10 @@
   margin: auto;
 }
 
+.announcement-container{
+  overflow-x: hidden;
+}
+
 .latest-post-tag{
   margin-top: 170px;
   width: 75%;
@@ -279,7 +283,6 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 100px;
-  /* height: 470px; */
 }
 
 .latest-large{
@@ -290,9 +293,14 @@
 }
 
 .latest-large h3{
-  /* margin-top: px; */
+  color: #ab3732;
   font-size: 2.0rem;
   font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .latest-large p{
@@ -313,26 +321,34 @@
 }
 
 .latest-l-img{
-  background-image: url('../assets/blog-image-test-large.jpg');
   background-size:auto;
   background-position: center; 
   width: 100%;
   height: 500px;
   border-radius: 10px;
+  background-size: cover;
+  background-position: center; 
 }
 
 .latest-s-img{
-  background-image: url('../assets/blog-image-test-small.jpg');
   background-size:cover;
   background-position: center; 
   width: 100%;
   height: 500px;
   border-radius: 10px;
+  background-size: cover;
+  background-position: center; 
 }
 
 .latest-small h3{
+  color: #ab3732;
   font-size: 2.0rem;
   font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .latest-small p{
@@ -373,9 +389,9 @@
 }
 
 .blogs-title{
+  color: #ab3732;
   font-size: 1.5rem;
-  /* text-overflow: ellipsis; */
-  /* white-space: nowrap; */
+  font-weight: 600;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -387,8 +403,6 @@
   font-size: 0.9rem;
   font-weight: 300;
   margin-bottom: 15px;
-  /* text-overflow: ellipsis; */
-  /* white-space: nowrap; */
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
