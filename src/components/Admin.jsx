@@ -249,7 +249,7 @@ function Admin(){
           {
             key: 'club-applications-tab',
             icon: <ProfileOutlined />,
-            label: <Link to="/admin/club-applications-tab" className='mt-2 admin-menu-items'>Applications</Link>,
+            label: <Link to="/admin/club-applications-tab" className='mt-2 admin-menu-items'>Aspirants</Link>,
           },
         ]
       },

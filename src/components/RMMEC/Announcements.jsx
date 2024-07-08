@@ -37,7 +37,6 @@ function RMMECAnnouncements(){
     async function getData(){
         try {
             await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/1`).then(function(response){
-            // console.log(response.data);
             setData(response.data);
             });
         } catch (error) {
