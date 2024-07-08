@@ -8,7 +8,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 function Announcements(){
-    const [latestAnnouncement, setLatestAnnouncement] = useState([]); /////   IMPORTANT    //////
+    const [latestAnnouncement, setLatestAnnouncement] = useState(null); /////   IMPORTANT    //////
+    const [secondLatestAnnouncement, setSecondLatestAnnouncement] = useState(null);
     const [data, setData] = useState([]); /////   IMPORTANT    //////
 
     useEffect(() =>{
@@ -19,8 +20,14 @@ function Announcements(){
     async function getLatestAnnouncement(){
         try {
             await axios.get(`http://127.0.0.1:8000/api/getRecentAnnouncement/0`).then(function(response){
-            console.log(response.data[0]);
-            setLatestAnnouncement(response.data[0]);
+                console.log(response.data[0]);
+                const announcements = response.data;
+                if (announcements.length > 0) {
+                    setLatestAnnouncement(announcements[0]);
+                }
+                if (announcements.length > 1) {
+                    setSecondLatestAnnouncement(announcements[1]);
+                }
             });
         } catch (error) {
             console.error('Error: ', error);
@@ -38,99 +45,85 @@ function Announcements(){
         }
     }
 
-    useEffect(() => {
-        console.log(latestAnnouncement.title);
-    }, [data]);
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const options = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        };
+        const formattedDate = date.toLocaleDateString(undefined, options);
 
-    var settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        initialSlide: 0,
-        responsive: [
-          
-          
-          {
-            breakpoint: 1439,
-            settings: {
-              slidesToShow: 2,
-              slidesToScroll: 2,
-              initialSlide: 2
-            }
-          },
-          {
-            breakpoint: 768,
-            settings: {
-              slidesToShow: 1,
-              slidesToScroll: 1
-            }
-          }
-        ],
-      };
+        return formattedDate;
+    }
 
     return(
         <>
+        <div className="announcement-container">
         <Header></Header>
-            <div>
-                <Container className='w-75 home-container' fluid>
-                    <Row className="align-items-center justify-content-center justify-content-lg-evenly">
-                        <Col lg={6} md={12} className="mb-3 mb-lg-0">
-                        <Image src={"http://localhost:8000/"+latestAnnouncement.cover_image} fluid className="img-fluid rounded-lg" />
-                        </Col>
-                        <Col lg={6} md={12}>
-                        <Row className="text-center text-md-start">
-                            <Col>
-                            <h2 className='font-weight-bold font-spcase-large'>Latest News</h2>
-                            <br></br>
-                            <h2 className='font-weight-bold font-size-large'>
-                            {latestAnnouncement && latestAnnouncement.created_at && (
-                                <>
-                                    <h2 className='font-weight-bold font-size-large'>{latestAnnouncement.created_at.split('T')[0]}</h2>
-                                    <br />
-                                </>
-                            )}    
-                            </h2>
-                            <br></br>
-                            <p>
-                            {latestAnnouncement.description}
-                            </p>
-                            <br></br>
-                            </Col>
-                        </Row>
-                        <Row className="justify-content-center justify-content-md-start">
-                            <Col>
-                                <a className="font-size-large font-weight-bold a-btn-style-1" href="#">Learn more</a>
-                            </Col>
-                        </Row>
-                        </Col>
-                    </Row>
-                </Container>
-                {/* IMPLEMENT CARD SLIDER BELOW */}
-                <div className='carousel-main-container'>
-                <div className='carousel-container'>
-                    <Slider {...settings}>
-                        {
-                            data.map((item, index) => (
-                                <div className='box' key={index}>
-                                    <div className="blog-post-image" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
-                                    <h3 className='font-weight-bold mt-3'>{item.title}</h3>
-                                    <div className='announcement-content-container'>
-                                        <p className='announcment-content'>
-                                            {item.description}
-                                        </p>
-                                    </div>
-                                    <div className='read-more-container mt-4'>
-                                        <a className="font-weight-normal" href="#" dangerouslySetInnerHTML={{ __html: 'Read more &gt;' }}></a>
-                                    </div>
+        <div className="announcement-main-container">
+            <h5 className="latest-post-tag">Latest Announcements</h5>
+            <div className="latest-post-container">
+                {latestAnnouncement && (
+                    <div className="latest-large">
+                        <a href="" className="announcement-prev-a">
+                            <div className="latest-l-img" style={{ backgroundImage: `url('http://localhost:8000/${latestAnnouncement.cover_image}')` }}></div>
+                            <div>
+                                <h3 className="latest-blog-l-title">{latestAnnouncement.title}</h3>
+                                <p>{latestAnnouncement.description}</p>
+                            </div>
+                            <div className="post-info-row">
+                                <div className="date-posted">
+                                    {latestAnnouncement.created_at && (
+                                    <p><strong>Created at: </strong>{formatDate(latestAnnouncement.created_at.split('T')[0])}</p>
+                                )}
                                 </div>
-                            ))
-                        }
-                    </Slider>
-                </div>
-                </div>
+                            </div>
+                        </a>
+                    </div>
+                )}
+
+                {secondLatestAnnouncement && (
+                    <div className="latest-small">
+                        <a href="" className="announcement-prev-a">
+                            <div className="latest-s-img" style={{ backgroundImage: `url('http://localhost:8000/${secondLatestAnnouncement.cover_image}')` }}></div>
+                            <div>
+                                <h3 className="latest-blog-l-title">{latestAnnouncement.title}</h3>
+                                <p>{secondLatestAnnouncement.description}</p>
+                            </div>
+                            <div className="post-info-row">
+                                <div className="date-posted">
+                                    {secondLatestAnnouncement.created_at && (
+                                    <p><strong>Created at: </strong>{formatDate(secondLatestAnnouncement.created_at.split('T')[0])}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                )}
             </div>
+
+            <h5 className="latest-post-tag">Other Announcements</h5>
+            <hr></hr>
+
+            <div className="main-parent-flex-container">
+                {
+                    data.map((item, index) => (
+                        <div className="child-content" key={index}>
+                            <a className="announcement-prev-a" href="">
+                            <div className="blog-post-image" style={{ backgroundImage: `url('http://localhost:8000/${item.cover_image}')` }}></div>
+                                <h1 className="blogs-title">{item.title}</h1>
+                                <p className="blogs-intro">{item.description}</p>
+                                <div className="date-posted">
+                                    <p><strong>Created at: </strong>{formatDate(item.created_at.split('T')[0])}</p>
+                                </div>
+                            </a>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+        </div>
         <Footer></Footer>
         </>
     )

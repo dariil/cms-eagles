@@ -35,7 +35,7 @@ function Home(){
             <div className='hero-main'>
                 <div className='hero-overlay'></div>
                 <div className='hero-vid-container'>
-                    <video src={"http://localhost:8000/"+data.hero_vid} autoPlay loop muted className='hero-vid'></video>
+                    <video src={"http://localhost:8000/"+data.hero_video} autoPlay loop muted className='hero-vid'></video>
                 </div>
                 <div className='hero-title'>
                     <h1 className='font-spcase-large font-weight-bold'>{data.hero_title}</h1>

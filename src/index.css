@@ -201,6 +201,10 @@
   padding-left: 270px;
 }
 
+.latest-proj-title{
+  color: var(--mud-variation);
+}
+
 .prjc-tag{
   background-color: #f85046;
   color: #ECF9FC;
@@ -557,7 +561,7 @@ small{
 }
 
 .proj-read-more-dark{
-  color: #fff;
+  color: var(--mud-variation);
   text-decoration: none;
   transition: color 0.3s ease-in-out;
 }
@@ -607,7 +611,6 @@ small{
 
 .project-date-light{
   color: black;
-  font-size: large;
 }
 
 .project-text-contents{

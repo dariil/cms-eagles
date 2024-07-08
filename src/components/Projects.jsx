@@ -35,6 +35,18 @@ function Projects(){
         }
     }
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const options = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        };
+        const formattedDate = date.toLocaleDateString(undefined, options);
+
+        return formattedDate;
+    }
+
 
     return(
         <>
@@ -43,14 +55,14 @@ function Projects(){
             <div className='hero-main'>
                 <div className='hero-project-overlay'></div>
                 <div className='hero-vid-container'>
-                    <img className='projects-img' src={"http://localhost:8000/"+latestProject.cover_image}></img>
+                    <div className='projects-img' style={{ backgroundImage: `url(http://localhost:8000/${latestProject.cover_image})` }}></div>
                 </div>
                 <div className='hero-project-title'>
                     <h2 className='font-weight-bold font-size-large prjc-tag'>Latest Project</h2>
                     <h1 className='font-spcase-large font-weight-bold'>{latestProject.project_title}</h1>
                     {latestProject && latestProject.created_at && (
                         <>
-                        <h2 className=' font-size-larger'>{latestProject.created_at.split('T')[0]}</h2>
+                        <h2 className=' font-size-larger'>{formatDate(latestProject.created_at.split('T')[0])}</h2>
                         <p className='project-details-dark'>{latestProject.project_description}</p>
                         </>
                     )}
@@ -61,12 +73,17 @@ function Projects(){
                     <div className={index%2==0 ? 'project-main-container-dark' : 'project-main-container-light'} key={index}>
                         <Container className='w-75' fluid>
                             <Col>
-                                <Row className='justify-content-between mb-2'>
-                                    <h1 className={index%2==0 ? 'w-50 project-name-dark font-spcase-large' : 'w-50 project-name-light font-spcase-large'}>{item.project_title}</h1>
-                                    <h1 className={index%2==0 ? 'w-50 project-date-dark font-size-larger' : 'w-50 project-date-light font-size-larger'}>{item.created_at.split('T')[0]}</h1>
-                                </Row>
-                                <div className="project-image-old" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
-                                <p className={index%2==0 ? 'project-details-dark' : 'project-details-light'}>{item.project_description}</p>
+                                <div className={index%2==0 ? "project-txt-img-container-reverse" : "project-txt-img-container"}>
+                                    <div className="project-image-old" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
+                                    <div className="project-text-contents">
+                                        <div>
+                                            <h1 className={'w-100 project-name-dark font-spcase-large'}>{item.project_title}</h1>
+                                            <h1 className={index%2==0 ? 'w-100 project-date-dark font-size-larger' : 'w-100 project-date-light font-size-larger'}>{formatDate(item.created_at.split('T')[0])}</h1>
+                                        </div>
+                                        <p className={index%2==0 ? 'project-details-dark' : 'project-details-light'}>{item.project_description}</p>
+                                        <a className={index%2==0 ? "proj-read-more-dark" : "proj-read-more-light"} href="#">Read More &rarr;</a>
+                                    </div>
+                                </div>
                             </Col>
                         </Container>
                     </div>

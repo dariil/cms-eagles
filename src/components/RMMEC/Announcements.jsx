@@ -20,14 +20,14 @@ function RMMECAnnouncements(){
     async function getLatestAnnouncement(){
         try {
             await axios.get(`http://127.0.0.1:8000/api/getRecentAnnouncement/1`).then(function(response){
-            console.log(response.data[0]);
-            const announcements = response.data;
-            if (announcements.length > 0) {
-                setLatestAnnouncement(announcements[0]);
-            }
-            if (announcements.length > 1) {
-                setSecondLatestAnnouncement(announcements[1]);
-            }
+                console.log(response.data[0]);
+                const announcements = response.data;
+                if (announcements.length > 0) {
+                    setLatestAnnouncement(announcements[0]);
+                }
+                if (announcements.length > 1) {
+                    setSecondLatestAnnouncement(announcements[1]);
+                }
             });
         } catch (error) {
             console.error('Error: ', error);
@@ -64,7 +64,7 @@ function RMMECAnnouncements(){
         <div className="announcement-container">
         <Header></Header>
         <div className="announcement-main-container">
-            <p className="latest-post-tag">Latest Announcements</p>
+            <h5 className="latest-post-tag">Latest Announcements</h5>
             <div className="latest-post-container">
                 {latestAnnouncement && (
                     <div className="latest-large">
@@ -105,7 +105,7 @@ function RMMECAnnouncements(){
                 )}
             </div>
 
-            <h2>Other Announcements</h2>
+            <h5 className="latest-post-tag">Other Announcements</h5>
             <hr></hr>
 
             <div className="main-parent-flex-container">
