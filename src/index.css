@@ -159,7 +159,7 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(to top, #1E1E1E 20%, #ab3732 150%);   
-  opacity: 0.95;
+  opacity: 0.90;
 }
 
 .hero-title{
@@ -563,9 +563,9 @@ small{
   display: flex;
   background-color: #1e1e1e;
   margin: 5em 0;
-  border-style: solid;
+  /* border-style: solid;
   border-width: 1px 0 1px 0;
-  border-color: #ab3732;
+  border-color: #ab3732; */
 }
 
 .project-text{

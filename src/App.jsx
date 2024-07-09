@@ -18,6 +18,7 @@ import RMMECAnnouncements from './components/RMMEC/Announcements'
 import RMMECProjects from './components/RMMEC/Projects'
 import RMMECAbout from './components/RMMEC/About'
 import RMMECRegister from './components/RMMEC/Register'
+import RMMECMemberRegister from './components/RMMEC/MemberRegister'
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
           <Route path='/rmmec/projects' element={<RMMECProjects />}></Route>
           <Route path='/rmmec/about' element={<RMMECAbout />}></Route>
           <Route path='/rmmec/register' element={<RMMECRegister />}></Route>
+          <Route path='/rmmec/member_register' element={<RMMECMemberRegister />}></Route>
 
           <Route path='/admin' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-users' element={<Protected component = {Admin}/>}></Route>
