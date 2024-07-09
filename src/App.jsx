@@ -50,6 +50,7 @@ function App() {
           <Route path='/admin/general-aboutUs' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-officers' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-applications' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/general-member-applications' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-users-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-announcements-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-projects-archives' element={<Protected component = {Admin}/>}></Route>
@@ -65,6 +66,7 @@ function App() {
           <Route path='/admin/club-about' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-officers' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-applications-tab' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-member-applications' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-users-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-announcements-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-projects-archives' element={<Protected component = {Admin}/>}></Route>

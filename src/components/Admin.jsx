@@ -17,6 +17,7 @@ import {
   ProfileOutlined,
   WarningOutlined,
   UserDeleteOutlined,
+  VerifiedOutlined
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 import GeneralUsersMaintenance from './GeneralUsersMaintenance';
@@ -27,6 +28,7 @@ import GeneralProjectsMaintenance from './GeneralProjectsMaintenance';
 import GeneralAboutUsMaintenance from './GeneralAboutUsMaintenance';
 import GeneralOfficerMaintenance from './GeneralOfficerMaintenance';
 import GeneralApplicationsMaintenance from './GeneralApplicationsMaintenance';
+import GeneralMemberApplicationsMaintenance from './GeneralMemberApplicationMaintenance';
 import GeneralArchivedUsers from './GeneralArchivedUsers';
 import GeneralArchivedAnnouncement from './GeneralArchivedAnnouncements';
 import GeneralArchivedProjects from './GeneralArchivedProjects';
@@ -148,7 +150,12 @@ function Admin(){
           {
             key: 'general-applications-tab',
             icon: <ProfileOutlined />,
-            label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Applications</Link>,
+            label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Aspirants</Link>,
+          },
+          {
+            key: 'general-member-applications-tab',
+            icon: <ProfileOutlined />,
+            label: <Link to="/admin/general-member-applications" className='mt-2 admin-menu-items'>Members</Link>,
           },
         ]
       },
@@ -179,7 +186,7 @@ function Admin(){
           },
           {
             key: 'general-applications-archives',
-            icon: <ProfileOutlined />,
+            icon: <VerifiedOutlined />,
             label: <Link to="/admin/general-applications-archives" className='mt-2 admin-menu-items'>Applications</Link>,
           },
         ],
@@ -250,6 +257,11 @@ function Admin(){
             key: 'club-applications-tab',
             icon: <ProfileOutlined />,
             label: <Link to="/admin/club-applications-tab" className='mt-2 admin-menu-items'>Aspirants</Link>,
+          },
+          {
+            key: 'club-member-applications-tab',
+            icon: <VerifiedOutlined />,
+            label: <Link to="/admin/club-member-applications" className='mt-2 admin-menu-items'>Members</Link>,
           },
         ]
       },
@@ -348,6 +360,8 @@ function Admin(){
         return <GeneralOfficerMaintenance />;
       case 'club-applications-tab':
         return <GeneralApplicationsMaintenance />;
+      case 'club-member-applications-tab':
+        return <GeneralMemberApplicationsMaintenance />;
       case 'club-users-archives':
         return <GeneralArchivedUsers />
       case 'club-announcements-archives':
