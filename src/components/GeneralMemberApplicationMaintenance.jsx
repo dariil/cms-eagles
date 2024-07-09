@@ -187,7 +187,7 @@ function GeneralMemberApplicationsMaintenance(){
                 <Popconfirm
                 title="Delete the task"
                 description="Are you sure to delete this task?"
-                onConfirm={() => archiveConfirm(record.application_id)}
+                onConfirm={() => archiveConfirm(record.member_application_id)}
                 icon={
                   <QuestionCircleOutlined
                     style={{
@@ -249,7 +249,7 @@ function GeneralMemberApplicationsMaintenance(){
   //DELETE FUNCTION
   const archiveConfirm = async (applicationID) => {
     setSelectedApplicationID(applicationID);
-    await axios.post('http://localhost:8000/api/archiveApplication/'+applicationID).then(function(response){
+    await axios.post('http://localhost:8000/api/archiveMemberApplication/'+applicationID).then(function(response){
             console.log(response.data);
             message.success(response.data.messages.message);
     });

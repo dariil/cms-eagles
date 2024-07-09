@@ -72,6 +72,7 @@ function App() {
           <Route path='/admin/club-projects-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-officers-archives' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/club-applications-archives' element={<Protected component = {Admin}/>}></Route>
+          <Route path='/admin/club-member-applications-archives' element={<Protected component = {Admin}/>}></Route>
 
           </Routes>
         </BrowserRouter>

@@ -36,6 +36,7 @@ import GeneralArchivedOfficers from './GeneralArchivedOfficers';
 import GeneralArchivedApplication from './GeneralArchivedApplication';
 import ClubUsersMaintenance from './ClubUsersMaintenance';
 import ClubAdminMaintenance from './ClubAdminMaintenance';
+import GeneralArchivedMemberApplication from './GeneralArchivedMemberApplications';
 
 
 const Dashboard = () => <div>Dashboard Content</div>;
@@ -293,7 +294,12 @@ function Admin(){
           {
             key: 'club-applications-archives',
             icon: <ProfileOutlined />,
-            label: <Link to="/admin/club-applications-archives" className='mt-2 admin-menu-items'>Applications</Link>,
+            label: <Link to="/admin/club-applications-archives" className='mt-2 admin-menu-items'>Aspirants</Link>,
+          },
+          {
+            key: 'club-member-applications-archives',
+            icon: <ProfileOutlined />,
+            label: <Link to="/admin/club-member-applications-archives" className='mt-2 admin-menu-items'>Members</Link>,
           },
         ],
       },
@@ -372,6 +378,8 @@ function Admin(){
         return <GeneralArchivedOfficers />
       case 'club-applications-archives':
         return <GeneralArchivedApplication />
+      case 'club-member-applications-archives':
+        return <GeneralArchivedMemberApplication />
       default:
         return <Dashboard />;
 
