@@ -290,8 +290,8 @@ function RMMECRegister(){
                     <div className='register-texts'>
                         <h1 className='register-text-title'>ASPIRANT REGISTRATION FORM</h1>
                         <h4 className='register-sub-title'>Fill out the form below to become an aspirant.</h4>
+                        <p className='register-sub-title'>Already a member? <a href="member_register">Click here</a> to register!</p>
                     </div>
-                    <br />
                     <hr />
                     <br />  
                     <Form layout="vertical"
