@@ -497,7 +497,7 @@ function RMMECMemberRegister(){
                                         rules={[
                                             {
                                             required: true,
-                                            message: 'Please enter the name fo contact person',
+                                            message: 'Please enter the name of contact person',
                                             },
                                         ]}
                                     >

@@ -1,23 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
-import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
-import { Button, Col, DatePicker, Drawer, Form, Modal, Input, Row, Image, Select, Popconfirm, Tag, notification } from 'antd';
+import { Radio, Space, Table, ConfigProvider, message, Upload } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Image, Select, Popconfirm, Tag } from 'antd';
 import { PDFDocument, rgb } from 'pdf-lib';
 import { saveAs } from 'file-saver';
 import moment from 'moment';
 import {
-    SmileOutlined,
-    DeleteOutlined,
     EditOutlined,
     EyeOutlined,
-    InboxOutlined,
     PlusOutlined,
     QuestionCircleOutlined,
     PrinterOutlined,
     MinusCircleOutlined,
     DownOutlined,
 } from '@ant-design/icons';
-import About from './About';
   
 // HANDLE IMAGE PREVIEW
 const getBase64 = (file) => new Promise((resolve, reject) => {
@@ -56,7 +52,6 @@ function GeneralMemberApplicationsMaintenance(){
     firstname: '',
     middlename: '',
     lastname: '',
-    birthplace: '',
     dateOfBirth: null,
     height: '',
     weight: '',
@@ -213,7 +208,7 @@ function GeneralMemberApplicationsMaintenance(){
               }
             }}
           >
-            <Button type='primary' onClick={() => showDrawer(record.application_id)} className='action-edit1' size='medium' icon={<EditOutlined />}>
+            <Button type='primary' onClick={() => showDrawer(record.member_application_id)} className='action-edit1' size='medium' icon={<EditOutlined />}>
               {/* <EditOutlined className='action-edit' /> */}
             </Button>
           </ConfigProvider>
@@ -354,7 +349,7 @@ function GeneralMemberApplicationsMaintenance(){
       );
       const dataWithKeys = filteredData.map((item) => ({
         ...item,
-        key: item.application_id,
+        key: item.member_application_id,
       }));
       setData(dataWithKeys);
     }
@@ -362,7 +357,7 @@ function GeneralMemberApplicationsMaintenance(){
 
   const dataWithKeys = data.map((item) => ({
     ...item,
-    key: item.application_id,
+    key: item.member_application_id,
   }));
 
   const tableProps = {
@@ -417,13 +412,14 @@ function GeneralMemberApplicationsMaintenance(){
           Formdata.append('firstname', values.firstname);
           Formdata.append('middlename', values.middlename);
           Formdata.append('lastname', values.lastname);
-          Formdata.append('email', values.email);
+        //   Formdata.append('email', values.email);
           Formdata.append('number', values.cellphone_number);
           Formdata.append('application_file', pdfBlob);
           Formdata.append('club_id', clubId);
+          Formdata.append('position', values.position);
 
           // Perform API call
-          const response = await fetch(`http://127.0.0.1:8000/api/updateApplication/${selectedApplicationID}`, {
+          const response = await fetch(`http://127.0.0.1:8000/api/updateMemberApplication/${selectedApplicationID}`, {
               method: 'POST',
               body: Formdata,
           });
@@ -469,7 +465,7 @@ function GeneralMemberApplicationsMaintenance(){
   };
 
   const generatePDF = async (data, imageBase64) => {
-    const linkToFile = `http://127.0.0.1:8000/api/get-pdf/${selectedApplicationID}`;
+    const linkToFile = `http://127.0.0.1:8000/api/getMemberPdf/${selectedApplicationID}`;
     try {
 
         const response = await fetch(linkToFile);
@@ -496,8 +492,8 @@ function GeneralMemberApplicationsMaintenance(){
 
             // Draw the image at a specific location on the page (e.g., top-right corner)
             firstPage.drawImage(image, {
-                x: 437,
-                y: 715,
+                x: 230,
+                y: 485,
                 width: 2 * 72, // 2 inches in points (1 inch = 72 points)
                 height: 2 * 72,
             });
@@ -505,79 +501,35 @@ function GeneralMemberApplicationsMaintenance(){
 
         // Populate PDF form fields
         form.getTextField('first_name').setText(data.firstname);
-        form.getTextField('nickname').setText(data.nickname);
-        form.getTextField('middle_name').setText(data.middlename);
-        form.getTextField('last_name').setText(data.lastname);
-        form.getTextField('birthplace').setText(data.birthplace);
-    
-        // Example for date fields, adjust as per your DatePicker implementation
-        if (data.dateOfBirth) {
-            form.getTextField('birthdate').setText(data.dateOfBirth.format('MM/DD/YYYY'));
-        }
-
-        form.getTextField('height').setText(data.height);
-        form.getTextField('weight').setText(data.weight);
-    
-        // Handle Radio.Group field
-        form.getRadioGroup('civil_status').select(data.civil_status);
-    
-        form.getTextField('citizenship').setText(data.citizenship);
-        form.getTextField('religion').setText(data.religion);
-        form.getTextField('blood_type').setText(data.bloodType);
-    
-        form.getTextField('street_number').setText(data.street_number);
-        form.getTextField('barangay').setText(data.barangay);
-        form.getTextField('municipality').setText(data.municipality);
-        form.getTextField('province').setText(data.province);
-        form.getTextField('zip_code').setText(data.zip_code);
-        form.getTextField('cellphone_number').setText(data.cellphone_number);
-        form.getTextField('telephone_number').setText(data.telephone_number);
-        form.getTextField('email').setText(data.email);
-        form.getTextField('name_of_company').setText(data.name_of_company);
-        form.getTextField('position').setText(data.position);
-        form.getTextField('company_address').setText(data.office_address);
-        form.getTextField('company_telephone_number').setText(data.business_telephone_number);
-        form.getTextField('fax_number').setText(data.fax_number);
-        form.getTextField('spouse_name').setText(data.spouse_name);
-        if (data.spouse_date_of_birth) {
-            form.getTextField('spouse_birthdate').setText(data.spouse_date_of_birth.format('MM/DD/YYYY'));
-        }
-        form.getTextField('spouse_age').setText(data.spouse_age);
-    
-        const maxDependents = 6;
-        for (let i = 0; i < maxDependents; i++) {
-            const nameField = form.getTextField(`dependent${i + 1}_name`);
-            const birthdateField = form.getTextField(`dependent${i + 1}_birthdate`);
-            const ageField = form.getTextField(`dependent${i + 1}_age`);
-            
-            if (data.name_of_children[i]) {
-                const child = data.name_of_children[i];
-                nameField.setText(child.name_of_dependent || '');
-                birthdateField.setText(child.birth_date_of_dependent ? child.birth_date_of_dependent.format('MM/DD/YYYY') : '');
-                ageField.setText(child.age_of_dependent || '');
-            } else {
-                nameField.setText('');
-                birthdateField.setText('');
-                ageField.setText('');
+            form.getTextField('middle_name').setText(data.middlename);
+            form.getTextField('last_name').setText(data.lastname);
+        
+            // Example for date fields, adjust as per your DatePicker implementation
+            if (data.dateOfBirth) {
+                form.getTextField('date_of_birth').setText(data.dateOfBirth.format('MM/DD/YYYY'));
             }
-        }
 
-        // Handle educational attainment fields
-        form.getTextField('elementary').setText(data.attended_elementary);
-        if (data.year_graduated_elementary) {
-            form.getTextField('elementary_year').setText(data.year_graduated_elementary.format('YYYY'));
-        }
-        form.getTextField('high_school').setText(data.attended_hs);
-        if (data.year_graduated_hs) {
-            form.getTextField('hs_year').setText(data.year_graduated_hs.format('YYYY'));
-        }
-        form.getTextField('college').setText(data.attended_college);
-        if (data.year_graduated_college) {
-            form.getTextField('college_year').setText(data.year_graduated_college.format('YYYY'));
-        }
-        form.getTextField('course').setText(data.course);
-        form.getTextField('hobbies').setText(data.hobbies);
-        form.getTextField('special_skills').setText(data.special_skills);
+            form.getTextField('height').setText(data.height);
+            form.getTextField('weight').setText(data.weight);
+        
+            // Handle Radio.Group field
+            form.getTextField('religion').setText(data.religion);
+            form.getTextField('blood_type').setText(data.bloodType);
+        
+            form.getTextField('address').setText(data.complete_address);
+            form.getTextField('contact_number').setText(data.cellphone_number);
+            form.getTextField('name_icoe').setText(data.name_of_contact_person);
+            form.getTextField('contact_num_icoe').setText(data.number_of_contact_person);
+            form.getTextField('sss_number').setText(data.sss_num);
+            form.getTextField('philhealth_number').setText(data.philhealth_num);
+            form.getTextField('pagibig_number').setText(data.pagibig_num);
+            form.getTextField('tin_number').setText(data.tin_num);
+            form.getTextField('region').setText(data.club_region);
+            form.getTextField('chartered_governor_name').setText(data.chartered_governor);
+            form.getTextField('member_control_number').setText(data.member_control_number);
+            form.getTextField('position').setText(data.position);
+            const currentYear = new Date().getFullYear();
+            form.getTextField('chartered_governor_ey').setText(currentYear.toString());
     
         // Save PDF and return bytes
         const pdfBytes = await pdfDoc.save();
@@ -596,55 +548,38 @@ function GeneralMemberApplicationsMaintenance(){
   const { Option } = Select;
   const [open, setOpen] = useState(false);
   const [defaultFirstName, setDefaultFirstName] = useState("");
-  const [defaultNickName, setDefaultNickName] = useState("");
   const [defaultMiddleName, setDefaultMiddleName] = useState("");
   const [defaultLastName, setDefaultLastName] = useState("");
-  const [defaultBirthplace, setDefaultBirthPlace] = useState("");
   const [defaultBirthDate, setDefaultBirthDate] = useState("");
   const [defaultHeight, setDefaultHeight] = useState("");
   const [defaultWeight, setDefaultWeight] = useState("");
-  const [defaultCivilStatus, setDefaultCivilStatus] = useState("");
-  const [defaultCitizenship, setDefaultCitizenship] = useState("");
   const [defaultReligion, setDefaultReligion] = useState("");
   const [defaultBloodType, setDefaultBloodType] = useState("");
-  const [defaultStreetNumber, setDefaultStreetNumber] = useState("");
-  const [defaultBarangay, setDefaultBarangay] = useState("");
-  const [defaultMunicipality, setDefaultMunicipality] = useState("");
-  const [defaultProvince, setDefaultProvince] = useState("");
-  const [defaultZipCode, setDefaultZipCode] = useState("");
   const [defaultCellphoneNumber, setDefaultCellphoneNumber] = useState("");
-  const [defaultTelephoneNumber, setDefaultTelephoneNumber] = useState("");
+  const [defaultCompleteAddress, setDefaultCompleteAddress] = useState("");
   const [defaultEmail, setDefaultEmail] = useState("");
-  const [defaultCompanyName, setDefaultCompanyName] = useState("");
+  const [defaultSSSNum, setDefaultSSSNum] = useState("");
+  const [defaultPhilHealthNum, setDefaultPhilHealthNum] = useState("");
+  const [defaultPagibigNum, setDefaultPagibigNum] = useState("");
+  const [defaultTinNum, setDefaultTinNum] = useState("");
+  const [defaultNameOfContactPerson, setDefaultNameOfContactPerson] = useState("");
+  const [defaultNumberOfContactPerson, setDefaultNumberOfContactPerson] = useState("");
+  const [defaultClubRegion, setDefaultClubRegion] = useState("");
+  const [defaultCharteredGovernor, setDefaultCharteredGovernor] = useState("");
+  const [defaultMemberControlNumber, setDefaultMemberControlNumber] = useState("");
   const [defaultPosition, setDefaultPosition] = useState("");
-  const [defaultCompanyAddress, setDefaultCompanyAddress] = useState("");
-  const [defaultCompanyTelephoneNumber, setDefaultCompanyTelephoneNumber] = useState("");
-  const [defaultCompanyFaxNumber, setDefaultCompanyFaxNumber] = useState("");
-  const [defaultSpouseName, setDefaultSpouseName] = useState("");
-  const [defaultSpouseBirthDate, setDefaultSpouseBirthDate] = useState("");
-  const [defaultSpouseAge, setDefaultSpouseAge] = useState("");
-  const [defaultDependents, setDefaultDependents] = useState(null);
-  const [defaultElementarySchool, setDefaultElementarySchool] = useState("");
-  const [defaultHighSchool, setDefaultHighSchool] = useState("");
-  const [defaultCollege, setDefaultCollege] = useState("");
-  const [defaultElementaryYear, setDefaultElementaryYear] = useState("");
-  const [defaultHSYear, setDefaultHSYear] = useState("");
-  const [defaultCollegeYear, setDefaultCollegeYear] = useState("");
-  const [defaultCollegeCourse, setDefaultCollegeCourse] = useState("");
-  const [defaultHobbies, setDefaultHobbies] = useState("");
-  const [defaultSpecialSkills, setDefaultSpecialSkills] = useState("");
 
   const showDrawer = async (applicationID) => {
     setIsLoading(true);
     const fetchData = async () => {
-      const result = await axios.get("http://127.0.0.1:8000/api/getOneApplication/" + applicationID);
+      const result = await axios.get("http://127.0.0.1:8000/api/getOneMemberApplication/" + applicationID);
       setSelectedApplicationID(applicationID);
       const application = result.data;
       const applicationFile = application.map(application_data => application_data.application_file);
       const trimAppLink = applicationFile[0].replace("magiting_laguna", "");
       console.log(trimAppLink);
 
-      const linkToFile = `http://127.0.0.1:8000/api/get-pdf/${applicationID}`;
+      const linkToFile = `http://127.0.0.1:8000/api/getMemberPdf/${applicationID}`;
 
       try {
         const response = await fetch(linkToFile);
@@ -661,117 +596,26 @@ function GeneralMemberApplicationsMaintenance(){
         const dependentsData = [];
 
         setDefaultFirstName(form.getTextField('first_name').getText());
-        setDefaultNickName(form.getTextField('nickname').getText());
         setDefaultMiddleName(form.getTextField('middle_name').getText());
         setDefaultLastName(form.getTextField('last_name').getText());
-        setDefaultBirthPlace(form.getTextField('birthplace').getText());
-        setDefaultBirthDate(form.getTextField('birthdate').getText());
+        setDefaultBirthDate(form.getTextField('date_of_birth').getText());
         setDefaultWeight(form.getTextField('weight').getText());
         setDefaultHeight(form.getTextField('height').getText());
-        setDefaultCivilStatus(form.getRadioGroup('civil_status').getSelected());
-        setDefaultCitizenship(form.getTextField('citizenship').getText());
         setDefaultReligion(form.getTextField('religion').getText());
         setDefaultBloodType(form.getTextField('blood_type').getText());
-        setDefaultStreetNumber(form.getTextField('street_number').getText());
-        setDefaultBarangay(form.getTextField('barangay').getText());
-        setDefaultMunicipality(form.getTextField('municipality').getText());
-        setDefaultProvince(form.getTextField('province').getText());
-        setDefaultZipCode(form.getTextField('zip_code').getText());
-        setDefaultCellphoneNumber(form.getTextField('cellphone_number').getText());
-        setDefaultTelephoneNumber(form.getTextField('telephone_number').getText());
-        setDefaultEmail(form.getTextField('email').getText());
-        setDefaultCompanyName(form.getTextField('name_of_company').getText());
+        setDefaultCompleteAddress(form.getTextField('address').getText());
+        setDefaultCellphoneNumber(form.getTextField('contact_number').getText());
+        setDefaultSSSNum(form.getTextField('sss_number').getText());
+        setDefaultPhilHealthNum(form.getTextField('philhealth_number').getText());
+        setDefaultPagibigNum(form.getTextField('pagibig_number').getText());
+        setDefaultTinNum(form.getTextField('tin_number').getText());
+        setDefaultNameOfContactPerson(form.getTextField('name_icoe').getText());
+        setDefaultNumberOfContactPerson(form.getTextField('contact_num_icoe').getText());
+        setDefaultClubRegion(form.getTextField('region').getText());
+        setDefaultCharteredGovernor(form.getTextField('chartered_governor_name').getText());
+        setDefaultMemberControlNumber(form.getTextField('member_control_number').getText());
         setDefaultPosition(form.getTextField('position').getText());
-        setDefaultCompanyAddress(form.getTextField('company_address').getText());
-        setDefaultCompanyTelephoneNumber(form.getTextField('company_telephone_number').getText());
-        setDefaultCompanyFaxNumber(form.getTextField('fax_number').getText());
-        setDefaultSpouseName(form.getTextField('spouse_name').getText());
-        setDefaultSpouseBirthDate(form.getTextField('spouse_birthdate').getText());
-        setDefaultSpouseAge(form.getTextField('spouse_age').getText());
-
-        const dependent1Name = form.getTextField('dependent1_name').getText();
-        const dependent1Birthdate = form.getTextField('dependent1_birthdate').getText();
-        const dependent1Age = form.getTextField('dependent1_age').getText();
-
-        if (dependent1Name || dependent1Birthdate || dependent1Age) {
-          dependentsData.push({
-            name_of_dependent: dependent1Name,
-            birth_date_of_dependent: dependent1Birthdate ? moment(dependent1Birthdate, 'MM/DD/YYYY') : null,
-            age_of_dependent: dependent1Age,
-          });
-        }
-
-        const dependent2Name = form.getTextField('dependent2_name').getText();
-        const dependent2Birthdate = form.getTextField('dependent2_birthdate').getText();
-        const dependent2Age = form.getTextField('dependent2_age').getText();
-
-        if (dependent2Name || dependent2Birthdate || dependent2Age) {
-          dependentsData.push({
-            name_of_dependent: dependent2Name,
-            birth_date_of_dependent: dependent2Birthdate ? moment(dependent2Birthdate, 'MM/DD/YYYY') : null,
-            age_of_dependent: dependent2Age,
-          });
-        }
-
-        const dependent3Name = form.getTextField('dependent3_name').getText();
-        const dependent3Birthdate = form.getTextField('dependent3_birthdate').getText();
-        const dependent3Age = form.getTextField('dependent3_age').getText();
-
-        if (dependent3Name || dependent3Birthdate || dependent3Age) {
-          dependentsData.push({
-            name_of_dependent: dependent3Name,
-            birth_date_of_dependent: dependent3Birthdate ? moment(dependent3Birthdate, 'MM/DD/YYYY') : null,
-            age_of_dependent: dependent3Age,
-          });
-        }
-
-        const dependent4Name = form.getTextField('dependent4_name').getText();
-        const dependent4Birthdate = form.getTextField('dependent4_birthdate').getText();
-        const dependent4Age = form.getTextField('dependent4_age').getText();
-
-        if (dependent4Name || dependent4Birthdate || dependent4Age) {
-          dependentsData.push({
-            name_of_dependent: dependent4Name,
-            birth_date_of_dependent: dependent4Birthdate ? moment(dependent4Birthdate, 'MM/DD/YYYY') : null,
-            age_of_dependent: dependent4Age,
-          });
-        }
-
-        const dependent5Name = form.getTextField('dependent5_name').getText();
-        const dependent5Birthdate = form.getTextField('dependent5_birthdate').getText();
-        const dependent5Age = form.getTextField('dependent5_age').getText();
-
-        if (dependent5Name || dependent5Birthdate || dependent5Age) {
-          dependentsData.push({
-            name_of_dependent: dependent5Name,
-            birth_date_of_dependent: dependent5Birthdate ? moment(dependent5Birthdate, 'MM/DD/YYYY') : null,
-            age_of_dependent: dependent5Age,
-          });
-        }
-
-        const dependent6Name = form.getTextField('dependent6_name').getText();
-        const dependent6Birthdate = form.getTextField('dependent6_birthdate').getText();
-        const dependent6Age = form.getTextField('dependent6_age').getText();
-
-        if (dependent6Name || dependent6Birthdate || dependent6Age) {
-          dependentsData.push({
-            name_of_dependent: dependent6Name,
-            birth_date_of_dependent: dependent6Birthdate ? moment(dependent6Birthdate, 'MM/DD/YYYY') : null,
-            age_of_dependent: dependent6Age,
-          });
-        }
-
-        setDefaultDependents(dependentsData);
-
-        setDefaultElementarySchool(form.getTextField('elementary').getText());
-        setDefaultElementaryYear(form.getTextField('elementary_year').getText());
-        setDefaultHighSchool(form.getTextField('high_school').getText());
-        setDefaultHSYear(form.getTextField('hs_year').getText());
-        setDefaultCollege(form.getTextField('college').getText());
-        setDefaultCollegeYear(form.getTextField('college_year').getText());
-        setDefaultCollegeCourse(form.getTextField('course').getText());
-        setDefaultHobbies(form.getTextField('hobbies').getText());
-        setDefaultSpecialSkills(form.getTextField('special_skills').getText());
+        // setDefaultEmail(form.getTextField('email').getText());
 
       } catch (error) {
         console.error("Error fetching PDF:", error);
@@ -806,43 +650,25 @@ function GeneralMemberApplicationsMaintenance(){
                         initialValues={{
                             requiredMarkValue: requiredMark,
                             firstname: defaultFirstName,
-                            nickname: defaultNickName,
                             middlename: defaultMiddleName,
                             lastname: defaultLastName,
-                            birthplace: defaultBirthplace,
                             dateOfBirth: moment(defaultBirthDate, 'MM/DD/YYYY'),
                             height: defaultHeight,
                             weight: defaultWeight,
-                            civil_status: defaultCivilStatus,
-                            citizenship: defaultCitizenship,
                             religion: defaultReligion,
                             bloodType: defaultBloodType,
-                            street_number: defaultStreetNumber,
-                            barangay: defaultBarangay,
-                            municipality: defaultMunicipality,
-                            province: defaultProvince,
-                            zip_code: defaultZipCode,
+                            complete_address: defaultCompleteAddress,
                             cellphone_number: defaultCellphoneNumber,
-                            telephone_number: defaultTelephoneNumber,
-                            email: defaultEmail,
-                            name_of_company: defaultCompanyName,
+                            sss_num: defaultSSSNum,
+                            philhealth_num: defaultPhilHealthNum,
+                            pagibig_num: defaultPagibigNum,
+                            tin_num: defaultTinNum,
+                            name_of_contact_person: defaultNameOfContactPerson,
+                            number_of_contact_person: defaultNumberOfContactPerson,
+                            club_region: defaultClubRegion,
+                            chartered_governor: defaultCharteredGovernor,
+                            member_control_number: defaultMemberControlNumber,
                             position: defaultPosition,
-                            office_address: defaultCompanyAddress,
-                            business_telephone_number: defaultCompanyTelephoneNumber,
-                            fax_number: defaultCompanyFaxNumber,
-                            spouse_name: defaultSpouseName,
-                            spouse_date_of_birth: moment(defaultSpouseBirthDate, 'MM/DD/YYYY'),
-                            spouse_age: defaultSpouseAge,
-                            name_of_children: defaultDependents,
-                            attended_elementary: defaultElementarySchool,
-                            year_graduated_elementary: moment(defaultElementaryYear, 'YYYY'),
-                            attended_hs: defaultHighSchool,
-                            year_graduated_hs: moment(defaultHSYear, 'YYYY'),
-                            attended_college: defaultCollege,
-                            year_graduated_college: moment(defaultCollegeYear, 'YYYY'),
-                            course: defaultCollegeCourse,
-                            hobbies: defaultHobbies,
-                            special_skills: defaultSpecialSkills,
                           }}
                         requiredMark={requiredMark === 'customize' ? customizeRequiredMark : requiredMark}  
                         onFinish={handleEditFinish}
@@ -867,21 +693,6 @@ function GeneralMemberApplicationsMaintenance(){
                                         ]}
                                     >
                                         <Input name="title" placeholder="Enter your first name" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="nickname"
-                                        label="Nickname"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter your nickname',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your nickname" />
                                     </Form.Item>
 
                                     <Form.Item
@@ -913,21 +724,7 @@ function GeneralMemberApplicationsMaintenance(){
                                     >
                                         <Input name="title" placeholder="Enter your last name" />
                                     </Form.Item>
-                                    
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="birthplace"
-                                        label="Birthplace"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please enter your birthplace',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your birthplace" />
-                                    </Form.Item>
+
                                     <Form.Item
                                         tooltip="This is a required field"
                                         className='form-item-snap-1'
@@ -973,41 +770,6 @@ function GeneralMemberApplicationsMaintenance(){
                                         <Input name="title" placeholder="Enter your weight" />
                                     </Form.Item>
 
-                                    <Form.Item 
-                                        className='form-item-snap-1'
-                                        tooltip="This is a required field"
-                                        label="Civil Status"
-                                        name="civil_status"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please select your current civil status',
-                                            },
-                                        ]}
-                                    >
-                                        <Radio.Group>
-                                        <Radio.Button value="single">Single</Radio.Button>
-                                        <Radio.Button value="married">Married</Radio.Button>
-                                        <Radio.Button value="separated">Separated</Radio.Button>
-                                        <Radio.Button value="widowed">Widowed</Radio.Button>
-                                        </Radio.Group>
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="citizenship"
-                                        label="Citizenship"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please enter your citizenship',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your citizenship" />
-                                    </Form.Item>
-
                                     <Form.Item
                                         tooltip="This is a required field"
                                         className='form-item-snap-1'
@@ -1046,6 +808,66 @@ function GeneralMemberApplicationsMaintenance(){
                                             <Radio.Button value="AB+">AB+</Radio.Button>
                                         </Radio.Group>
                                     </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="sss_num"
+                                        label="GSIS/SSS"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your GSIS/SSS',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your GSIS/SSS" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="philhealth_num"
+                                        label="PhilHealth"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your PhilHealth',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your PhilHealth" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="pagibig_num"
+                                        label="PAG-IBIG"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your PAG-IBIG',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your PAG-IBIG" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="tin_num"
+                                        label="Tin"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your Tin',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter your PAG-IBIG" />
+                                    </Form.Item>
                                 </div>
                                 <br></br>
                                 <h3>Address</h3>
@@ -1053,76 +875,16 @@ function GeneralMemberApplicationsMaintenance(){
                                     <Form.Item
                                         tooltip="This is a required field"
                                         className='form-item-snap-1'
-                                        name="street_number"
-                                        label="Street Number"
+                                        name="complete_address"
+                                        label="Complete Address"
                                         rules={[
                                             {
                                             required: true,
-                                            message: 'Please enter your street number',
+                                            message: 'Please enter the complete address',
                                             },
                                         ]}
                                     >
-                                        <Input name="title" placeholder="Enter your street number" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="barangay"
-                                        label="Barangay"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter your barangay',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your barangay" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="municipality"
-                                        label="Municipality/City"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter your municipality/city',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your municipality/city" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="province"
-                                        label="Province"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter your province',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your province" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="zip_code"
-                                        label="Zip Code"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter your zip code',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your zip code" />
+                                        <Input name="title" placeholder="Enter the complete address" />
                                     </Form.Item>
                                 </div>
                                 <br></br>
@@ -1142,22 +904,7 @@ function GeneralMemberApplicationsMaintenance(){
                                     >
                                         <Input name="title" placeholder="Enter your cell number" />
                                     </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="telephone_number"
-                                        label="Telephone Number"
-                                        rules={[
-                                            {
-                                            required: false,
-                                            message: 'Please enter your telephone number',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your telephone number" />
-                                    </Form.Item>
-
+                                {/*
                                     <Form.Item
                                         tooltip="This is a required field"
                                         className='form-item-snap-1'
@@ -1171,335 +918,105 @@ function GeneralMemberApplicationsMaintenance(){
                                         ]}
                                     >
                                         <Input name="title" placeholder="Enter your email" />
-                                    </Form.Item>
-                                </div>
+                                    </Form.Item> */}
+                                </div> 
                                 <br></br>
-                                <h3>Employment/Profession</h3>
-                                <div className=''>
-                                    <Form.Item
+                                <h3>Contact Person In Case of Emergency</h3>
+                                <div>
+                                <Form.Item
                                         tooltip="This is a required field"
                                         className='form-item-snap-1'
-                                        name="name_of_company"
-                                        label="Name of Office Line of Business"
+                                        name="name_of_contact_person"
+                                        label="Name of contact person"
                                         rules={[
                                             {
                                             required: true,
-                                            message: 'Please enter your name of business',
+                                            message: 'Please enter the name of contact person',
                                             },
                                         ]}
                                     >
-                                        <Input name="title" placeholder="Enter your name of business" />
+                                        <Input name="title" placeholder="Enter the name of contact person." />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="number_of_contact_person"
+                                        label="Mobile Number"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the number of contact person',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the number of contact person" />
+                                    </Form.Item>
+                                </div>
+                                <br></br>
+                                <h3>Other Club Information</h3>
+                                <div>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="club_region"
+                                        label="Club Region"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the region of club you belong to.',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the region of club you belong to." />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="chartered_governor"
+                                        label="Chartered Governor"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of your club\'s chartered governor.',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of your club\'s chartered governor." />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="member_control_number"
+                                        label="Member Control Number"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter your control number.',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter enter your control number." />
                                     </Form.Item>
 
                                     <Form.Item
                                         tooltip="This is a required field"
                                         className='form-item-snap-1'
                                         name="position"
-                                        label="Position/Designation"
+                                        label="Position"
                                         rules={[
                                             {
                                             required: true,
-                                            message: 'Please enter your title/designation',
+                                            message: 'Please enter your position.',
                                             },
                                         ]}
                                     >
-                                        <Input name="title" placeholder="Enter your title/designation" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="office_address"
-                                        label="Address"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter office address',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter office address" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="business_telephone_number"
-                                        label="Telephone Number"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter business telephone number',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter business telephone number" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="fax_number"
-                                        label="Fax Number"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter fax number',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter fax number" />
-                                    </Form.Item>
-                                </div>
-                                <br></br>
-
-                                <h3>List of Legal Dependents</h3>
-                                <div className=''>
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="spouse_name"
-                                        label="Name of Spouse"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the name fo your spouse.',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter the name of your spouse." />
-                                    </Form.Item>
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="spouse_date_of_birth"
-                                        label="Spouse's Date of Birth"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please enter your spouse\'s date of birth',
-                                            },
-                                        ]}
-                                    >
-                                        <DatePicker onChange={dateOfBirthOnChange} />
-                                    </Form.Item>
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="spouse_age"
-                                        label="Age of Spouse"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the age of your spouse.',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter the age of your spouse." />
+                                        <Input name="title" placeholder="Enter enter your position." />
                                     </Form.Item>
                                 </div>
                                 
-                                <Form.List name="name_of_children">
-                                    {(fields, { add, remove }) => (
-                                        <>
-                                        {fields.map(({ key, name, ...restField }) => (
-                                            <Space
-                                            key={key}
-                                            style={{
-                                                display: 'flex',
-                                                marginBottom: 8,
-                                            }}
-                                            align="baseline"
-                                            >
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name, 'name_of_dependent']}
-                                                rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Missing name',
-                                                },
-                                                ]}
-                                            >
-                                                <Input placeholder="Name" />
-                                            </Form.Item>
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name, 'birth_date_of_dependent']}
-                                                rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Missing date of birth',
-                                                },
-                                                ]}
-                                            >
-                                                <DatePicker onChange={dateOfBirthOnChange} />
-                                            </Form.Item>
-
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name, 'age_of_dependent']}
-                                                rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Missing age',
-                                                },
-                                                ]}
-                                            >
-                                                <Input placeholder="Age" />
-                                            </Form.Item>
-                                            <MinusCircleOutlined onClick={() => remove(name)} />
-                                            </Space>
-                                        ))}
-                                        <Form.Item>
-                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                            Add field
-                                            </Button>
-                                        </Form.Item>
-                                        </>
-                                    )}
-                                    </Form.List>
-                                <br></br>
-
-                                <h3>Educational Attainment</h3>
-                                <div className=''>
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="attended_elementary"
-                                        label="Elementary"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the name of attended elementary school',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter the name of attended elementary school" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="year_graduated_elementary"
-                                        label="Year Graduated"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the year you graduated (elementary',
-                                            },
-                                        ]}
-                                    >
-                                        <DatePicker onChange={dateOfBirthOnChange} picker="year" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="attended_hs"
-                                        label="High School"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the name of attended high school',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter the name of attended high school" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="year_graduated_hs"
-                                        label="Year Graduated"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the year you graduated (high school',
-                                            },
-                                        ]}
-                                    >
-                                        <DatePicker onChange={dateOfBirthOnChange} picker="year" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="attended_college"
-                                        label="College"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the name of attended college',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter the name of attended college" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="year_graduated_college"
-                                        label="Year Graduated"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the year you graduated (college)',
-                                            },
-                                        ]}
-                                    >
-                                        <DatePicker onChange={dateOfBirthOnChange} picker="year" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="course"
-                                        label="Course"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter the name of your college course',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter the name of your college course" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="hobbies"
-                                        label="Hobbies"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter your hobbies',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your hobbies" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        tooltip="This is a required field"
-                                        className='form-item-snap-1'
-                                        name="special_skills"
-                                        label="Special Skills"
-                                        rules={[
-                                            {
-                                            required: true,
-                                            message: 'Please enter your special skills',
-                                            },
-                                        ]}
-                                    >
-                                        <Input name="title" placeholder="Enter your special skills" />
-                                    </Form.Item>
-                                </div>
-                                <br></br>
-
                                 <Form.Item
                                 name={"2_by_2"}
                                 valuePropName='fileList'
@@ -1568,7 +1085,7 @@ function GeneralMemberApplicationsMaintenance(){
                             <Row gutter={16} className=''>
                                 <Col span={12}>
                                 <Button htmlType='submit' type="primary">
-                                    Register
+                                    Update
                                 </Button>
                                 </Col>
                                 <Col span={12}>

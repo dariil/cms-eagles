@@ -1568,7 +1568,7 @@ function GeneralApplicationsMaintenance(){
                             <Row gutter={16} className=''>
                                 <Col span={12}>
                                 <Button htmlType='submit' type="primary">
-                                    Register
+                                    Update
                                 </Button>
                                 </Col>
                                 <Col span={12}>
