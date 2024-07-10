@@ -834,20 +834,32 @@ small{
 .admin-nav{
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding: 15px;
   background-color: white;
 }
 
+.admin-cub-cont-1{
+  /* width: 10%; */
+  display: flex;
+  align-items: center;
+}
+
 .admin-nav p{
   /* margin: auto; */
-  margin: 0 0 0 15px;
+  margin: 0 0 0 25px;
+  /* width: 20%; */
 }
 
 .admin-logo{
-  margin-left: 15px;
+  margin-left: 25px;
   width: 60px;
   height: 60px;
+}
+
+.logout-container{
+  margin-right: 25px;
 }
 
 .admin-body{

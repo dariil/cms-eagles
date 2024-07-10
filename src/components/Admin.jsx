@@ -17,7 +17,8 @@ import {
   ProfileOutlined,
   WarningOutlined,
   UserDeleteOutlined,
-  VerifiedOutlined
+  VerifiedOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 import GeneralUsersMaintenance from './GeneralUsersMaintenance';
@@ -385,11 +386,15 @@ function Admin(){
 
     }
   };
-
-
+  const navigate = useNavigate();
+  function logOut(){
+    localStorage.clear();
+    navigate('/login');
+  }
     return(
         <>
           <div className='admin-nav'>
+            <div className='admin-cub-cont-1'>
               <Button
                 type="primary"
                 onClick={toggleCollapsed}
@@ -405,7 +410,23 @@ function Admin(){
               </Button>
               <img className="admin-logo" src="/assets/eagles-nobg-logo.png"></img>
               <p>The Fraternal Order of Eagles</p>
-              </div>
+            </div>
+            <div className="logout-container">
+            <Button
+                type="primary"
+                onClick={logOut}
+                style={{
+                  // marginBottom: 10,
+                  backgroundColor: "white",
+                  color: 'red',
+                  height: 50,
+                  width: 50,
+                }}
+              >
+                <LogoutOutlined />
+              </Button>
+            </div>
+          </div>
               <div className='admin-body'>
                 <Menu
                   defaultSelectedKeys={['dashboard']}
