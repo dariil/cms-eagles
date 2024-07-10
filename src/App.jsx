@@ -16,6 +16,7 @@ import RMMECProjects from './components/RMMEC/Projects'
 import RMMECAbout from './components/RMMEC/About'
 import RMMECRegister from './components/RMMEC/Register'
 import RMMECMemberRegister from './components/RMMEC/MemberRegister'
+import ProjectViewer from './components/ProjectViewer'
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
           <Route path='/register' element={<Register />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/announcements/view_announcement/:id' element={<AnnouncementViewer />}></Route>
+          <Route path='/projects/view_project/:id' element={<ProjectViewer />}></Route>
 
           <Route path='/rmmec' element={<Protected component = {RMMECHome}/>}></Route>
           <Route path='/rmmec/announcements' element={<RMMECAnnouncements />}></Route>
