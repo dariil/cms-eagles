@@ -1,11 +1,8 @@
-import { useState } from 'react'
-import { Button } from 'react-bootstrap'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import {Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import './App.css'
-import Header from './components/Header'
 import Home from './components/Home'
 import Announcements from './components/Announcements'
+import AnnouncementViewer from './components/AnnouncementViewer'
 import Projects from './components/Projects'
 import About from './components/About'
 import Register from './components/Register'
@@ -33,6 +30,7 @@ function App() {
           <Route path='/about' element={<About />}></Route>
           <Route path='/register' element={<Register />}></Route>
           <Route path='/login' element={<Login />}></Route>
+          <Route path='/announcements/view_announcement/:id' element={<AnnouncementViewer />}></Route>
 
           <Route path='/rmmec' element={<Protected component = {RMMECHome}/>}></Route>
           <Route path='/rmmec/announcements' element={<RMMECAnnouncements />}></Route>

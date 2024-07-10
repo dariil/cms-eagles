@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from 'react';
+import {Link} from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
 import Slider from 'react-slick';
@@ -66,7 +67,7 @@ function Announcements(){
             <div className="latest-post-container">
                 {latestAnnouncement && (
                     <div className="latest-large">
-                        <a href="" className="announcement-prev-a">
+                        <Link to={"view_announcement/"+latestAnnouncement.announcement_id} className="announcement-prev-a">
                             <div className="latest-l-img" style={{ backgroundImage: `url('http://localhost:8000/${latestAnnouncement.cover_image}')` }}></div>
                             <div>
                                 <h3 className="latest-blog-l-title">{latestAnnouncement.title}</h3>
@@ -79,16 +80,16 @@ function Announcements(){
                                 )}
                                 </div>
                             </div>
-                        </a>
+                        </Link>
                     </div>
                 )}
 
                 {secondLatestAnnouncement && (
                     <div className="latest-small">
-                        <a href="" className="announcement-prev-a">
+                        <Link to={"view_announcement/"+secondLatestAnnouncement.announcement_id} className="announcement-prev-a">
                             <div className="latest-s-img" style={{ backgroundImage: `url('http://localhost:8000/${secondLatestAnnouncement.cover_image}')` }}></div>
                             <div>
-                                <h3 className="latest-blog-l-title">{latestAnnouncement.title}</h3>
+                                <h3 className="latest-blog-l-title">{secondLatestAnnouncement.title}</h3>
                                 <p>{secondLatestAnnouncement.description}</p>
                             </div>
                             <div className="post-info-row">
@@ -98,7 +99,7 @@ function Announcements(){
                                     )}
                                 </div>
                             </div>
-                        </a>
+                        </Link>
                     </div>
                 )}
             </div>
@@ -110,14 +111,14 @@ function Announcements(){
                 {
                     data.map((item, index) => (
                         <div className="child-content" key={index}>
-                            <a className="announcement-prev-a" href="">
+                            <Link className="announcement-prev-a" to={"view_announcement/"+item.announcement_id}>
                             <div className="blog-post-image" style={{ backgroundImage: `url('http://localhost:8000/${item.cover_image}')` }}></div>
                                 <h1 className="blogs-title">{item.title}</h1>
                                 <p className="blogs-intro">{item.description}</p>
                                 <div className="date-posted">
                                     <p><strong>Created at: </strong>{formatDate(item.created_at.split('T')[0])}</p>
                                 </div>
-                            </a>
+                            </Link>
                         </div>
                     ))
                 }

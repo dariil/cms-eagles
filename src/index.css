@@ -1015,3 +1015,49 @@ small{
   margin-right: 8px;
   color: rgba(0, 0, 0, 0.85);
 }
+
+/* ======================= POST VIEWER STYLING ======================= */
+
+.post-view-main-container{
+  display: flex;
+  flex-direction: column;
+  margin: 150px auto auto auto;
+  width: 75%;
+  padding: 10px;
+  /* background-color: beige; */
+}
+
+.post-view-date{
+  color: grey;
+}
+
+.post-img{
+  background-image: url('../assets/blog-image-test-large.jpg');
+  background-size:cover;
+  background-position: center; 
+  width: auto;
+  height: 55vh;
+  border-radius: 10px;
+}
+
+.post-view-content-container{
+  width: 100%;
+  margin-top: 20px;
+}
+
+.post-view-content-container h2{
+  color: var(--page-theme-color-darker);
+  font-size: 3.0rem;
+  width: 70%;
+}
+
+.post-view-intro{
+  font-size: 1.2rem;
+  width: 95%;
+  margin-bottom: 10px;
+}
+
+.post-view-content{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
