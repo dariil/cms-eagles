@@ -110,7 +110,7 @@ function RMMECRegister(){
 
             if (response.ok) {
                 message.success(data.messages.message);
-                formRef.current.resetFields();
+                // formRef.current.resetFields();
                 setFileList([]);
             } else {
                 message.error(data.messages.message);
