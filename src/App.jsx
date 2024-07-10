@@ -4,6 +4,7 @@ import Home from './components/Home'
 import Announcements from './components/Announcements'
 import AnnouncementViewer from './components/AnnouncementViewer'
 import Projects from './components/Projects'
+import ProjectViewer from './components/ProjectViewer'
 import About from './components/About'
 import Register from './components/Register'
 import Login from './components/Login'
@@ -16,7 +17,8 @@ import RMMECProjects from './components/RMMEC/Projects'
 import RMMECAbout from './components/RMMEC/About'
 import RMMECRegister from './components/RMMEC/Register'
 import RMMECMemberRegister from './components/RMMEC/MemberRegister'
-import ProjectViewer from './components/ProjectViewer'
+import RMMECAnnouncementViewer from './components/RMMEC/AnnouncementViewer'
+import RMMECProjectViewer from './components/RMMEC/ProjectViewer'
 
 function App() {
 
@@ -40,6 +42,8 @@ function App() {
           <Route path='/rmmec/about' element={<RMMECAbout />}></Route>
           <Route path='/rmmec/register' element={<RMMECRegister />}></Route>
           <Route path='/rmmec/member_register' element={<RMMECMemberRegister />}></Route>
+          <Route path='/rmmec/announcements/view_announcement/:id' element={<RMMECAnnouncementViewer />}></Route>
+          <Route path='/rmmec/projects/view_project/:id' element={<RMMECProjectViewer />}></Route>
 
           <Route path='/admin' element={<Protected component = {Admin}/>}></Route>
           <Route path='/admin/general-users' element={<Protected component = {Admin}/>}></Route>

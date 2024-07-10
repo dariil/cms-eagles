@@ -2,9 +2,10 @@ import axios from "axios";
 import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header'
 import Footer from './Footer'
+import {Link} from 'react-router-dom'
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 
-function Projects(){
+function RMMECProjects(){
     const [latestProject, setLatestProject] = useState([]); /////   IMPORTANT    //////
     const [data, setData] = useState([]);
 
@@ -64,6 +65,7 @@ function Projects(){
                         <>
                         <h2 className='font-size-larger'>{formatDate(latestProject.created_at.split('T')[0])}</h2>
                         <p className='project-details-dark'>{latestProject.project_description}</p>
+                        <Link to={"view_project/"+latestProject.project_id} className={"proj-read-more-dark"} href="#">Read More &rarr;</Link>
                         </>
                     )}
                 </div>
@@ -81,7 +83,7 @@ function Projects(){
                                             <h1 className={index%2==0 ? 'w-100 project-date-dark font-size-larger' : 'w-100 project-date-light font-size-larger'}>{formatDate(item.created_at.split('T')[0])}</h1>
                                         </div>
                                         <p className={index%2==0 ? 'project-details-dark' : 'project-details-light'}>{item.project_description}</p>
-                                        <a className={index%2==0 ? "proj-read-more-dark" : "proj-read-more-light"} href="#">Read More &rarr;</a>
+                                        <Link to={"view_project/"+item.project_id} className={index%2==0 ? "proj-read-more-dark" : "proj-read-more-light"} href="#">Read More &rarr;</Link>
                                     </div>
                                 </div>
                             </Col>
@@ -116,4 +118,4 @@ function Projects(){
     )
 }
 
-export default Projects
+export default RMMECProjects
