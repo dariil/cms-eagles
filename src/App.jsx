@@ -34,7 +34,7 @@ function App() {
           <Route path='/announcements/view_announcement/:id' element={<AnnouncementViewer />}></Route>
           <Route path='/projects/view_project/:id' element={<ProjectViewer />}></Route>
 
-          <Route path='/rmmec' element={<Protected component = {RMMECHome}/>}></Route>
+          <Route path='/rmmec' element={<RMMECHome />}></Route>
           <Route path='/rmmec/announcements' element={<RMMECAnnouncements />}></Route>
           <Route path='/rmmec/projects' element={<RMMECProjects />}></Route>
           <Route path='/rmmec/about' element={<RMMECAbout />}></Route>

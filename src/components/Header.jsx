@@ -40,7 +40,7 @@ function Header(){
                         <Link to="/announcements" className='mt-2'>Announcements</Link>
                         <Link to="/projects" className='mt-2'>Projects</Link>
                         <NavDropdown title="Clubs" id="collapsible-nav-dropdown">
-                            <NavDropdown.Item href="/announcements">Eagles Club</NavDropdown.Item>
+                            <NavDropdown.Item href="/">Eagles Club</NavDropdown.Item>
                             <NavDropdown.Item href="/rmmec">RMMEC</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">MMEC</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">LBAEC</NavDropdown.Item>
