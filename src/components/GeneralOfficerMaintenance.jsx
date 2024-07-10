@@ -139,12 +139,46 @@ function GeneralOfficerMaintenance() {
     setOpenViewDrawer(true);
   }
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [defaultOfficerName, setDefaultOfficerName] = useState('');
+  const [defaultPosition, setDefaultPosition] = useState('');
+  const [defaultDescription, setDefaultDescription] = useState('');
+
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
   const showDrawer = (officerID) => {
     setSelectedOfficerId(officerID);
-    console.log(selectedOfficerId);
+    setIsLoading(true);
+    const fetchData = async () => {
+      try{
+        if (clubId !== null) {
+          const response = await axios.get(`http://127.0.0.1:8000/api/getOneOfficer/${officerID}`);
+          const officer = response.data;
+          const officerName = officer.map(officerName => officerName.official_name);
+          const officerPosition = officer.map(officerPosition => officerPosition.official_position);
+          const officerDescription = officer.map(officerDescription => officerDescription.official_description);
+          const officerImage = officer.map(officerImage => officerImage.official_image);
+          setDefaultOfficerName(officerName);
+          setDefaultPosition(officerPosition);
+          setDefaultDescription(officerDescription);
+          setFileList([
+            {
+              uid: officerID,
+              name: officerImage,
+              status: 'done',
+              url: `http://127.0.0.1:8000/${officerImage}`
+            }
+          ]);
+          
+        }
+      } catch (error) {
+        console.error("An error occured:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
     setOpen(true);
   };
   const onClose = () => {
@@ -473,6 +507,7 @@ function GeneralOfficerMaintenance() {
         title="Edit Officer Details"
         width={500}
         onClose={onClose}
+        loading={isLoading}
         open={open}
         styles={{
           body: {
@@ -480,7 +515,17 @@ function GeneralOfficerMaintenance() {
           },
         }}
       >
-        <Form layout="vertical" onFinish={onFinish} ref={formRef} >
+        <Form 
+          layout="vertical" 
+          onFinish={onFinish} 
+          ref={formRef} 
+          initialValues={{
+            official_name: defaultOfficerName,
+            official_position: defaultPosition,
+            official_description: defaultDescription,
+            image: fileList,
+          }}
+        >
           <div className='test-cont'>
           <Col span={24}>
             <Form.Item

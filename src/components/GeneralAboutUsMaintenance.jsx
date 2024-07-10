@@ -67,11 +67,55 @@ function GeneralAboutUsMaintenance() {
     setOpenViewDrawer(true);
   }
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [defaultClubName, setDefaultdefaultClubName] = useState('');
+  const [defaultVision, setDefaultVision] = useState('');
+  const [defaultMission, setDefaultMission] = useState('');
+
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
   const showDrawer = (aboutID) => {
     setSelectedAboutId(aboutID);
+    setIsLoading(true);
+    const fetchData = async () => {
+      try{
+        if (clubId !== null) {
+          const response = await axios.get(`http://127.0.0.1:8000/api/getAboutClub/${aboutID}`);
+          const club = response.data;
+          const clubName = club.map(clubName => clubName.club_name);
+          const vision = club.map(vision => vision.vision_content);
+          const mission = club.map(mission => mission.mission_content);
+          const logo = club.map(logo => logo.club_logo);
+          const postImage = club.map(postImage => postImage.club_post_image);
+          setDefaultdefaultClubName(clubName);
+          setDefaultVision(vision);
+          setDefaultMission(mission);
+          setLogoFileList([
+            {
+              uid: aboutID,
+              name: logo,
+              status: 'done',
+              url: `http://127.0.0.1:8000/${logo}` 
+            }
+          ]);
+          setFileList([
+            {
+              uid: aboutID,
+              name: postImage,
+              status: 'done',
+              url: `http://127.0.0.1:8000/${postImage}`
+            }
+          ]);
+          
+        }
+      } catch (error) {
+        console.error("An error occured:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
     setOpen(true);
   };
   const onClose = () => {
@@ -130,11 +174,11 @@ function GeneralAboutUsMaintenance() {
       title: 'Club Name',
       dataIndex: 'club_name',
     },
-    {
-      title: 'Cover Image',
-      dataIndex: 'cover_image',
-      render: (club_cover) => <img src={"http://localhost:8000/" + club_cover} alt="About Cover Image" style={{ maxWidth: '70px' }} />
-    },
+    // {
+    //   title: 'Cover Image',
+    //   dataIndex: 'cover_image',
+    //   render: (club_cover) => <img src={"http://localhost:8000/" + club_cover} alt="About Cover Image" style={{ maxWidth: '70px' }} />
+    // },
     {
       title: 'Vision Content',
       dataIndex: 'vision_content',
@@ -302,7 +346,7 @@ function GeneralAboutUsMaintenance() {
     try {
       const formData = new FormData();
       formData.append('club_name', values.club_name);
-      formData.append('cover_image', coverImageFileList[0]?.originFileObj);
+      // formData.append('cover_image', coverImageFileList[0]?.originFileObj);
       formData.append('vision_content', values.vision_content);
       formData.append('logo', logoFileList[0]?.originFileObj);
       formData.append('mission_content', values.mission_content);
@@ -368,13 +412,25 @@ function GeneralAboutUsMaintenance() {
         width={500}
         onClose={onClose}
         open={open}
+        loading={isLoading}
         styles={{
           body: {
             paddingBottom: 80,
           },
         }}
       >
-        <Form layout="vertical" onFinish={onFinish} ref={formRef} >
+        <Form 
+          layout="vertical" 
+          onFinish={onFinish} 
+          ref={formRef} 
+          initialValues={{
+            club_name: defaultClubName,
+            vision_content: defaultVision,
+            mission_content: defaultMission,
+            logo: logoFileList,
+            post_image: fileList,
+          }}
+        >
           <div className='test-cont-1'>
           <Col span={24}>
             <Form.Item
@@ -390,7 +446,7 @@ function GeneralAboutUsMaintenance() {
               <Input name="title" placeholder="Enter club name" />
             </Form.Item>
           
-            <Form.Item
+            {/* <Form.Item
               name={"cover_image"}
               valuePropName='fileList'
               getValueFromEvent={(event)=>{
@@ -437,7 +493,7 @@ function GeneralAboutUsMaintenance() {
               >
                 {uploadButton}
               </Upload>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               name="vision_content"

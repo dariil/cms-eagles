@@ -145,23 +145,6 @@ function Admin(){
         ]
       },
       {
-        key: 'general-applications',
-        icon: <ContainerOutlined />,
-        label: 'Applications Maintenance',
-        children: [
-          {
-            key: 'general-applications-tab',
-            icon: <ProfileOutlined />,
-            label: <Link to="/admin/general-applications" className='mt-2 admin-menu-items'>Aspirants</Link>,
-          },
-          {
-            key: 'general-member-applications-tab',
-            icon: <ProfileOutlined />,
-            label: <Link to="/admin/general-member-applications" className='mt-2 admin-menu-items'>Members</Link>,
-          },
-        ]
-      },
-      {
         key: 'general-archives',
         icon: <WarningOutlined />,
         label: 'Archives',
@@ -185,11 +168,6 @@ function Admin(){
             key: 'general-officers-archives',
             icon: <SolutionOutlined />,
             label: <Link to="/admin/general-officers-archives" className='mt-2 admin-menu-items'>Officers</Link>,
-          },
-          {
-            key: 'general-applications-archives',
-            icon: <VerifiedOutlined />,
-            label: <Link to="/admin/general-applications-archives" className='mt-2 admin-menu-items'>Applications</Link>,
           },
         ],
       },

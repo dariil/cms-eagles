@@ -139,13 +139,47 @@ function GeneralAnnouncementMaintenance() {
     setOpenViewDrawer(true);
   }
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [defaultAnnouncementTitle, setDefaultAnnouncementTitle] = useState('');
+  const [defaultDescription, setDefaultDescription] = useState('');
+  
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
+
   const showDrawer = (announcementId) => {
+    setIsLoading(true);
     setSelectedAnnouncementId(announcementId);
+    const fetchData = async () => {
+      try{
+        if (clubId !== null) {
+          const response = await axios.get(`http://127.0.0.1:8000/api/getOneAnnouncement/${announcementId}`);
+          const home = response.data;
+          const title = home.map(heroTitle => heroTitle.title);
+          const content = home.map(content => content.description);
+          const imgName = home.map(image => image.cover_image);
+          setDefaultAnnouncementTitle(title[0]);
+          setDefaultDescription(content);
+          setFileList([
+            {
+              uid: announcementId,
+              name: imgName,
+              status: 'done',
+              url: `http://127.0.0.1:8000/${imgName}`
+            }
+          ]);
+          
+        }
+      } catch (error) {
+        console.error("An error occured:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
     setOpen(true);
   };
+
   const onClose = () => {
     setOpen(false);
     setOpenViewDrawer(false);
@@ -211,7 +245,7 @@ function GeneralAnnouncementMaintenance() {
     },
     {
       title: 'Action',
-      render: (text, record) => (
+      render: (record) => (
         <Space size="middle">
           <ConfigProvider
                 theme={{
@@ -467,7 +501,7 @@ function GeneralAnnouncementMaintenance() {
         width={'100%'}
         onClose={onClose}
         open={openViewDrawer}
-        
+        loading={isLoading}
       >
         <Announcements></Announcements>
       </Drawer>
@@ -476,13 +510,23 @@ function GeneralAnnouncementMaintenance() {
         width={500}
         onClose={onClose}
         open={open}
+        loading={isLoading}
         styles={{
           body: {
             paddingBottom: 80,
           },
         }}
       >
-        <Form layout="vertical" onFinish={onFinish} ref={formRef} >
+        <Form 
+          layout="vertical" 
+          onFinish={onFinish}
+          ref={formRef} 
+          initialValues={{
+            title: defaultAnnouncementTitle,
+            announcement_content: defaultDescription,
+            image: fileList,
+          }}
+        >
           <div className='test-cont'>
           <Col span={24}>
             <Form.Item

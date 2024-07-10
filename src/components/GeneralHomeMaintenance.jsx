@@ -58,12 +58,55 @@ function GeneralHomeMaintenance() {
     setOpenViewDrawer(true);
   }
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [defaultHeroTitle, setDefaultHeroTitle] = useState('');
+  const [defaultTagline, setDefaultTagline] = useState('');
+  const [defaultHomeContent, setDefaultHomeContent] = useState('');
+
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
   const showDrawer = (home_ID) => {
-    setOpen(true);
+    setIsLoading(true);
     setSelectedHomeID(home_ID);
+    const fetchData = async () => {
+      try{
+        if (clubId !== null) {
+          const response = await axios.get(`http://127.0.0.1:8000/api/getHome/${clubId}`);
+          const home = response.data;
+          const title = home.map(heroTitle => heroTitle.hero_title);
+          const tagline = home.map(tagline => tagline.hero_tagline);
+          const content = home.map(content => content.description);
+          const imgName = home.map(image => image.logo);
+          const vidName = home.map(video => video.hero_video);
+          setDefaultHeroTitle(title[0]);
+          setDefaultTagline(tagline);
+          setDefaultHomeContent(content);
+          setFileList([
+            {
+              uid: home_ID,
+              name: imgName,
+              status: 'done',
+              url: `http://127.0.0.1:8000/${imgName}`
+            }
+          ]);
+          setFileListVid([
+            {
+              uid: home_ID,
+              name: vidName,
+              status: 'done',
+              url: `http://127.0.0.1:8000/${vidName}`
+            }
+          ]);
+        }
+      } catch (error) {
+        console.error("An error occured:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+    setOpen(true);
   };
   const onClose = () => {
     setOpen(false);
@@ -276,8 +319,13 @@ function GeneralHomeMaintenance() {
       const formData = new FormData();
       formData.append('home_title', values.title_home);
       formData.append('home_tagline', values.tagline_home);
-      formData.append('video', fileListVid[0]?.originFileObj);
-      formData.append('image', fileList[0]?.originFileObj);
+      if (fileListVid[0]?.originFileObj) {
+        formData.append('video', fileListVid[0].originFileObj);
+      }
+      
+      if (fileList[0]?.originFileObj) {
+        formData.append('image', fileList[0].originFileObj);
+      }
       formData.append('description', values.home_content);
 
       const response = await fetch(`http://127.0.0.1:8000/api/updateHome/${selectedHomeID}?_method=POST`, {
@@ -330,7 +378,6 @@ function GeneralHomeMaintenance() {
         width={'100%'}
         onClose={onClose}
         open={openViewDrawer}
-        
       >
         <Home></Home>
       </Drawer>
@@ -338,6 +385,7 @@ function GeneralHomeMaintenance() {
         title="Edit Home Contents"
         width={500}
         onClose={onClose}
+        loading={isLoading}
         open={open}
         styles={{
           body: {
@@ -345,7 +393,19 @@ function GeneralHomeMaintenance() {
           },
         }}
       >
-        <Form layout="vertical" onFinish={onFinish} ref={formRef} >
+        <Form 
+          layout="vertical" 
+          onFinish={onFinish} 
+          ref={formRef} 
+          initialValues={{
+            title_home: defaultHeroTitle,
+            tagline_home: defaultTagline,
+            home_content: defaultHomeContent,
+            image: fileList,
+            video: fileListVid,
+          }}
+        
+        >
           <div className='test-cont-1'>
           <Col span={24}>
           

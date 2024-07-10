@@ -139,12 +139,43 @@ function GeneralProjectsMaintenance() {
     setOpenViewDrawer(true);
   }
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [defaultProjectTitle, setDefaultProjectTitle] = useState('');
+  const [defaultDescription, setDefaultDescription] = useState('');
 
   // DRAWER ITEMS
   const { Option } = Select;
   const [open, setOpen] = useState(false);
   const showDrawer = (projectID) => {
     setSelectedProjectId(projectID);
+    setIsLoading(true);
+    const fetchData = async () => {
+      try{
+        if (clubId !== null) {
+          const response = await axios.get(`http://127.0.0.1:8000/api/getOneProject/${projectID}`);
+          const project = response.data;
+          const title = project.map(heroTitle => heroTitle.project_title);
+          const content = project.map(content => content.project_description);
+          const imgName = project.map(image => image.cover_image);
+          setDefaultProjectTitle(title[0]);
+          setDefaultDescription(content);
+          setFileList([
+            {
+              uid: projectID,
+              name: imgName,
+              status: 'done',
+              url: `http://127.0.0.1:8000/${imgName}`
+            }
+          ]);
+          
+        }
+      } catch (error) {
+        console.error("An error occured:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
     setOpen(true);
   };
   const onClose = () => {
@@ -470,7 +501,6 @@ function GeneralProjectsMaintenance() {
         width={'100%'}
         onClose={onClose}
         open={openViewDrawer}
-        
       >
         <Projects></Projects>
       </Drawer>
@@ -479,13 +509,23 @@ function GeneralProjectsMaintenance() {
         width={500}
         onClose={onClose}
         open={open}
+        loading={isLoading}
         styles={{
           body: {
             paddingBottom: 80,
           },
         }}
       >
-        <Form layout="vertical" onFinish={onFinish} ref={formRef} >
+        <Form 
+          layout="vertical" 
+          onFinish={onFinish} 
+          ref={formRef} 
+          initialValues={{
+            project_title: defaultProjectTitle,
+            project_content: defaultDescription,
+            image: fileList,
+          }}
+        >
           <div className='test-cont'>
           <Col span={24}>
             <Form.Item
