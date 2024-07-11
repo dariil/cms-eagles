@@ -123,6 +123,10 @@ function GeneralUsersMaintenance(){
         dataIndex: 'full_name',
       },
       {
+        title: 'Position',
+        dataIndex: 'position'
+      },
+      {
           title: 'Number',
           dataIndex: 'number',
       },
@@ -238,7 +242,8 @@ function GeneralUsersMaintenance(){
   const [viewNumber, setViewNumber] = useState('');
   const [viewEmail, setViewEmail] = useState('');
   const [viewClub, setViewClub] = useState('');
-  const [viewAccessLevel, setViewAccessLevel] = useState('');
+  // const [viewAccessLevel, setViewAccessLevel] = useState('');
+  const [viewPostion, setViewPostion] = useState('');
 
   const [openViewDrawer, setOpenViewDrawer] = useState(false);
   const showViewDrawer = (userID) => {
@@ -249,8 +254,9 @@ function GeneralUsersMaintenance(){
       const middleName = users.map(user => user.middle_name);
       const lastName = users.map(user => user.last_name);
       const number = users.map(user => user.number);
-      const clubMember = users.map(user => user.club_id);
-      const accessLevel = users.map(user => user.access_level);
+      const clubMember = users.map(user => user.club_name);
+      // const accessLevel = users.map(user => user.access_level);
+      const position = users.map(user => user.position);
       const email = users.map(user => user.email);
 
       setViewFirstName(firstName);
@@ -259,7 +265,8 @@ function GeneralUsersMaintenance(){
       setViewNumber(number);
       setViewEmail(email);
       setViewClub(clubMember);
-      setViewAccessLevel(accessLevel);
+      // setViewAccessLevel(accessLevel);
+      setViewPostion(position);
 
     };
     setSelectedUserID(userID);
@@ -278,6 +285,7 @@ function GeneralUsersMaintenance(){
   const [defaultFirstName, setDefaultFirstName] = useState("");
   const [defaultMiddleName, setDefaultMiddleName] = useState("");
   const [defaultLastName, setDefaultLastName] = useState("");
+  const [defaultPosition, setDefaultPosition] = useState("");
   const [defaultNumber, setDefaultNumber] = useState("");
   const [defaultEmail, setDefaultEmail] = useState("");
   const [defaultClub, setDefaultClub] = useState("");
@@ -292,6 +300,7 @@ function GeneralUsersMaintenance(){
       const firstName = users.map(user => user.first_name);
       const middleName = users.map(user => user.middle_name);
       const lastName = users.map(user => user.last_name);
+      const position = users.map(user => user.position);
       const number = users.map(user => user.number);
       const clubMember = users.map(user => user.club_id);
       const accessLevel = users.map(user => user.access_level);
@@ -300,6 +309,7 @@ function GeneralUsersMaintenance(){
       setDefaultFirstName(firstName);
       setDefaultMiddleName(middleName);
       setDefaultLastName(lastName);
+      setDefaultPosition(position);
       setDefaultNumber(number);
       setDefaultEmail(email);
       setDefaultClub(clubMember);
@@ -520,6 +530,7 @@ function GeneralUsersMaintenance(){
         first_name: '',
         middle_name: '',
         last_name: '',
+        position: '',
         number: '',
         club_member: '',
         access_level: '0',
@@ -569,6 +580,7 @@ function GeneralUsersMaintenance(){
       formData.append('first_name', defaultFirstName);
       formData.append('middle_name', defaultMiddleName);
       formData.append('last_name', defaultLastName);
+      formData.append('position', defaultPosition);
       formData.append('number', defaultNumber);
       formData.append('access_level', defaultAccess);
       formData.append('club_member', defaultClub);
@@ -655,7 +667,7 @@ function GeneralUsersMaintenance(){
         </Row>
         <Row>
           <Col span={12}>
-            <DescriptionItem title="Access Level" content={viewAccessLevel} />
+            <DescriptionItem title="Position" content={viewPostion} />
           </Col>
         </Row>
         <Divider />
@@ -687,6 +699,11 @@ function GeneralUsersMaintenance(){
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="last_name" className=''>Last Name</Form.Label>
                 <Form.Control className='' type="text" name="last_name" id="last_name" onChange={(e) => setDefaultLastName(e.target.value)} value={defaultLastName} placeholder="Enter last name" />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="position" className=''>Position</Form.Label>
+                <Form.Control className='' type="text" name="position" id="position" onChange={(e) => setDefaultPosition(e.target.value)} value={defaultPosition} placeholder="Enter position" />
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -765,6 +782,11 @@ function GeneralUsersMaintenance(){
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="last_name" className=''>Last Name</Form.Label>
                 <Form.Control className='' type="text" name="last_name" id="last_name" onChange={handleChange} value={inputs.last_name} placeholder="Enter last name" />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="position" className=''>Position</Form.Label>
+                <Form.Control className='' type="text" name="position" id="position" onChange={handleChange} value={inputs.position} placeholder="Enter position" />
               </Form.Group>
 
               <Form.Group className="mb-3">
