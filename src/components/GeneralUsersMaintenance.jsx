@@ -630,7 +630,7 @@ function GeneralUsersMaintenance(){
       {contextHolderMsg}
       <Drawer
         title="User Details"
-        width={550}
+        width={650}
         onClose={onClose}
         open={openViewDrawer}
         
