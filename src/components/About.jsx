@@ -46,7 +46,7 @@ function About(){
                             </Col>
                         </Row>
                         <Row className="justify-content-center justify-content-md-start">
-                            <Col>
+                            <Col className="aboutUs-container-testing">
                                 <a className="font-size-large font-weight-bold a-btn-style-1" href="#">Join us</a>
                             </Col>
                         </Row>
