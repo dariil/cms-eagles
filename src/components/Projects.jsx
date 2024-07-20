@@ -73,14 +73,14 @@ function Projects(){
             {
                 data.map((item, index) => (
                     <div className={index%2==0 ? 'project-main-container-dark' : 'project-main-container-light'} key={index}>
-                        <Container className='w-75' fluid>
+                        <Container className='project-cont-width'>
                             <Col>
                                 <div className={index%2==0 ? "project-txt-img-container-reverse" : "project-txt-img-container"}>
                                     <div className="project-image-old" style={{ backgroundImage: `url(http://localhost:8000/${item.cover_image})` }}></div>
                                     <div className="project-text-contents">
                                         <div>
                                             <h1 className={'w-100 project-name-dark font-spcase-large'}>{item.project_title}</h1>
-                                            <h1 className={index%2==0 ? 'w-100 project-date-dark font-size-larger' : 'w-100 project-date-light font-size-larger'}>{formatDate(item.created_at.split('T')[0])}</h1>
+                                            <h1 className={index%2==0 ? 'w-100 project-date-dark font-size-large' : 'w-100 project-date-light font-size-large'}>{formatDate(item.created_at.split('T')[0])}</h1>
                                         </div>
                                         <p className={index%2==0 ? 'project-details-dark' : 'project-details-light'}>{item.project_description}</p>
                                         <Link to={"view_project/"+item.project_id} className={index%2==0 ? "proj-read-more-dark" : "proj-read-more-light"} href="#">Read More &rarr;</Link>

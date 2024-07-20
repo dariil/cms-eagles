@@ -76,7 +76,7 @@ function Home(){
                                 </Col>
                             </Row>
                             <Row className="justify-content-center justify-content-md-start">
-                                <Col>
+                                <Col className="center-the-a">
                                     <a className="font-size-large font-weight-bold a-btn-style-1" href="#">About Us</a>
                                 </Col>
                             </Row>
@@ -99,8 +99,6 @@ function Home(){
                                             <h1 className="project-name-dark font-spcase-large">{item.official_name}</h1>
                                             </div>
                                             <p className="project-details-dark">{item.official_description}</p>
-                                            <br />
-                                            <br />
                                             <a className="proj-read-more-dark" href="#">Read More &rarr;</a>
                                         </div>
                                         <div className="project-image" style={{ backgroundImage: `url(http://localhost:8000/${item.official_image})` }}>

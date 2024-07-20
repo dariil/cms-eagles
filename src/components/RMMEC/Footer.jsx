@@ -36,7 +36,9 @@ function RMMECFooter(){
                     <section className=''>
                         <MDBContainer className='text-center text-md-start mt-5'>
                             <MDBRow className='mt-3'>
-                            <img className="logo mb-3" src="/assets/eagles-nobg-logo.png"></img>
+                                <div className='footer-logo-container'>
+                                    <img className="logo mb-3" src="/assets/eagles-nobg-logo.png"></img>
+                                </div>
                                 <MDBCol md="3" lg="4" xl="3" className='mx-auto mb-4'>
                                 <h6 className='footer-text text-uppercase fw-bold mb-4'>
                                     Eagles
