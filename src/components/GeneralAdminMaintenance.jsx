@@ -222,7 +222,7 @@ function GeneralAdminMaintenance(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://127.0.0.1:8000/api/getUsers/1');
+        const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/1');
         const users = response.data.map((user) => ({
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -334,7 +334,7 @@ function GeneralAdminMaintenance(){
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/1`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/1`);
             const users = response.data.map((user) => ({
               ...user,
               full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -377,7 +377,7 @@ function GeneralAdminMaintenance(){
 
             if (userInfo.response && userInfo.response.access_level) {
               setAccessLevel(userInfo.response.access_level)
-            // setClubId(userInfo.response.club_id);
+            setClubId(userInfo.response.club_id);
             // console.log(clubId);
             }
         } catch (error) {
@@ -390,7 +390,7 @@ function GeneralAdminMaintenance(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://127.0.0.1:8000/api/getUsers/1`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/1`);
         const users = response.data.map((user) => ({
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -546,7 +546,7 @@ function GeneralAdminMaintenance(){
       const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await axios.get('http://127.0.0.1:8000/api/getUsers/1');
+          const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/1');
           const users = response.data.map((user) => ({
             ...user,
             full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -602,7 +602,7 @@ function GeneralAdminMaintenance(){
           const fetchData = async () => {
             try {
               setLoading(true);
-              const response = await axios.get('http://127.0.0.1:8000/api/getUsers/1');
+              const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/1');
               const users = response.data.map((user) => ({
                 ...user,
                 full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,

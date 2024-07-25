@@ -27,7 +27,7 @@ function Header(){
     return(
         <>
             <div className={`navbar-main-container ${isScrolled ? 'scrolled' : ''}`}>
-            <Navbar collapseOnSelect expand="lg" bg="transparent" data-bs-theme="tranparent" className="">
+            <Navbar collapseOnSelect expand="lg" bg="dark" data-bs-theme="dark" className="">
                 <Container>
                     <img className="logo" src="/assets/eagles-nobg-logo.png"></img>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />

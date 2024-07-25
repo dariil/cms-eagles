@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Link, useNavigate} from 'react-router-dom'
+import {Link, Outlet, useNavigate} from 'react-router-dom'
 import {
   ContainerOutlined,
   MenuFoldOutlined,
@@ -38,6 +38,7 @@ import GeneralArchivedApplication from './GeneralArchivedApplication';
 import ClubUsersMaintenance from './ClubUsersMaintenance';
 import ClubAdminMaintenance from './ClubAdminMaintenance';
 import GeneralArchivedMemberApplication from './GeneralArchivedMemberApplications';
+import GeneralDashboard from './GeneralDashboard';
 
 
 const Dashboard = () => <div>Dashboard Content</div>;
@@ -85,7 +86,7 @@ function Admin(){
       {
         key: 'dashboard',
         icon: <DashboardOutlined />,
-        label: 'Dashboard',
+        label: <Link to={"/admin/dashboard-general"} className='mt-2 admin-menu-items'>Dashboard</Link>,
       },
       {
         type: 'divider',
@@ -174,6 +175,19 @@ function Admin(){
     ]
 
     const clubItems = [
+      {
+        key: 'main-grp',
+        label: 'Main',
+        type: 'group',
+      },
+      {
+        key: 'dashboard',
+        icon: <DashboardOutlined />,
+        label: <Link to={"/admin/dashboard-club"} className='mt-2 admin-menu-items'>Dashboard</Link>,
+      },
+      {
+        type: 'divider',
+      },
       {
         key: 'club-grp',
         label: 'Manage Club',
@@ -300,8 +314,10 @@ function Admin(){
   ///////////////////////////////////// RENDER TABLE UI
   const renderContent = () => {
     switch (selectedKey) {
-      case 'dashboard':
-        return <Dashboard />;
+      case 'dashboard-club':
+        return <GeneralDashboard />;
+      case 'dashboard-general':
+        return <GeneralDashboard />;
       case 'general-users':
         return <GeneralUsersMaintenance />;
       case 'general-admin':
@@ -360,7 +376,7 @@ function Admin(){
       case 'club-member-applications-archives':
         return <GeneralArchivedMemberApplication />
       default:
-        return <Dashboard />;
+        return <GeneralDashboard />;
 
     }
   };
@@ -421,7 +437,8 @@ function Admin(){
                 <div className='admin-content-container'>
                   <div className='child-main-test'>
                     {/* RENDER COMPONENT HERE */}
-                    {renderContent()}
+                    
+                    <Outlet />
                   </div>
                 </div>
               </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { Radio, Space, Switch, Table, ConfigProvider, Divider, message, Upload } from 'antd';
 import { useParams } from 'react-router-dom';
@@ -504,7 +503,7 @@ function GeneralAnnouncementMaintenance() {
         loading={isLoading}
       >
         <Announcements></Announcements>
-      </Drawer>
+    </Drawer>
       <Drawer
         title="Edit Announcement Contents"
         width={500}
