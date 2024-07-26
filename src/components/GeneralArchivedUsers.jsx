@@ -38,14 +38,8 @@ function GeneralArchivedUsers(){
     const [yScroll, setYScroll] = useState(true);
     const [xScroll, setXScroll] = useState('fixed');
     const [open, setOpen] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
     const [selectedUserID, setSelectedUserID] = useState(null);
-    const [inputs, setInputs] = useState({ access_level: '0' });
-    const navigate = useNavigate();
-    const formRef = useRef(null);
-    const showModal = () => {
-      setOpen(true);
-    };
+
 
     const handleCancel = () => {
       console.log('Clicked cancel button');
@@ -379,14 +373,6 @@ function GeneralArchivedUsers(){
     rowSelection,
     scroll,
     tableLayout,
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setInputs((prevInputs) => ({
-      ...prevInputs,
-      [name]: value,
-    }));
   };
 
   const [api, contextHolder] = notification.useNotification();

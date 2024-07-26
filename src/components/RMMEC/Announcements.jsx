@@ -20,7 +20,7 @@ function RMMECAnnouncements(){
 
     async function getLatestAnnouncement(){
         try {
-            await axios.get(`http://127.0.0.1:8000/api/getRecentAnnouncement/1`).then(function(response){
+            await axios.get(`http://127.0.0.1:8000/api/getRecentAnnouncement/CLB-000002`).then(function(response){
                 console.log(response.data[0]);
                 const announcements = response.data;
                 if (announcements.length > 0) {
@@ -37,7 +37,7 @@ function RMMECAnnouncements(){
 
     async function getData(){
         try {
-            await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/1`).then(function(response){
+            await axios.get(`http://127.0.0.1:8000/api/getAnnouncementsInClub/CLB-000002`).then(function(response){
             setData(response.data);
             });
         } catch (error) {

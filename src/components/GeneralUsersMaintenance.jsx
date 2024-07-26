@@ -92,7 +92,7 @@ function GeneralUsersMaintenance(){
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [selectedUserID, setSelectedUserID] = useState(null);
     const [modalText, setModalText] = useState('Content of the modal');
-    const [inputs, setInputs] = useState({ access_level: '0' });
+    const [inputs, setInputs] = useState({ access_level: 'USER' });
     const navigate = useNavigate();
     const formRef = useRef(null);
     const showModal = () => {
@@ -219,7 +219,7 @@ function GeneralUsersMaintenance(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/1');
+        const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/USER');
         const users = response.data.map((user) => ({
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -332,7 +332,7 @@ function GeneralUsersMaintenance(){
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/0`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/USER`);
             const users = response.data.map((user) => ({
               ...user,
               full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -375,8 +375,8 @@ function GeneralUsersMaintenance(){
 
             if (userInfo.response && userInfo.response.access_level) {
               setAccessLevel(userInfo.response.access_level)
-            setClubId(userInfo.response.club_id);
-            console.log(accessLevel);
+              setClubId(userInfo.response.club_id);
+              console.log(accessLevel);
             }
         } catch (error) {
             console.error("Failed to parse user info from localStorage:", error);
@@ -388,7 +388,7 @@ function GeneralUsersMaintenance(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/0`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/USER`);
         const users = response.data.map((user) => ({
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -542,7 +542,7 @@ function GeneralUsersMaintenance(){
       const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/'+ clubId +'/0');
+          const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/'+ clubId +'/USER');
           const users = response.data.map((user) => ({
             ...user,
             full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -558,9 +558,6 @@ function GeneralUsersMaintenance(){
 
 
       fetchData();
-
-
-      navigate('/admin/general-users');
       // openNotification();
     } catch (error) {
       console.error('Error registering:', error);
@@ -596,25 +593,26 @@ function GeneralUsersMaintenance(){
       if (response.ok) {
         message.success(data.messages.message);
         const fetchData = async () => {
-          try {
-            setLoading(true);
-            const response = await axios.get('http://127.0.0.1:8000/api/getUsers/' + clubId + '/0');
-            const users = response.data.map((user) => ({
-              ...user,
-              full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
-            }));
-            setData(users);
-          } catch (error) {
-            console.error('Error: ', error);
-            message.error(response.data.messages.message);
-          } finally {
-            setLoading(false);
+          if (clubId !== null) {
+            try {
+              setLoading(true);
+              const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/USER`);
+              const users = response.data.map((user) => ({
+                ...user,
+                full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
+              }));
+              setData(users);
+              setLoading(false);
+            } catch (error) {
+              console.error('Error: ', error);
+              message.error(response.data.messages.message);
+              setLoading(false);
+            }
           }
         };
   
-        fetchData();
         setOpenDrawer(false);
-        
+        fetchData();
       } else {
         message.error(data.messages.message);
       }
@@ -715,7 +713,7 @@ function GeneralUsersMaintenance(){
                 <Form.Label htmlFor="club_member" className=''>Select Club</Form.Label>
                 <Form.Select name="club_member" id="club_member" onChange={(e) => setDefaultClub(e.target.value)} value={defaultClub} aria-label="Default select example">
                   <option>Open this select menu</option>
-                  <option value="0">AGILA</option>
+                  <option value="CLB-000001">AGILA</option>
                   <option value="1">RMMEC</option>
                   <option value="2">MMEC</option>
                   <option value="3">LBAEC</option>
@@ -728,8 +726,8 @@ function GeneralUsersMaintenance(){
                 <Form.Label htmlFor="access_level" className=''>Access Level</Form.Label>
                 <Form.Select name="access_level" id="access_level" onChange={(e) => setDefaultAccess(e.target.value)} value={defaultAccess} aria-label="Default select example">
                   <option>Open this select menu</option>
-                  <option value="0">Member</option>
-                  <option value="1">Admin</option>
+                  <option value="USER">Member</option>
+                  <option value="ADMIN">Admin</option>
                 </Form.Select>
               </Form.Group>
 
@@ -798,7 +796,7 @@ function GeneralUsersMaintenance(){
                 <Form.Label htmlFor="club_member" className=''>Select Club</Form.Label>
                 <Form.Select name="club_member" id="club_member" onChange={handleChange} value={inputs.club_member} aria-label="Default select example">
                   <option>Open this select menu</option>
-                  <option value="0">AGILA</option>
+                  <option value="CLB-000001">AGILA</option>
                   <option value="1">RMMEC</option>
                   <option value="2">MMEC</option>
                   <option value="3">LBAEC</option>

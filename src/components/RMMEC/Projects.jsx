@@ -16,7 +16,7 @@ function RMMECProjects(){
 
     async function getData(){
         try {
-            await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/1`).then(function(response){
+            await axios.get(`http://127.0.0.1:8000/api/getProjectsInClub/CLB-000002`).then(function(response){
             console.log(response.data);
             setData(response.data);
             });
@@ -27,7 +27,7 @@ function RMMECProjects(){
 
     async function getLatestProject(){
         try {
-            await axios.get(`http://127.0.0.1:8000/api/getRecentProject/1`).then(function(response){
+            await axios.get(`http://127.0.0.1:8000/api/getRecentProject/CLB-000002`).then(function(response){
             console.log(response.data[0]);
             setLatestProject(response.data[0]);
             });

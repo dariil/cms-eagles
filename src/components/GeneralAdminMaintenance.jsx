@@ -96,7 +96,7 @@ function GeneralAdminMaintenance(){
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [selectedUserID, setSelectedUserID] = useState(null);
     const [modalText, setModalText] = useState('Content of the modal');
-    const [inputs, setInputs] = useState({ access_level: '1' });
+    const [inputs, setInputs] = useState({ access_level: 'ADMIN' });
     const navigate = useNavigate();
     const showModal = () => {
       setOpen(true);
@@ -222,7 +222,7 @@ function GeneralAdminMaintenance(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/1');
+        const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/ADMIN');
         const users = response.data.map((user) => ({
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -334,7 +334,7 @@ function GeneralAdminMaintenance(){
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/1`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/ADMIN`);
             const users = response.data.map((user) => ({
               ...user,
               full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -390,7 +390,7 @@ function GeneralAdminMaintenance(){
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/1`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/getUsersInClub/${clubId}/ADMIN`);
         const users = response.data.map((user) => ({
           ...user,
           full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -546,7 +546,7 @@ function GeneralAdminMaintenance(){
       const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/1');
+          const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/ADMIN');
           const users = response.data.map((user) => ({
             ...user,
             full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -563,8 +563,6 @@ function GeneralAdminMaintenance(){
       if (accessLevel) {
         fetchData();
       }
-
-      navigate('/admin/general-users');
       // openNotification();
     } catch (error) {
       console.error('Error registering:', error);
@@ -602,7 +600,7 @@ function GeneralAdminMaintenance(){
           const fetchData = async () => {
             try {
               setLoading(true);
-              const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/1');
+              const response = await axios.get('http://127.0.0.1:8000/api/getUsersInClub/' + clubId + '/ADMIN');
               const users = response.data.map((user) => ({
                 ...user,
                 full_name: `${user.first_name} ${user.middle_name} ${user.last_name}`,
@@ -730,6 +728,7 @@ function GeneralAdminMaintenance(){
                 <Form.Label htmlFor="club_member" className=''>Select Club</Form.Label>
                 <Form.Select name="club_member" id="club_member" onChange={(e) => setDefaultClub(e.target.value)} value={defaultClub} aria-label="Default select example">
                   <option>Open this select menu</option>
+                  <option value="CLB-000001">AGILA</option>
                   <option value="1">RMMEC</option>
                   <option value="2">MMEC</option>
                   <option value="3">LBAEC</option>
@@ -742,8 +741,8 @@ function GeneralAdminMaintenance(){
                 <Form.Label htmlFor="access_level" className=''>Access Level</Form.Label>
                 <Form.Select name="access_level" id="access_level" onChange={(e) => setDefaultAccess(e.target.value)} value={defaultAccess} aria-label="Default select example">
                   <option>Open this select menu</option>
-                  <option value="0">Member</option>
-                  <option value="1">Admin</option>
+                  <option value="USER">Member</option>
+                  <option value="ADMIN">Admin</option>
                 </Form.Select>
               </Form.Group>
 
@@ -813,7 +812,7 @@ function GeneralAdminMaintenance(){
                 <Form.Label htmlFor="club_member" className=''>Select Club</Form.Label>
                 <Form.Select name="club_member" id="club_member" onChange={handleChange} value={inputs.club_member} aria-label="Default select example">
                   <option>Open this select menu</option>
-                  <option value="0">AGILA</option>
+                  <option value="CLB-000001">AGILA</option>
                   <option value="1">RMMEC</option>
                   <option value="2">MMEC</option>
                   <option value="3">LBAEC</option>

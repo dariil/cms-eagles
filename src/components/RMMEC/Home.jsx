@@ -18,7 +18,7 @@ function RMMECHome(){
 
     async function getData(){
         try {
-            await axios.get(`http://127.0.0.1:8000/api/getHome/1`).then(function(response){
+            await axios.get(`http://127.0.0.1:8000/api/getHome/CLB-000002`).then(function(response){
             console.log(response.data[0]);
             setData(response.data[0]);
             });
@@ -29,7 +29,7 @@ function RMMECHome(){
 
     async function getOfficers(){
         try{
-            await axios.get(`http://127.0.0.1:8000/api/getOfficials/1`).then(function(response){
+            await axios.get(`http://127.0.0.1:8000/api/getOfficials/CLB-000002`).then(function(response){
                 console.log(response.data[0]);
                 const officials = response.data;
                 if(officials.length > 0){
@@ -60,7 +60,7 @@ function RMMECHome(){
                     <Container className='w-75 home-container' fluid>
                         <Row className="align-items-center justify-content-center justify-content-lg-evenly">
                             <Col lg={6} md={12} className="mb-3 mb-lg-0">
-                            <Image src={"http://localhost:8000/"+data.logo} fluid className="img-fluid rounded-lg" />
+                            <Image src={"http://localhost:8000/"+data.logo} fluid className="img-fluid home-img rounded-lg" />
                             </Col>
                             <Col lg={6} md={12}>
                             <Row className="text-center text-md-start">

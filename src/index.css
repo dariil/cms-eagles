@@ -194,6 +194,11 @@
   border-color: #ab3732; */
 }
 
+.home-img{
+  width: 450px;
+  height: 450px;
+}
+
 .hero-project-title{
   position: absolute;
   width: 70%;
