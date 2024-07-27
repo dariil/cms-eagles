@@ -40,31 +40,20 @@ function GeneralDashboard() {
   const [recentProject, setRecentProject] = useState([]);
   const [recentOfficer, setRecentOfficer] = useState([]);
 
-    const data = {
-      labels: [
-        '2024-07-18',
-        '2024-07-19',
-        '2024-07-20',
-        '2024-07-21',
-        '2024-07-22',
-        '2024-07-23',
-        '2024-07-24',
-      ],
-      values: [5, 10, 3, 8, 6, 2, 4],
-    };
-  
-    const chartData = {
-      labels: data.labels,
-      datasets: [
-        {
-          label: 'Aspirant applications in the past seven (7) days',
-          data: data.values,
-          fill: false,
-          backgroundColor: 'rgba(200,0,0,1)',
-          borderColor: 'rgba(200,0,0,1)',
-        },
-      ],
-    };
+
+
+    const [chartData, setChartData] = useState({
+        labels: [],
+        datasets: [
+            {
+                label: 'Aspirant applications in the past seven (7) days',
+                data: [],
+                fill: false,
+                backgroundColor: 'rgba(200,0,0,1)',
+                borderColor: 'rgba(200,0,0,1)',
+            },
+        ],
+    });
   
     const options = {
       scales: {
@@ -92,6 +81,33 @@ function GeneralDashboard() {
           }
         }
     }, []);
+
+    useEffect(() => {
+      const fetchData = async () => {
+          if (clubId) {
+              try {
+                  const response = await axios.get(`http://127.0.0.1:8000/api/getSevenRecentApplications/${clubId}`);
+                  const data = response.data;
+
+                  setChartData({
+                      labels: data.labels,
+                      datasets: [
+                          {
+                              label: 'Aspirant applications in the past seven (7) days',
+                              data: data.values,
+                              fill: false,
+                              backgroundColor: 'rgba(200,0,0,1)',
+                              borderColor: 'rgba(200,0,0,1)',
+                          },
+                      ],
+                  });
+              } catch (error) {
+                  console.error('Error fetching data:', error);
+              }
+          }
+      };
+      fetchData();
+  }, [clubId]);
 
     useEffect(() => {
       const fetchRowCount = async () => {
