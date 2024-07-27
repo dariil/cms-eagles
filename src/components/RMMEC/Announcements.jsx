@@ -2,9 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header'
 import Footer from './Footer'
-import Slider from 'react-slick';
 import {Link} from 'react-router-dom'
-import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 

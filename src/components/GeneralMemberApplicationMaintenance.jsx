@@ -222,8 +222,7 @@ function GeneralMemberApplicationsMaintenance(){
               }
             }}
           >
-            <Button type='primary' className='action-print1' size='medium' icon={<PrinterOutlined />}>
-              {/* <EyeOutlined className='action-view' /> */}
+            <Button type='primary' onClick={() => handlePrint(record.member_application_id)} className='action-print1' size='medium' icon={<PrinterOutlined />}>
             </Button>
           </ConfigProvider>
 
@@ -318,6 +317,39 @@ function GeneralMemberApplicationsMaintenance(){
 
     fetchData();
   }, [clubId]);
+
+  const handlePrint = async (applicationId) => {
+    const apiUrl = `http://127.0.0.1:8000/api/getMemberPdf/${applicationId}`;
+    
+    try {
+      // Fetch the PDF data
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const pdfBlob = await response.blob();
+  
+      // Create a Blob URL
+      const blobUrl = URL.createObjectURL(pdfBlob);
+  
+      // Open the PDF in a new window
+      const printWindow = window.open(blobUrl, '_blank');
+  
+      if (printWindow) {
+        printWindow.addEventListener('load', () => {
+          printWindow.focus();
+          printWindow.print();
+          
+          // Clean up the Blob URL after a delay
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+        });
+      } else {
+        console.error('Failed to open print window. Pop-up might be blocked.');
+      }
+    } catch (error) {
+      console.error('Error fetching or printing PDF:', error);
+    }
+  };
 
   // SEARCH FUNCTIONALITIES
   const { Search } = Input;

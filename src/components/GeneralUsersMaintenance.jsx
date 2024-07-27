@@ -714,7 +714,7 @@ function GeneralUsersMaintenance(){
                 <Form.Select name="club_member" id="club_member" onChange={(e) => setDefaultClub(e.target.value)} value={defaultClub} aria-label="Default select example">
                   <option>Open this select menu</option>
                   <option value="CLB-000001">AGILA</option>
-                  <option value="1">RMMEC</option>
+                  <option value="CLB-000002">RMMEC</option>
                   <option value="2">MMEC</option>
                   <option value="3">LBAEC</option>
                   <option value="4">RMMLEC</option>
@@ -797,7 +797,7 @@ function GeneralUsersMaintenance(){
                 <Form.Select name="club_member" id="club_member" onChange={handleChange} value={inputs.club_member} aria-label="Default select example">
                   <option>Open this select menu</option>
                   <option value="CLB-000001">AGILA</option>
-                  <option value="1">RMMEC</option>
+                  <option value="CLB-000002">RMMEC</option>
                   <option value="2">MMEC</option>
                   <option value="3">LBAEC</option>
                   <option value="4">RMMLEC</option>

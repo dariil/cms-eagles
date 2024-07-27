@@ -291,14 +291,14 @@ function Admin(){
           },
           {
             key: 'club-member-applications-archives',
-            icon: <ProfileOutlined />,
+            icon: <VerifiedOutlined />,
             label: <Link to="/admin/club-member-applications-archives" className='mt-2 admin-menu-items'>Members</Link>,
           },
         ],
       },
     ]
 
-  const itemsToRender = clubId === 0 ? regionalItems : clubItems;
+  const itemsToRender = clubId === "CLB-000001" ? regionalItems : clubItems;
 
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState('dashboard');

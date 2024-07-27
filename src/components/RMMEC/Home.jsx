@@ -3,6 +3,7 @@ import Footer from './Footer'
 import axios from "axios";
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
+import { Carousel } from 'antd';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import './App.css'; // You can create your custom CSS file for additional styling if needed
 
@@ -87,27 +88,33 @@ function RMMECHome(){
                         <h3 className='font-spcase-large project-details-dark'>OFFICERS</h3>
                         <br />
                         <br />
-                        {
-                            officers.map((item, index) => (
-                                <div className="skewed-card-main" key={index}>
-                                    <div className="skewed-project-main">
-                                        <div className="project-text">
-                                            <div>
-                                            <h4 className="project-details-dark">{item.official_position}</h4>
-                                            <h1 className="project-name-dark font-spcase-large">{item.official_name}</h1>
+                        <Carousel arrows autoplay infinite={true}>
+                            {
+                                officers.map((item, index) => (
+                                    <div className="skewed-card-main" key={index}>
+                                        <div className="skewed-project-main">
+                                            <div className="project-text">
+                                                <div>
+                                                <h4 className="project-details-dark">{item.official_position}</h4>
+                                                <h1 className="project-name-dark font-spcase-large">{item.official_name}</h1>
+                                                </div>
+                                                <p className="project-details-dark">{item.official_description}</p>
+                                                <br />
+                                                <br />
+                                                <a className="proj-read-more-dark" href="#">Read More &rarr;</a>
                                             </div>
-                                            <p className="project-details-dark">{item.official_description}</p>
-                                            <br />
-                                            <br />
-                                            <a className="proj-read-more-dark" href="#">Read More &rarr;</a>
-                                        </div>
-                                        <div className="project-image" style={{ backgroundImage: `url(http://localhost:8000/${item.official_image})` }}>
-                                            <div className="project-image-overlay"></div>
+                                            <div className="project-image" style={{ 
+                                                borderRadius: "15px", 
+                                                height: "75vh",
+                                                width: "100%",
+                                                backgroundImage: `url(http://localhost:8000/${item.official_image})` }}></div>
                                         </div>
                                     </div>
-                                </div>
-                            ))
-                        }
+                                ))
+                            }
+                        </Carousel>
+                        <br />
+                        <br />
                     </div>
                 </div>
             </div>

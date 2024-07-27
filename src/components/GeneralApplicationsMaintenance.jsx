@@ -133,7 +133,7 @@ function GeneralApplicationsMaintenance(){
         // setPreviewImage(base64);
         setApplicantImage(base64);
     }
-}
+  }
   const uploadButton = (
     <button
       style={{

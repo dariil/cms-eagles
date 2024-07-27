@@ -77,7 +77,7 @@ function RMMECMemberRegister(){
             Formdata.append('email', formData.email);
             Formdata.append('number', formData.cellphone_number);
             Formdata.append('application_file', pdfBlob);
-            Formdata.append('club_id', 1);
+            Formdata.append('club_id', "CLB-000002");
             Formdata.append('position', formData.position);
 
             // Perform API call
@@ -120,14 +120,6 @@ function RMMECMemberRegister(){
             setApplicantImage(base64);
         }
     }
-
-    const getBase64 = (file) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-    });
 
     const uploadButton = (
         <button
