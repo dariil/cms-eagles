@@ -5,8 +5,6 @@ import Header from './Header'
 import Footer from './Footer'
 import Slider from 'react-slick';
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 function Announcements(){
     const [latestAnnouncement, setLatestAnnouncement] = useState(null); /////   IMPORTANT    //////

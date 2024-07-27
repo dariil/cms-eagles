@@ -3,8 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header'
 import Footer from './Footer'
 import {Link} from 'react-router-dom'
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 function RMMECAnnouncements(){
     const [latestAnnouncement, setLatestAnnouncement] = useState(null); /////   IMPORTANT    //////

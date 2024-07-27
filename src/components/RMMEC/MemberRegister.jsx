@@ -172,7 +172,9 @@ function RMMECMemberRegister(){
     
             // Populate PDF form fields
             form.getTextField('first_name').setText(data.firstname);
-            form.getTextField('middle_name').setText(data.middlename);
+            if(data.middlename){
+                form.getTextField('middle_name').setText(data.middlename);
+            }
             form.getTextField('last_name').setText(data.lastname);
         
             // Example for date fields, adjust as per your DatePicker implementation
@@ -180,21 +182,42 @@ function RMMECMemberRegister(){
                 form.getTextField('date_of_birth').setText(data.dateOfBirth.format('MM/DD/YYYY'));
             }
 
-            form.getTextField('height').setText(data.height);
-            form.getTextField('weight').setText(data.weight);
+            if(data.height){
+                form.getTextField('height').setText(data.height);
+            }
+
+            if(data.weight){
+                form.getTextField('weight').setText(data.weight);
+            }
         
             // Handle Radio.Group field
             form.getTextField('religion').setText(data.religion);
-            form.getTextField('blood_type').setText(data.bloodType);
+
+            if(data.bloodType){
+                form.getTextField('blood_type').setText(data.bloodType);
+            }
         
             form.getTextField('address').setText(data.complete_address);
             form.getTextField('contact_number').setText(data.cellphone_number);
             form.getTextField('name_icoe').setText(data.name_of_contact_person);
             form.getTextField('contact_num_icoe').setText(data.number_of_contact_person);
-            form.getTextField('sss_number').setText(data.sss_num);
-            form.getTextField('philhealth_number').setText(data.philhealth_num);
-            form.getTextField('pagibig_number').setText(data.pagibig_num);
-            form.getTextField('tin_number').setText(data.tin_num);
+
+            if(data.sss_num){
+                form.getTextField('sss_number').setText(data.sss_num);
+            }
+
+            if(data.philhealth_num){
+                form.getTextField('philhealth_number').setText(data.philhealth_num);
+            }
+
+            if(data.pagibig_num){
+                form.getTextField('pagibig_number').setText(data.pagibig_num);
+            }
+
+            if(data.tin_num){
+                form.getTextField('tin_number').setText(data.tin_num);
+            }
+            
             form.getTextField('region').setText(data.club_region);
             form.getTextField('chartered_governor_name').setText(data.chartered_governor);
             form.getTextField('member_control_number').setText(data.member_control_number);
@@ -258,7 +281,7 @@ function RMMECMemberRegister(){
                                         label="Middle name"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your middle name',
                                             },
                                         ]}
@@ -303,7 +326,7 @@ function RMMECMemberRegister(){
                                         label="Height"
                                         rules={[
                                             {
-                                                required: true,
+                                                required: false,
                                                 message: 'Please enter your height in feet',
                                             },
                                         ]}
@@ -318,7 +341,7 @@ function RMMECMemberRegister(){
                                         label="Weight"
                                         rules={[
                                             {
-                                                required: true,
+                                                required: false,
                                                 message: 'Please enter your weight in kilograms',
                                             },
                                         ]}
@@ -372,7 +395,7 @@ function RMMECMemberRegister(){
                                         label="GSIS/SSS"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your GSIS/SSS',
                                             },
                                         ]}
@@ -387,7 +410,7 @@ function RMMECMemberRegister(){
                                         label="PhilHealth"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your PhilHealth',
                                             },
                                         ]}
@@ -402,7 +425,7 @@ function RMMECMemberRegister(){
                                         label="PAG-IBIG"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your PAG-IBIG',
                                             },
                                         ]}
@@ -417,7 +440,7 @@ function RMMECMemberRegister(){
                                         label="Tin"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your Tin',
                                             },
                                         ]}

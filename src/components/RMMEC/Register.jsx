@@ -73,6 +73,12 @@ function RMMECRegister(){
         course: '',
         hobbies: '',
         special_skills: '',
+        sponsor_name: '',
+        date_today_sponsor: null,
+        chairman_name: '',
+        president_name: '',
+        national_director_name: '',
+        national_president_name: '',
     });
     const formRef = useRef(null);
 
@@ -192,25 +198,39 @@ function RMMECRegister(){
     
             // Populate PDF form fields
             form.getTextField('first_name').setText(data.firstname);
-            form.getTextField('nickname').setText(data.nickname);
-            form.getTextField('middle_name').setText(data.middlename);
+
+            if(data.nickname){
+                form.getTextField('nickname').setText(data.nickname);
+            }
+            
+            if(data.middlename){
+                form.getTextField('middle_name').setText(data.middlename);
+            }
+
             form.getTextField('last_name').setText(data.lastname);
             form.getTextField('birthplace').setText(data.birthplace);
         
-            // Example for date fields, adjust as per your DatePicker implementation
             if (data.dateOfBirth) {
                 form.getTextField('birthdate').setText(data.dateOfBirth.format('MM/DD/YYYY'));
             }
 
-            form.getTextField('height').setText(data.height);
-            form.getTextField('weight').setText(data.weight);
+            if(data.height){
+                form.getTextField('height').setText(data.height);
+            }
+            
+            if(data.weight){
+                form.getTextField('weight').setText(data.weight);
+            }
         
             // Handle Radio.Group field
             form.getRadioGroup('civil_status').select(data.civil_status);
         
             form.getTextField('citizenship').setText(data.citizenship);
             form.getTextField('religion').setText(data.religion);
-            form.getTextField('blood_type').setText(data.bloodType);
+
+            if(data.bloodType){
+                form.getTextField('blood_type').setText(data.bloodType);
+            }
         
             form.getTextField('street_number').setText(data.street_number);
             form.getTextField('barangay').setText(data.barangay);
@@ -218,18 +238,27 @@ function RMMECRegister(){
             form.getTextField('province').setText(data.province);
             form.getTextField('zip_code').setText(data.zip_code);
             form.getTextField('cellphone_number').setText(data.cellphone_number);
-            form.getTextField('telephone_number').setText(data.telephone_number);
+
+            if(data.telephone_number){
+                form.getTextField('telephone_number').setText(data.telephone_number);
+            }
+
             form.getTextField('email').setText(data.email);
             form.getTextField('name_of_company').setText(data.name_of_company);
             form.getTextField('position').setText(data.position);
             form.getTextField('company_address').setText(data.office_address);
             form.getTextField('company_telephone_number').setText(data.business_telephone_number);
             form.getTextField('fax_number').setText(data.fax_number);
-            form.getTextField('spouse_name').setText(data.spouse_name);
+
+            if(data.spouse_name){
+                form.getTextField('spouse_name').setText(data.spouse_name);
+            }
             if (data.spouse_date_of_birth) {
                 form.getTextField('spouse_birthdate').setText(data.spouse_date_of_birth.format('MM/DD/YYYY'));
             }
-            form.getTextField('spouse_age').setText(data.spouse_age);
+            if(data.spouse_age){
+                form.getTextField('spouse_age').setText(data.spouse_age);
+            }
         
             const maxDependents = 6;
             for (let i = 0; i < maxDependents; i++) {
@@ -263,8 +292,31 @@ function RMMECRegister(){
                 form.getTextField('college_year').setText(data.year_graduated_college.format('YYYY'));
             }
             form.getTextField('course').setText(data.course);
-            form.getTextField('hobbies').setText(data.hobbies);
-            form.getTextField('special_skills').setText(data.special_skills);
+
+            if(data.hobbies){
+                form.getTextField('hobbies').setText(data.hobbies);
+            }
+
+            if(data.special_skills){
+                form.getTextField('special_skills').setText(data.special_skills);
+            }
+
+            if(data.sponsor_name){
+                form.getTextField('sponsor_name').setText(data.sponsor_name);
+            }
+
+            if (data.date_today_sponsor) {
+                form.getTextField('sponsor_date').setText(data.date_today_sponsor.format('MM/DD/YYYY'));
+            }
+
+            form.getTextField('chairman_name').setText(data.chairman_name);
+            form.getTextField('president_name').setText(data.president_name);
+            form.getTextField('national_director_name').setText(data.national_director_name);
+            form.getTextField('national_president_name').setText(data.national_president_name);
+
+            const currentYear = new Date().getFullYear();
+            form.getTextField('national_director_ey').setText(currentYear.toString());
+            form.getTextField('national_president_ey').setText(currentYear.toString());
         
             // Save PDF and return bytes
             const pdfBytes = await pdfDoc.save();
@@ -322,7 +374,7 @@ function RMMECRegister(){
                                         label="Nickname"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your nickname',
                                             },
                                         ]}
@@ -337,7 +389,7 @@ function RMMECRegister(){
                                         label="Middle name"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your middle name',
                                             },
                                         ]}
@@ -396,7 +448,7 @@ function RMMECRegister(){
                                         label="Height"
                                         rules={[
                                             {
-                                                required: true,
+                                                required: false,
                                                 message: 'Please enter your height in feet',
                                             },
                                         ]}
@@ -411,7 +463,7 @@ function RMMECRegister(){
                                         label="Weight"
                                         rules={[
                                             {
-                                                required: true,
+                                                required: false,
                                                 message: 'Please enter your weight in kilograms',
                                             },
                                         ]}
@@ -708,7 +760,7 @@ function RMMECRegister(){
                                         label="Name of Spouse"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter the name fo your spouse.',
                                             },
                                         ]}
@@ -722,7 +774,7 @@ function RMMECRegister(){
                                         label="Spouse's Date of Birth"
                                         rules={[
                                             {
-                                                required: true,
+                                                required: false,
                                                 message: 'Please enter your spouse\'s date of birth',
                                             },
                                         ]}
@@ -736,7 +788,7 @@ function RMMECRegister(){
                                         label="Age of Spouse"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter the age of your spouse.',
                                             },
                                         ]}
@@ -799,7 +851,7 @@ function RMMECRegister(){
                                         ))}
                                         <Form.Item>
                                             <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                            Add field
+                                            Add children (if applicable)
                                             </Button>
                                         </Form.Item>
                                         </>
@@ -921,7 +973,7 @@ function RMMECRegister(){
                                         label="Hobbies"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your hobbies',
                                             },
                                         ]}
@@ -936,7 +988,7 @@ function RMMECRegister(){
                                         label="Special Skills"
                                         rules={[
                                             {
-                                            required: true,
+                                            required: false,
                                             message: 'Please enter your special skills',
                                             },
                                         ]}
@@ -945,6 +997,99 @@ function RMMECRegister(){
                                     </Form.Item>
                                 </div>
                                 <br></br>
+
+                                <h3>Other Club Information</h3>
+                                <div className='form-snap-2'>
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="sponsor_name"
+                                        label="Name of Sponsor"
+                                        rules={[
+                                            {
+                                            required: false,
+                                            message: 'Please enter the name of your sponsor (if applicable)',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of your sponsor" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="date_today_sponsor"
+                                        label="Date today"
+                                        rules={[
+                                            {
+                                            required: false,
+                                            message: 'Please select the date today',
+                                            },
+                                        ]}
+                                    >
+                                        <DatePicker onChange={dateOfBirthOnChange} picker="date" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="chairman_name"
+                                        label="Name of Chairman Membership Committee"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of chairman membership committee of the club you\'re applying to',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of chairman membership committee of the club you\'re applying to" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="president_name"
+                                        label="Name of Chartered President"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of chartered president of the club you\'re applying to',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of chartered president of the club you\'re applying to" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="national_director_name"
+                                        label="Name of National Director"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of national director',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of national director" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        tooltip="This is a required field"
+                                        className='form-item-snap-1'
+                                        name="national_president_name"
+                                        label="Name of National President"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            message: 'Please enter the name of national president',
+                                            },
+                                        ]}
+                                    >
+                                        <Input name="title" placeholder="Enter the name of national president" />
+                                    </Form.Item>
+                                </div>
 
                                 <Form.Item
                                 name={"2_by_2"}
