@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 import { Carousel } from 'antd';
+import {Link} from 'react-router-dom'
 
 function Home(){
     const [data, setData] = useState([]); /////   IMPORTANT    //////
@@ -102,7 +103,7 @@ function Home(){
                                                 <p className="project-details-dark">{item.official_description}</p>
                                                 <br />
                                                 <br />
-                                                <a className="proj-read-more-dark" href="#">Read More &rarr;</a>
+                                                <Link to={"view_officer/"+item.official_id} className="proj-read-more-dark">Read More &rarr;</Link>
                                             </div>
                                             <div className="project-image" style={{ 
                                                 borderRadius: "15px", 
@@ -114,6 +115,10 @@ function Home(){
                                 ))
                             }
                         </Carousel>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
                     </div>
                 </div>
              </div>

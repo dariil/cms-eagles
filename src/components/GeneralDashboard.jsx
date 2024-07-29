@@ -185,6 +185,9 @@ function GeneralDashboard() {
     return (
         <>
             <div className="main-dashboard-container">
+              {
+                clubId !== "CLB-000001" && (
+                  <>
                 <div className="dahsboard-chart-container">
                     <Line data={chartData} options={options} />
                 </div>
@@ -226,6 +229,9 @@ function GeneralDashboard() {
                     </div>
                   </div>
                 </div>
+                </>
+                )
+              }
               <div className="dashboard-more-contents-main-container">
                 <div className="dash-list-container">
                   <div className="dash-list-header-container">

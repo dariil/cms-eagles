@@ -1432,6 +1432,10 @@ small{
   }
 }
 
+.post-view-intro {
+  margin-bottom: 50px;
+}
+
 @media (max-width: 1460px) {
   .main-parent-flex-container {
     display: grid;

@@ -36,6 +36,8 @@ import GeneralMemberApplicationsMaintenance from './components/GeneralMemberAppl
 import GeneralOfficerMaintenance from './components/GeneralOfficerMaintenance'
 import GeneralProjectsMaintenance from './components/GeneralProjectsMaintenance'
 import GeneralUsersMaintenance from './components/GeneralUsersMaintenance'
+import RMMECOfficerViewer from './components/RMMEC/OfficerViewer'
+import OfficerViewer from './components/OfficerViewer'
 
 function App() {
 
@@ -52,6 +54,7 @@ function App() {
             <Route path='/login' element={<Login />}></Route>
             <Route path='/announcements/view_announcement/:id' element={<AnnouncementViewer />}></Route>
             <Route path='/projects/view_project/:id' element={<ProjectViewer />}></Route>
+            <Route path='/view_officer/:id' element={<OfficerViewer />}></Route>
 
             <Route path='/rmmec' element={<RMMECHome />}></Route>
             <Route path='/rmmec/announcements' element={<RMMECAnnouncements />}></Route>
@@ -61,8 +64,10 @@ function App() {
             <Route path='/rmmec/member_register' element={<RMMECMemberRegister />}></Route>
             <Route path='/rmmec/announcements/view_announcement/:id' element={<RMMECAnnouncementViewer />}></Route>
             <Route path='/rmmec/projects/view_project/:id' element={<RMMECProjectViewer />}></Route>
+            <Route path='/rmmec/view_officer/:id' element={<RMMECOfficerViewer />}></Route>
 
             <Route path='/admin' element={<Protected component = {Admin}/>}>
+              <Route path='/admin' element={<Protected component = {GeneralDashboard}/>}></Route>
               <Route path='/admin/general-users' element={<Protected component = {GeneralUsersMaintenance}/>}></Route>
               <Route path='/admin/general-admin' element={<Protected component = {GeneralAdminMaintenance}/>}></Route>
               <Route path='/admin/general-home' element={<Protected component = {GeneralHomeMaintenance}/>}></Route>
@@ -79,7 +84,6 @@ function App() {
               <Route path='/admin/general-applications-archives' element={<Protected component = {GeneralArchivedApplication}/>}></Route>
               <Route path='/admin/general-users-archives' element={<Protected component = {GeneralArchivedUsers}/>}></Route>
               <Route path='/admin/general-announcements-archives' element={<Protected component = {GeneralArchivedAnnouncement}/>}></Route>
-              <Route path='/admin/dashboard-general' element={<Protected component = {GeneralDashboard}/>}></Route>
               <Route path='/admin/users-club' element={<Protected component = {GeneralUsersMaintenance}/>}></Route>
               <Route path='/admin/admin-club' element={<Protected component = {GeneralAdminMaintenance}/>}></Route>
               <Route path='/admin/club-home' element={<Protected component = {GeneralHomeMaintenance}/>}></Route>
@@ -95,7 +99,7 @@ function App() {
               <Route path='/admin/club-officers-archives' element={<Protected component = {GeneralArchivedOfficers}/>}></Route>
               <Route path='/admin/club-applications-archives' element={<Protected component = {GeneralArchivedApplication}/>}></Route>
               <Route path='/admin/club-member-applications-archives' element={<Protected component = {GeneralArchivedMemberApplication}/>}></Route>
-              <Route path='/admin/dashboard-club' element={<Protected component = {GeneralDashboard}/>}></Route>
+              {/* <Route path='/admin/dashboard-club' element={<Protected component = {GeneralDashboard}/>}></Route> */}
             </Route>
 
           </Routes>

@@ -86,7 +86,7 @@ function Admin(){
       {
         key: 'dashboard',
         icon: <DashboardOutlined />,
-        label: <Link to={"/admin/dashboard-general"} className='mt-2 admin-menu-items'>Dashboard</Link>,
+        label: <Link to={"/admin"} className='mt-2 admin-menu-items'>Dashboard</Link>,
       },
       {
         type: 'divider',
@@ -183,7 +183,7 @@ function Admin(){
       {
         key: 'dashboard',
         icon: <DashboardOutlined />,
-        label: <Link to={"/admin/dashboard-club"} className='mt-2 admin-menu-items'>Dashboard</Link>,
+        label: <Link to={"/admin"} className='mt-2 admin-menu-items'>Dashboard</Link>,
       },
       {
         type: 'divider',

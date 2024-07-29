@@ -86,7 +86,7 @@ function RMMECAnnouncements(){
                         <Link to={"view_announcement/"+secondLatestAnnouncement.announcement_id} href="" className="announcement-prev-a">
                             <div className="latest-s-img" style={{ backgroundImage: `url('http://localhost:8000/${secondLatestAnnouncement.cover_image}')` }}></div>
                             <div>
-                                <h3 className="latest-blog-l-title">{latestAnnouncement.title}</h3>
+                                <h3 className="latest-blog-l-title">{secondLatestAnnouncement.title}</h3>
                                 <p>{secondLatestAnnouncement.description}</p>
                             </div>
                             <div className="post-info-row">
