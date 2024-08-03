@@ -37,6 +37,12 @@ function ProjectViewer(){
         return formattedDate;
     }
 
+    const renderContent = (content) => {
+        return content.split('\n').map((paragraph, index) => (
+            <p key={index} className="post-view-intro">{paragraph}</p>
+        ));
+    };
+
     return(
         <>
             <Header />
@@ -49,7 +55,7 @@ function ProjectViewer(){
                     <div className="post-view-content-container">
                         <h2 className="">{project.project_title}</h2>
                         <hr />
-                            <p className="post-view-intro">{project.project_description}</p>
+                            {renderContent(project.project_description)}
                         <hr />
                     </div>
                 </div>

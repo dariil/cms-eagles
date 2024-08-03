@@ -4,6 +4,7 @@ import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import axios from "axios";
 import {useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 import React, {useState, useEffect} from 'react';
 
 function Login(){
@@ -27,9 +28,10 @@ function Login(){
         axios.post('http://127.0.0.1:8000/api/login', inputs).then(function(response){
             console.log(response.data);
             if(response.data.messages.status == 0){
-                //do nothing
+                message.error(response.data.messages.message);
             }else{
                 localStorage.setItem("user-info", JSON.stringify(response.data));
+                message.success(response.data.messages.message);
                 navigate('/admin');
             }
         });
@@ -38,12 +40,9 @@ function Login(){
     return(
         <>
             <div className='login-main-container'>
-                {/* <div className="login-image-container" style={{ backgroundImage: 'url(/assets/eagle-bg.jpg)', backgroundColor: 'rgba(0, 0, 0, 0.5)', backgroundBlendMode: 'overlay'}}> */}
                 <div className='logo-container'>
                     <Image src="/assets/eagles-nobg-logo.png" fluid className="login-logo-img" />
                 </div>
-                    {/* <h1 className='login-text-title-light'>Welcome!</h1>
-                </div> */}
                 <div className='login-container'>
                     <Form className='login-form' onSubmit={handleSubmit}>
                             <div className=''>

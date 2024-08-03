@@ -37,6 +37,12 @@ function AnnouncementViewer(){
         return formattedDate;
     }
 
+    const renderContent = (content) => {
+        return content.split('\n').map((paragraph, index) => (
+            <p key={index} className="post-view-intro">{paragraph}</p>
+        ));
+    };
+
     return(
         <>
             <Header />
@@ -49,7 +55,7 @@ function AnnouncementViewer(){
                     <div className="post-view-content-container">
                         <h2 className="">{announcement.title}</h2>
                         <hr />
-                            <p className="post-view-intro">{announcement.description}</p>
+                            {renderContent(announcement.description)}
                         <hr />
                     </div>
                 </div>
