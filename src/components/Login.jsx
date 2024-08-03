@@ -6,9 +6,13 @@ import axios from "axios";
 import {useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import React, {useState, useEffect} from 'react';
+import {
+    LoadingOutlined,
+  } from '@ant-design/icons';
 
 function Login(){
     const [inputs, setInputs] = useState({});
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (event) => {
@@ -25,8 +29,11 @@ function Login(){
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setLoading(true);
+        message.loading("Logging in...");
         axios.post('http://127.0.0.1:8000/api/login', inputs).then(function(response){
             console.log(response.data);
+            setLoading(false);
             if(response.data.messages.status == 0){
                 message.error(response.data.messages.message);
             }else{
@@ -65,7 +72,9 @@ function Login(){
                                         </Form.Group> */}
                                         
                                 <Button variant="primary" className='login-btn' type="submit">
-                                    Login
+                                    {
+                                        loading ? <LoadingOutlined /> : "Login"
+                                    }
                                 </Button>
                             </Col>
                         </Form>

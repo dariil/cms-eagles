@@ -6,10 +6,11 @@ import { saveAs } from 'file-saver';
 import { 
     PlusOutlined,
     MinusCircleOutlined,
+    LoadingOutlined
 } from '@ant-design/icons';
 import { Button, Form, Input, Radio, Tag } from 'antd';
-import { Space, Table, ConfigProvider, message, DatePicker, Upload } from 'antd';
-import { Col, Drawer, Modal, Row, Image, Select, Popconfirm } from 'antd';
+import { Space, message, DatePicker, Upload } from 'antd';
+import { Col, Row, Image } from 'antd';
 
 // HANDLE IMAGE PREVIEW
 const getBase64 = (file) =>
@@ -34,6 +35,7 @@ function RMMECRegister(){
     const [applicantImage, setApplicantImage] = useState('');
     const [fileList, setFileList] = useState([]);
     const [requiredMark, setRequiredMarkType] = useState('customize');
+    const [loading, setLoading] = useState(false);
     // const [form] = Form.useForm();
     const [formData, setFormData] = useState({
         firstname: '',
@@ -90,6 +92,8 @@ function RMMECRegister(){
     };
 
     const handleFinish = async (values) => {
+        setLoading(true);
+        message.loading("Processing registration. Please wait.");
         try {
             const pdfBytes = await generatePDF(values, applicantImage);
             const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -114,10 +118,12 @@ function RMMECRegister(){
             saveAs(pdfBlob, `${formData.lastname}_Application_File`);
 
             if (response.ok) {
+                setLoading(false);
                 message.success(data.messages.message);
-                // formRef.current.resetFields();
+                formRef.current.resetFields();
                 setFileList([]);
             } else {
+                setLoading(false);
                 message.error(data.messages.message);
             }
         } catch (error) {
@@ -1159,7 +1165,9 @@ function RMMECRegister(){
                             <Row gutter={16} className=''>
                                 <Col span={12}>
                                 <Button htmlType='submit' type="primary">
-                                    Register
+                                    {
+                                        loading ? <LoadingOutlined /> : "Register"
+                                    }
                                 </Button>
                                 </Col>
                                 <Col span={12}>

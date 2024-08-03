@@ -33,6 +33,7 @@ function RMMECMemberRegister(){
     const [applicantImage, setApplicantImage] = useState('');
     const [fileList, setFileList] = useState([]);
     const [requiredMark, setRequiredMarkType] = useState('customize');
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         firstname: '',
@@ -67,6 +68,8 @@ function RMMECMemberRegister(){
     };
 
     const handleFinish = async (values) => {
+        setLoading(true);
+        message.loading("Processing registration. Please wait.");
         try {
             const pdfBytes = await generatePDF(values, applicantImage);
             const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -91,6 +94,7 @@ function RMMECMemberRegister(){
             saveAs(pdfBlob, `KUYA_${formData.lastname}_MEMBER_FORM`);
 
             if (response.ok) {
+                setLoading(false);
                 message.success(data.messages.message);
                 formRef.current.resetFields();
                 setFileList([]);
@@ -98,6 +102,7 @@ function RMMECMemberRegister(){
                 message.error(data.messages.message);
             }
         } catch (error) {
+            setLoading(false);
             console.error('Error generating PDF:', error);
             message.error('Failed to generate PDF.');
         }
@@ -668,7 +673,9 @@ function RMMECMemberRegister(){
                             <Row gutter={16} className=''>
                                 <Col span={12}>
                                 <Button htmlType='submit' type="primary">
-                                    Register
+                                    {
+                                        loading ? <LoadingOutlined /> : "Register"
+                                    }
                                 </Button>
                                 </Col>
                                 <Col span={12}>
